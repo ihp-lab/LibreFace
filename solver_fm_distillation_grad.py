@@ -103,17 +103,23 @@ class solver_fm_distillation_grad(nn.Module):
 
 			self.optimizer.zero_grad()
 			student_pred, student_feature = self.student_model(images)
-			
+			# Prediction from student model
 			student_pred = student_pred * 5.0
-
+			
+   			# Align the shape of features 
 			student_feature = torch.nn.functional.interpolate(student_feature.unsqueeze(1),size=[self.config.hidden_dim]).squeeze(1)
 
 			student_teacher_pred = self.teacher_model.interpreter(student_feature)
 
 			l2loss = torch.nn.MSELoss()
+   
+			# feature matching loss for feature-wise distillation
 			fm_loss = l2loss(student_feature,teacher_feature)
 
+			# KL Loss 
 			kl_loss = self.loss_fn_kd(student_teacher_pred, teacher_pred)
+   
+			# Overall loss
 			loss = fm_loss * self.config.alpha + kl_loss * self.config.alpha + self.criterion(student_pred.reshape(-1), labels.reshape(-1))  
 			loss.backward()
 
