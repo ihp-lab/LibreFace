@@ -1,0 +1,128 @@
+Namespace(seed=0, data_root='/home/ICT2000/dchang/TAC_project/Face_Heatmap/data', ckpt_path='/home/ICT2000/dchang/TAC_project/Face_Heatmap/OpenRecognition/resnet_disfa_all', data='DISFA', fold='all', num_workers=0, image_size=256, crop_size=224, num_labels=12, sigma=10.0, teacher_model_name='emotionnet_mae', teacher_model_path='/home/ICT2000/dchang/TAC_project/Face_Heatmap/checkpoints_ffhq_mae/', student_model_name='resnet', student_model_path=None, dropout=0.1, hidden_dim=128, alpha=1.0, fm_distillation=True, num_epochs=12, batch_size=128, learning_rate=0.001, weight_decay=0.0001, clip=1.0, when=10, patience=5, device='cuda')
+Load pretrain weights from DISFA, path :  /home/ICT2000/dchang/TAC_project/Face_Heatmap/checkpoints_ffhq_mae/DISFA/all/emotionnet_mae.pt
+Number of params:  11243980
+Epoch: 1/12
+Training loss: 417.074330
+save to: /home/ICT2000/dchang/TAC_project/Face_Heatmap/OpenRecognition/resnet_disfa_all/DISFA/all/resnet.pt
+Val avg MSE: 0.14 avg MAE: 0.19 avg PCC: 0.80
+MSE
+AU 1: 0.16 AU 2: 0.12 AU 4: 0.23 AU 5: 0.03 AU 6: 0.19 AU 9: 0.09 AU 12: 0.19 AU 15: 0.10 AU 17: 0.05 AU 20: 0.11 AU 25: 0.20 AU 26: 0.24 
+MAE
+AU 1: 0.18 AU 2: 0.15 AU 4: 0.24 AU 5: 0.07 AU 6: 0.24 AU 9: 0.14 AU 12: 0.26 AU 15: 0.14 AU 17: 0.14 AU 20: 0.13 AU 25: 0.27 AU 26: 0.29 
+PCC
+AU 1: 0.88 AU 2: 0.90 AU 4: 0.91 AU 5: 0.24 AU 6: 0.84 AU 9: 0.90 AU 12: 0.94 AU 15: 0.67 AU 17: 0.85 AU 20: 0.62 AU 25: 0.95 AU 26: 0.90 
+Epoch: 2/12
+Training loss: 358.674735
+save to: /home/ICT2000/dchang/TAC_project/Face_Heatmap/OpenRecognition/resnet_disfa_all/DISFA/all/resnet.pt
+Val avg MSE: 0.09 avg MAE: 0.14 avg PCC: 0.88
+MSE
+AU 1: 0.11 AU 2: 0.07 AU 4: 0.17 AU 5: 0.02 AU 6: 0.11 AU 9: 0.07 AU 12: 0.13 AU 15: 0.06 AU 17: 0.04 AU 20: 0.06 AU 25: 0.11 AU 26: 0.15 
+MAE
+AU 1: 0.14 AU 2: 0.10 AU 4: 0.20 AU 5: 0.04 AU 6: 0.17 AU 9: 0.09 AU 12: 0.22 AU 15: 0.09 AU 17: 0.10 AU 20: 0.08 AU 25: 0.21 AU 26: 0.23 
+PCC
+AU 1: 0.93 AU 2: 0.95 AU 4: 0.94 AU 5: 0.58 AU 6: 0.91 AU 9: 0.93 AU 12: 0.95 AU 15: 0.82 AU 17: 0.85 AU 20: 0.81 AU 25: 0.97 AU 26: 0.92 
+Epoch: 3/12
+Training loss: 317.552469
+save to: /home/ICT2000/dchang/TAC_project/Face_Heatmap/OpenRecognition/resnet_disfa_all/DISFA/all/resnet.pt
+Val avg MSE: 0.08 avg MAE: 0.12 avg PCC: 0.89
+MSE
+AU 1: 0.15 AU 2: 0.05 AU 4: 0.13 AU 5: 0.03 AU 6: 0.09 AU 9: 0.03 AU 12: 0.09 AU 15: 0.06 AU 17: 0.03 AU 20: 0.05 AU 25: 0.10 AU 26: 0.15 
+MAE
+AU 1: 0.14 AU 2: 0.07 AU 4: 0.15 AU 5: 0.03 AU 6: 0.14 AU 9: 0.06 AU 12: 0.17 AU 15: 0.07 AU 17: 0.07 AU 20: 0.07 AU 25: 0.19 AU 26: 0.22 
+PCC
+AU 1: 0.90 AU 2: 0.95 AU 4: 0.95 AU 5: 0.54 AU 6: 0.92 AU 9: 0.97 AU 12: 0.96 AU 15: 0.86 AU 17: 0.89 AU 20: 0.84 AU 25: 0.97 AU 26: 0.93 
+Epoch: 4/12
+Training loss: 286.349003
+save to: /home/ICT2000/dchang/TAC_project/Face_Heatmap/OpenRecognition/resnet_disfa_all/DISFA/all/resnet.pt
+Val avg MSE: 0.07 avg MAE: 0.12 avg PCC: 0.91
+MSE
+AU 1: 0.11 AU 2: 0.11 AU 4: 0.11 AU 5: 0.02 AU 6: 0.09 AU 9: 0.04 AU 12: 0.09 AU 15: 0.03 AU 17: 0.03 AU 20: 0.04 AU 25: 0.09 AU 26: 0.11 
+MAE
+AU 1: 0.12 AU 2: 0.11 AU 4: 0.15 AU 5: 0.03 AU 6: 0.15 AU 9: 0.07 AU 12: 0.18 AU 15: 0.07 AU 17: 0.08 AU 20: 0.07 AU 25: 0.18 AU 26: 0.19 
+PCC
+AU 1: 0.92 AU 2: 0.93 AU 4: 0.96 AU 5: 0.69 AU 6: 0.93 AU 9: 0.97 AU 12: 0.96 AU 15: 0.89 AU 17: 0.93 AU 20: 0.88 AU 25: 0.98 AU 26: 0.94 
+Epoch: 5/12
+Training loss: 262.530155
+save to: /home/ICT2000/dchang/TAC_project/Face_Heatmap/OpenRecognition/resnet_disfa_all/DISFA/all/resnet.pt
+Val avg MSE: 0.06 avg MAE: 0.12 avg PCC: 0.93
+MSE
+AU 1: 0.07 AU 2: 0.04 AU 4: 0.09 AU 5: 0.02 AU 6: 0.08 AU 9: 0.04 AU 12: 0.07 AU 15: 0.03 AU 17: 0.02 AU 20: 0.04 AU 25: 0.07 AU 26: 0.11 
+MAE
+AU 1: 0.11 AU 2: 0.08 AU 4: 0.16 AU 5: 0.04 AU 6: 0.15 AU 9: 0.08 AU 12: 0.16 AU 15: 0.08 AU 17: 0.09 AU 20: 0.08 AU 25: 0.17 AU 26: 0.19 
+PCC
+AU 1: 0.95 AU 2: 0.97 AU 4: 0.96 AU 5: 0.72 AU 6: 0.93 AU 9: 0.97 AU 12: 0.96 AU 15: 0.90 AU 17: 0.93 AU 20: 0.89 AU 25: 0.98 AU 26: 0.94 
+Epoch: 6/12
+Training loss: 244.410275
+save to: /home/ICT2000/dchang/TAC_project/Face_Heatmap/OpenRecognition/resnet_disfa_all/DISFA/all/resnet.pt
+Val avg MSE: 0.06 avg MAE: 0.11 avg PCC: 0.93
+MSE
+AU 1: 0.08 AU 2: 0.07 AU 4: 0.08 AU 5: 0.02 AU 6: 0.06 AU 9: 0.02 AU 12: 0.08 AU 15: 0.03 AU 17: 0.02 AU 20: 0.04 AU 25: 0.08 AU 26: 0.10 
+MAE
+AU 1: 0.12 AU 2: 0.09 AU 4: 0.14 AU 5: 0.04 AU 6: 0.12 AU 9: 0.06 AU 12: 0.16 AU 15: 0.07 AU 17: 0.06 AU 20: 0.06 AU 25: 0.18 AU 26: 0.18 
+PCC
+AU 1: 0.95 AU 2: 0.95 AU 4: 0.97 AU 5: 0.70 AU 6: 0.94 AU 9: 0.98 AU 12: 0.97 AU 15: 0.92 AU 17: 0.95 AU 20: 0.89 AU 25: 0.98 AU 26: 0.94 
+Epoch: 7/12
+Training loss: 231.335767
+save to: /home/ICT2000/dchang/TAC_project/Face_Heatmap/OpenRecognition/resnet_disfa_all/DISFA/all/resnet.pt
+Val avg MSE: 0.05 avg MAE: 0.09 avg PCC: 0.93
+MSE
+AU 1: 0.06 AU 2: 0.03 AU 4: 0.09 AU 5: 0.01 AU 6: 0.07 AU 9: 0.05 AU 12: 0.07 AU 15: 0.03 AU 17: 0.02 AU 20: 0.03 AU 25: 0.07 AU 26: 0.10 
+MAE
+AU 1: 0.09 AU 2: 0.06 AU 4: 0.13 AU 5: 0.03 AU 6: 0.11 AU 9: 0.07 AU 12: 0.14 AU 15: 0.06 AU 17: 0.06 AU 20: 0.06 AU 25: 0.16 AU 26: 0.17 
+PCC
+AU 1: 0.95 AU 2: 0.97 AU 4: 0.97 AU 5: 0.77 AU 6: 0.94 AU 9: 0.96 AU 12: 0.97 AU 15: 0.92 AU 17: 0.93 AU 20: 0.91 AU 25: 0.98 AU 26: 0.95 
+Epoch: 8/12
+Training loss: 222.154409
+save to: /home/ICT2000/dchang/TAC_project/Face_Heatmap/OpenRecognition/resnet_disfa_all/DISFA/all/resnet.pt
+Val avg MSE: 0.05 avg MAE: 0.10 avg PCC: 0.94
+MSE
+AU 1: 0.07 AU 2: 0.04 AU 4: 0.08 AU 5: 0.01 AU 6: 0.07 AU 9: 0.02 AU 12: 0.07 AU 15: 0.02 AU 17: 0.02 AU 20: 0.02 AU 25: 0.08 AU 26: 0.09 
+MAE
+AU 1: 0.09 AU 2: 0.07 AU 4: 0.13 AU 5: 0.03 AU 6: 0.14 AU 9: 0.06 AU 12: 0.15 AU 15: 0.06 AU 17: 0.07 AU 20: 0.05 AU 25: 0.17 AU 26: 0.16 
+PCC
+AU 1: 0.96 AU 2: 0.97 AU 4: 0.97 AU 5: 0.78 AU 6: 0.94 AU 9: 0.98 AU 12: 0.97 AU 15: 0.93 AU 17: 0.94 AU 20: 0.92 AU 25: 0.98 AU 26: 0.95 
+Epoch: 9/12
+Training loss: 215.814925
+save to: /home/ICT2000/dchang/TAC_project/Face_Heatmap/OpenRecognition/resnet_disfa_all/DISFA/all/resnet.pt
+Val avg MSE: 0.05 avg MAE: 0.09 avg PCC: 0.95
+MSE
+AU 1: 0.06 AU 2: 0.03 AU 4: 0.09 AU 5: 0.01 AU 6: 0.06 AU 9: 0.02 AU 12: 0.06 AU 15: 0.02 AU 17: 0.02 AU 20: 0.02 AU 25: 0.07 AU 26: 0.08 
+MAE
+AU 1: 0.10 AU 2: 0.06 AU 4: 0.12 AU 5: 0.03 AU 6: 0.11 AU 9: 0.05 AU 12: 0.14 AU 15: 0.05 AU 17: 0.06 AU 20: 0.05 AU 25: 0.15 AU 26: 0.16 
+PCC
+AU 1: 0.95 AU 2: 0.98 AU 4: 0.97 AU 5: 0.81 AU 6: 0.95 AU 9: 0.98 AU 12: 0.97 AU 15: 0.94 AU 17: 0.95 AU 20: 0.93 AU 25: 0.98 AU 26: 0.96 
+Epoch: 10/12
+Training loss: 211.431353
+Val avg MSE: 0.05 avg MAE: 0.09 avg PCC: 0.94
+MSE
+AU 1: 0.09 AU 2: 0.04 AU 4: 0.08 AU 5: 0.02 AU 6: 0.05 AU 9: 0.02 AU 12: 0.06 AU 15: 0.02 AU 17: 0.02 AU 20: 0.03 AU 25: 0.06 AU 26: 0.11 
+MAE
+AU 1: 0.11 AU 2: 0.07 AU 4: 0.13 AU 5: 0.03 AU 6: 0.09 AU 9: 0.05 AU 12: 0.13 AU 15: 0.06 AU 17: 0.06 AU 20: 0.05 AU 25: 0.15 AU 26: 0.18 
+PCC
+AU 1: 0.94 AU 2: 0.97 AU 4: 0.97 AU 5: 0.76 AU 6: 0.95 AU 9: 0.98 AU 12: 0.97 AU 15: 0.94 AU 17: 0.94 AU 20: 0.92 AU 25: 0.98 AU 26: 0.95 
+Epoch: 11/12
+Training loss: 208.654636
+Val avg MSE: 0.04 avg MAE: 0.09 avg PCC: 0.95
+MSE
+AU 1: 0.05 AU 2: 0.03 AU 4: 0.08 AU 5: 0.01 AU 6: 0.06 AU 9: 0.02 AU 12: 0.06 AU 15: 0.02 AU 17: 0.02 AU 20: 0.03 AU 25: 0.06 AU 26: 0.08 
+MAE
+AU 1: 0.09 AU 2: 0.06 AU 4: 0.12 AU 5: 0.03 AU 6: 0.10 AU 9: 0.04 AU 12: 0.14 AU 15: 0.05 AU 17: 0.05 AU 20: 0.05 AU 25: 0.15 AU 26: 0.15 
+PCC
+AU 1: 0.96 AU 2: 0.98 AU 4: 0.97 AU 5: 0.81 AU 6: 0.95 AU 9: 0.98 AU 12: 0.97 AU 15: 0.93 AU 17: 0.95 AU 20: 0.91 AU 25: 0.98 AU 26: 0.96 
+Epoch: 12/12
+Training loss: 206.556217
+save to: /home/ICT2000/dchang/TAC_project/Face_Heatmap/OpenRecognition/resnet_disfa_all/DISFA/all/resnet.pt
+Val avg MSE: 0.05 avg MAE: 0.09 avg PCC: 0.95
+MSE
+AU 1: 0.05 AU 2: 0.03 AU 4: 0.08 AU 5: 0.01 AU 6: 0.05 AU 9: 0.02 AU 12: 0.06 AU 15: 0.03 AU 17: 0.01 AU 20: 0.03 AU 25: 0.07 AU 26: 0.10 
+MAE
+AU 1: 0.09 AU 2: 0.06 AU 4: 0.11 AU 5: 0.03 AU 6: 0.09 AU 9: 0.04 AU 12: 0.12 AU 15: 0.06 AU 17: 0.04 AU 20: 0.05 AU 25: 0.16 AU 26: 0.18 
+PCC
+AU 1: 0.96 AU 2: 0.98 AU 4: 0.97 AU 5: 0.82 AU 6: 0.95 AU 9: 0.98 AU 12: 0.97 AU 15: 0.93 AU 17: 0.96 AU 20: 0.92 AU 25: 0.98 AU 26: 0.95 
+Test avg MSE: 0.05 avg MAE: 0.09 avg PCC: 0.95
+MSE
+AU 1: 0.05 AU 2: 0.03 AU 4: 0.08 AU 5: 0.01 AU 6: 0.05 AU 9: 0.02 AU 12: 0.06 AU 15: 0.03 AU 17: 0.01 AU 20: 0.03 AU 25: 0.07 AU 26: 0.10 
+MAE
+AU 1: 0.09 AU 2: 0.06 AU 4: 0.11 AU 5: 0.03 AU 6: 0.09 AU 9: 0.04 AU 12: 0.12 AU 15: 0.06 AU 17: 0.04 AU 20: 0.05 AU 25: 0.16 AU 26: 0.18 
+PCC
+AU 1: 0.96 AU 2: 0.98 AU 4: 0.97 AU 5: 0.82 AU 6: 0.95 AU 9: 0.98 AU 12: 0.97 AU 15: 0.93 AU 17: 0.96 AU 20: 0.92 AU 25: 0.98 AU 26: 0.95 

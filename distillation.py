@@ -29,14 +29,14 @@ parser.add_argument('--hidden_dim', type=int, default=128)
 
 #distillation
 parser.add_argument('--alpha', type=float, default=1.0)
-parser.add_argument('--fm_distillation',  action='store_true')
+parser.add_argument('--fm_distillation', default=True)
 
 
 
 # training
-parser.add_argument('--num_epochs', type=int, default=30)
-parser.add_argument('--batch_size', type=int, default=256)
-parser.add_argument('--learning_rate', type=float, default=3e-5)
+parser.add_argument('--num_epochs', type=int, default=12)
+parser.add_argument('--batch_size', type=int, default=128)
+parser.add_argument('--learning_rate', type=float, default=1e-3)
 parser.add_argument('--weight_decay', type=float, default=1e-4)
 parser.add_argument('--clip', type=int, default=1.0)
 parser.add_argument('--when', type=int, default=10, help='when to decay learning rate')

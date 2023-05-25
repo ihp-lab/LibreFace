@@ -1,1 +1,1 @@
-CUDA_VISIBLE_DEVICES=0 python distillation.py --teacher_model_path /home/ICT2000/dchang/TAC_project/Face_Heatmap/checkpoints_ffhq_mae/ --student_model_path /home/ICT2000/dchang/FFHQ/code/checkpoints_res18/FFHQ/ResNet_18.pt --batch_size 128 --learning_rate 1e-3 --fm_distillation
+python distillation.py --ckpt_path /home/ICT2000/dchang/TAC_project/Face_Heatmap/OpenRecognition/resnet_disfa_all 
