@@ -2,4 +2,3 @@
 ```
 bash inference.sh
 ```
-
