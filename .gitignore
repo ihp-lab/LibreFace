@@ -2,15 +2,9 @@ __pycache__
 AU_Recognition/__pycache__
 AU_Recognition/models/__pycache__
 AU_Recognition/data
-AU_Recognition/checkpoints
-AU_Recognition/resnet_disfa_all
 AU_Detection/__pycache__
 AU_Detection/models/__pycache__
 AU_Detection/data
-AU_Detection/checkpoints
-AU_Detection/resnet_disfa_all
 Facial_Expression_Recognition/__pycache__
 Facial_Expression_Recognition/models/__pycache__
 Facial_Expression_Recognition/data
-Facial_Expression_Recognition/checkpoints
-Facial_Expression_Recognition/resnet_disfa_all
