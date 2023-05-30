@@ -11,19 +11,13 @@ class MaskedAutoEncoder(nn.Module):
 		super(MaskedAutoEncoder, self).__init__()
 		self.fm_distillation = opts.fm_distillation
 		self.hidden_dim = opts.hidden_dim
-		# self.emotionnet_pretrain = (opts.teacher_model_name == 'emotionnet_mae')
 		self.mae = create_model(
 			'pretrain_mae_base_patch16_224',
 			pretrained=False,
 			drop_path_rate=0.0,
 			drop_block_rate=None,
 		)
-		# if self.emotionnet_pretrain:
-		# 	checkpoint = torch.load('./checkpoints/EmotioNet_pretrain_mae_base_patch16_224.pth')
-		# 	print("Load EmotioNet weights from ./checkpoints/EmotioNet_pretrain_mae_base_patch16_224.pth")
-		# 	self.mae.load_state_dict(checkpoint['model'])
-		# else:
-		# 	print("Load pretrain_mae_base_patch16_224")
+
 		self.encoder = self.mae.encoder
 
 		self.masked_position_generator = RandomMaskingGenerator((14, 14), 0.)
@@ -40,7 +34,6 @@ class MaskedAutoEncoder(nn.Module):
 	def forward(self, images):
 		B, C, H, W = images.shape
 		F = 1
-		# images = images.permute(0,2,1,3,4).reshape(B*F, C, H, W)
 		masks = []
 		for _ in range(B):
 			masks.append(torch.Tensor(self.masked_position_generator()).repeat(F, 1))
