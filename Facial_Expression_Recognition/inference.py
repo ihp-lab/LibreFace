@@ -50,7 +50,7 @@ os.makedirs(opts.ckpt_path,exist_ok=True)
 # Fix random seed
 set_seed(opts.seed)
 
-train_loader, test_loader = get_data_loaders(opts)
+train_loader, test_loader = (None, None) # get_data_loaders(opts)
 
 
 # Setup solver 

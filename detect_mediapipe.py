@@ -109,10 +109,10 @@ def image_align(img, face_landmarks, output_size=256,
 
 
 
-image_root = '/home/ICT2000/dchang/DISFA_Data/DISFA/images/'
-aligned_image_root = '/home/ICT2000/dchang/DISFA_Data/DISFA/aligned_images_new/'
-landmark_root = '/home/ICT2000/dchang/DISFA_Data/DISFA/landmark/'
-annotated_image_root = '/home/ICT2000/dchang/DISFA_Data/DISFA/detect_images/'
+image_root = 'data/DISFA/images/'
+aligned_image_root = 'data/DISFA/aligned_images_new/'
+landmark_root = 'data/DISFA/landmark/'
+annotated_image_root = 'data/DISFA/detect_images/'
 for folder in os.listdir(image_root):
   os.makedirs(os.path.join(annotated_image_root,folder),exist_ok=True)
   os.makedirs(os.path.join(aligned_image_root,folder),exist_ok=True)
