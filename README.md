@@ -1,17 +1,15 @@
-
-
 <div align="center">
   <h1 align="center">LibreFace: An Open-Source Toolkit for Deep Facial Expression Analysis</h1>
 
   <p align="center">
 
 <a href="https://boese0601.github.io/">
-    Di Chang</a>
+    Di Chang</a>,
 <a href="https://yufengyin.github.io/">
-    Yufeng Yin</a>
-    Zongjian Li
+    Yufeng Yin</a>,
+    Zongjian Li,
 <a href="https://scholar.google.com/citations?user=HuuQRj4AAAAJ&hl=en">
-    Minh Tran</a>
+    Minh Tran</a>,
 <a href="https://people.ict.usc.edu/~soleymani/">
     Mohammad Soleymani</a>
 
@@ -29,7 +27,9 @@
 
 ## Introduction
 
-This is the official pytorch implementation of our ECCV2022 paper: RC-MVSNet: Unsupervised Multi-View Stereo with Neural Rendering. In this work, we introduce RC-MVSNet, a neural-rendering based unsupervised Multi-View Stereo 3D reconstruction approach. First, we leverage NeRF-like rendering to generate consistent photometric supervision for non-Lambertian surfaces in unsupervised MVS task. Second, we impose depth rendering consistency loss to refine the initial depth map predicted by naive photometric consistency loss. We also propose Gaussian-Uniform sampling to improve NeRF's ability to learn the geometry features close to the object surface, which overcomes occlusion artifacts present in existing approaches. We achieved state-of-the-art performance on DTU and Tanks\&Temples benchmarks and competitive performance to many supervised methods.
+This is the official implementation of our WACV 2024 Application Track paper: LibreFace: An Open-Source Toolkit for Deep Facial Expression Analysis. LibreFace is an open-source and comprehensive toolkit for accurate and real-time facial expression analysis with both CPU-only and GPU-acceleration versions. LibreFace eliminates the gap between cutting-edge research and an easy and free-to-use non-commercial toolbox. We propose to adaptively pre-train the vision encoders with various face datasets and then distillate them to a lightweight ResNet-18 model in a feature-wise matching manner. We conduct extensive experiments of pre-training and distillation to demonstrate that our proposed pipeline achieves comparable results to state-of-the-art works while maintaining real-time efficiency. LibreFace system supports cross-platform running, and the code is open-sourced in C\# (model inference and checkpoints) and Python (model training, inference, and checkpoints).
+
+![](media/Comparison.jpg)
 
 ![](media/Comparison.jpg)
 
