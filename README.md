@@ -7,15 +7,11 @@
 
 <a href="https://boese0601.github.io/">
     Di Chang</a>
-
 <a href="https://yufengyin.github.io/">
     Yufeng Yin</a>
-
-Zongjian Li
-
+    Zongjian Li
 <a href="https://scholar.google.com/citations?user=HuuQRj4AAAAJ&hl=en">
-    Minh Tran
-
+    Minh Tran</a>
 <a href="https://people.ict.usc.edu/~soleymani/">
     Mohammad Soleymani</a>
 
