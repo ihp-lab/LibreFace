@@ -181,7 +181,14 @@ Our code is distributed under the MIT License. See `LICENSE` file for more infor
 ## Citation
 
 ```
-@inproceedings{chang2022rc,  title={RC-MVSNet: Unsupervised Multi-View Stereo with Neural Rendering},  author={Chang, Di and Bo{\v{z}}i{\v{c}}, Alja{\v{z}} and Zhang, Tong and Yan, Qingsong and Chen, Yingcong and S{\"u}sstrunk, Sabine and Nie{\ss}ner, Matthias},  booktitle={Proceedings of the European conference on computer vision (ECCV)},  year={2022}}
+@misc{chang2023libreface,
+      title={LibreFace: An Open-Source Toolkit for Deep Facial Expression Analysis}, 
+      author={Di Chang and Yufeng Yin and Zongjian Li and Minh Tran and Mohammad Soleymani},
+      year={2023},
+      eprint={2308.10713},
+      archivePrefix={arXiv},
+      primaryClass={cs.CV}
+}
 ```
 
 ## Contact
