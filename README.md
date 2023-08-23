@@ -22,7 +22,7 @@
 
 <strong>WACV 2024</strong>
 <br />
-<a href="https://arxiv.org/abs/2203.03949">Arxiv</a> | <a href="https://boese0601.github.io/libreface">Project page</a>
+<a href="https://arxiv.org/abs/2308.10713">Arxiv</a> | <a href="https://boese0601.github.io/libreface">Project page</a>
 <br />
 </p>
 </div>
