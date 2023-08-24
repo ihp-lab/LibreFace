@@ -32,7 +32,7 @@
 
 This is the official implementation of our WACV 2024 Application Track paper: LibreFace: An Open-Source Toolkit for Deep Facial Expression Analysis. LibreFace is an open-source and comprehensive toolkit for accurate and real-time facial expression analysis with both CPU-only and GPU-acceleration versions. LibreFace eliminates the gap between cutting-edge research and an easy and free-to-use non-commercial toolbox. We propose to adaptively pre-train the vision encoders with various face datasets and then distillate them to a lightweight ResNet-18 model in a feature-wise matching manner. We conduct extensive experiments of pre-training and distillation to demonstrate that our proposed pipeline achieves comparable results to state-of-the-art works while maintaining real-time efficiency. LibreFace system supports cross-platform running, and the code is open-sourced in C# (model inference and checkpoints) and Python (model training, inference, and checkpoints).
 
-![media/Comparison.jpg](media/Comparison.jpg)
+![media/System.jpg](media/System.jpg)
 
 ## Installation
 
@@ -172,6 +172,10 @@ There are several options of flags at the beginning of each train/inference file
 - [ ]  Upload Training/Validation Split csv files and CSV creation python code for model training
 - [ ]  Upload Facial Expression Recognition code on RAF-DB Dataset
 - [ ]  Open-Source C# code for LibreFace
+
+## Demo on Windows
+
+![media/software.jpg](media/software.jpg)
 
 ## License
 
