@@ -156,21 +156,20 @@ bash inference.sh
 
 ## Configure
 
-There are several options of flags at the beginning of each train/inference files. Several key options are explained below. Other options are self-explanatory in the codes. Before running our codes, you may need to change the `true_gpu`, `trainpath/testpath` , `logdir`and `loadckpt` (only for testing).
+There are several options of flags at the beginning of each train/inference files. Several key options are explained below. Other options are self-explanatory in the codes. Before running our codes, you may need to change the `device`, `data_root` , `ckpt_path` , `data` and `fold`.
 
-- `logdir` A relative or absolute folder path for writing logs.
-- `true_gpu` The true GPU IDs, used for setting CUDA_VISIBLE_DEVICES in the code. You may change it to your GPU IDs.
-- `gpu` The GPU ID used in your experiment. If true_gpu: “5, 6”. Then you could use gpu: [0], gpu: [1], or gpu: [0, 1]
-- `loadckpt` The checkpoint file path used for testing.
-- `trainpath/testpath` A relative or absolute folder path for training or testing data. You may need to change it to your data folder.
-- `outdir` A relative or absolute folder path for generating depth maps and writing point clouds(DTU).
-- `plydir` A relative or absolute folder path for writing point clouds(Tanks).
-- `dataset` Dataset to be used. [“dtu_train”,“dtu_test”,“tanks”]
-- `resume` Resume training from the latest history.
+- `ckpt_path` A relative or absolute folder path for writing checkpoints.
+- `data_root` The path to your dataset on your local machine.
+- `device` Specify cuda or cpu. 
+- `data` Dataset to be used. [“DSIFA”,“BP4D”,"AffectNet","RAF-DB"]
+- `fold` We use five-fold cross-validation to report performance on DISFA and three-fold cross-validation on BP4D. ["0","1","2","3","4"]
+- `train_csv` Training csv file to be parsed. 
+- `test_csv` Testing csv file to be parsed. 
+- `fm_distillation` Use feature matching distillation for training. 
 
 ## TODO:
 
-- [ ]  Upload Training/Validation Split csv files for model training
+- [ ]  Upload Training/Validation Split csv files and CSV creation python code for model training
 - [ ]  Upload Facial Expression Recognition code on RAF-DB Dataset
 - [ ]  Open-Source C# code for LibreFace
 
