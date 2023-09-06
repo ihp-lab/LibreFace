@@ -50,7 +50,7 @@ The code is tested with Python == 3.7, PyTorch == 1.10.1 and CUDA == 11.3 on NVI
 
 ```
 conda create -n libreface python=3.7
-conda install pytorch==1.10.1 torchvision==0.11.2 torchaudio==0.10.1 cudatoolkit=11.3 -c pytorch -c conda-forge
+conda install pytorch==1.10.0 torchvision==0.11.0 torchaudio==0.10.0 cudatoolkit=11.3 -c pytorch -c conda-forge
 conda activate libreface
 pip install -r requirements.txt
 ```
