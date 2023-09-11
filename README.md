@@ -185,7 +185,7 @@ There are several options of flags at the beginning of each train/inference file
 
 ## License
 
-Our code is distributed under the MIT License. See `LICENSE` file for more information.
+Our code is distributed under the USC research license. See `LICENSE.txt` file for more information.
 
 ## Citation
 
