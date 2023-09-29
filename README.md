@@ -190,14 +190,13 @@ Our code is distributed under the USC research license. See `LICENSE.txt` file f
 ## Citation
 
 ```
-@misc{chang2023libreface,
+@inproceedings{chang2023libreface,
       title={LibreFace: An Open-Source Toolkit for Deep Facial Expression Analysis}, 
       author={Di Chang and Yufeng Yin and Zongjian Li and Minh Tran and Mohammad Soleymani},
-      year={2023},
-      eprint={2308.10713},
-      archivePrefix={arXiv},
-      primaryClass={cs.CV}
-}
+      year={2024},
+      booktitle = {Proceedings of the IEEE/CVF Winter Conference on Applications of Computer Vision (WACV)},
+      month     = {January},
+      note = {To appear}}
 ```
 
 ## Contact
@@ -210,3 +209,4 @@ Our code follows several awesome repositories. We appreciate them for making the
 
 - [KD_SRRL](https://github.com/jingyang2017/KD_SRRL)
 - [XNorm](https://github.com/ihp-lab/XNorm)
+- This work is sponsored by the U.S. Army Research Laboratory (ARL) under contract number W911NF-14-D-0005. The content of the information does not necessarily reflect the position or the policy of the Government, and no official endorsement should be inferred.
