@@ -170,18 +170,24 @@ There are several options of flags at the beginning of each train/inference file
 - `test_csv` Testing csv file to be parsed. 
 - `fm_distillation` Use feature matching distillation for training. 
 
-## TODO:
+## Derivative Tools
 
-- [ ]  Upload Training/Validation Split csv files and CSV creation python code for model training
-- [ ]  Upload Facial Expression Recognition code on RAF-DB Dataset
-- [ ]  Open-Source C# code for LibreFace
-
-## Demo on Windows
+In addition to the original Python project in this repository, we also offer several derivative tools on the .NET platform to facilitate easier integration of LibreFace into various systems. These works are based on ONNX platform weights exported from the model weights of this project.
 
 <p align="center">
   <img src="https://github.com/ihp-lab/LibreFace/blob/main/media/software.png" />
 </p>
 
++ NuGet Package: We have released a [NuGet Package named `LibreFace`](https://www.nuget.org/packages/LibreFace). This NuGet Package contains the ONNX weight files, and its source code is located in [this directory of the OpenSense repository](https://github.com/ihp-lab/OpenSense/tree/master/Utilities/LibreFace)). For how to integrate it, you can refer to the documentation that comes with the Package or the source code of the OpenSense Component below. This Package is cross-platform compatible and is recommended to be used with an ONNX Runtime Execution Provider with acceleration features.
+
++ OpenSense Component: We have also wrapped LibreFace into a component available in OpenSense. With this work, other components in OpenSense can be used in conjunction with LibreFace in Zero-Code setup for real-time or non-real-time inference. Its source code is mainly stored in [this directory of the OpenSense repository](https://github.com/ihp-lab/OpenSense/tree/master/Components/LibreFace). Running this component by default requires CUDA support, but other ONNX Providers can be used when compiling from the source code. A OpenSense Pipeline we were using for testing can be used as an example and can be downloaded from [here](https://github.com/ihp-lab/OpenSense/releases/download/3.2.0/20230825__LibreFace__Injector__AzureKinect.pipe.json). Please set the camera you want to use before running it.
+
++ Command Line Tool: For the common scenario of analyzing videos and exporting results to text files, we have created a dedicated command-line tool for batch processing of video files. This tool can be downloaded as a compiled program from [the OpenSense release Google Drive directory](https://drive.google.com/drive/folders/1rYypeKELnva0-MGQvNJ45cgsrgjfowHw?usp=sharing), and the source code can be found in [this directory of the OpenSense repository](https://github.com/ihp-lab/OpenSense/tree/master/Derivatives/LibreFace.App.Consoles). For specific usage methods and running environment requirements, please refer to the documentation built into the tool. Currently, it only supports Windows, but we plan to develop a Linux version of this tool.
+
+## TODO:
+
+- [ ]  Upload Training/Validation Split csv files and CSV creation python code for model training
+- [ ]  Upload Facial Expression Recognition code on RAF-DB Dataset
 
 ## License
 
