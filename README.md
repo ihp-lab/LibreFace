@@ -71,7 +71,7 @@ python detect_mediapipe.py
 
 Download the [DISFA](http://mohammadmahoor.com/disfa/) dataset from the official website here. Please be reminded that the original format of the dataset are video sequences, you need to manually process them into image frames.
 
-Download the original video provided by DISFA+. Extract it and put it under the folder `data/DISFA`.
+Download the original video provided by DISFA. Extract it and put it under the folder `data/DISFA`.
 
 Preprocess the images by previous mediapipe script and you should get a dataset folder like below:
 
