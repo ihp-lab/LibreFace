@@ -36,7 +36,7 @@ This is the official implementation of our WACV 2024 Application Track paper: Li
   <img src="https://github.com/ihp-lab/LibreFace/blob/main/media/System.png" width="350px" />
 </p>
 
-## Getting Started with Derivative Tools (New!)
+## Getting Started with Derivative Tools (New! Suggested)
 
 We offer several derivative tools on the .NET platform to facilitate easier integration of LibreFace into various systems, in addition to pytorch code. These works are based on ONNX platform weights exported from the model weights of this project.
 
@@ -50,6 +50,13 @@ We offer several derivative tools on the .NET platform to facilitate easier inte
 
 + Command Line Tool: For the common scenario of analyzing videos and exporting results to text files, we have created a dedicated command-line tool for batch processing of video files. This tool can be downloaded as a compiled program from [the OpenSense release Google Drive directory](https://drive.google.com/drive/folders/1rYypeKELnva0-MGQvNJ45cgsrgjfowHw?usp=sharing), and the source code can be found in [this directory of the OpenSense repository](https://github.com/ihp-lab/OpenSense/tree/master/Derivatives/LibreFace.App.Consoles). For specific usage methods and running environment requirements, please refer to the documentation built into the tool. Currently, it only supports Windows, but we plan to develop a Linux version of this tool.
 
+  Download LibreFace Console Application 1.0.0.zip, unzip the file, and open the extracted folder.
+  Run:
+    ```
+    .\LibreFace.App.Consoles.exe
+    ```
+  And you'll see specific usage methods.
+  
 ## Getting Started with Python - Installation
 
 Clone repo:
