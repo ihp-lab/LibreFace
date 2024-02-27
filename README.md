@@ -36,7 +36,7 @@ This is the official implementation of our WACV 2024 Application Track paper: Li
   <img src="https://github.com/ihp-lab/LibreFace/blob/main/media/System.png" width="350px" />
 </p>
 
-## Getting Started with Derivative Tools (New! Suggested)
+## Getting Started with Derivative Tools (New 2.0 Models Available! Recommended)
 
 We offer several derivative tools on the .NET platform to facilitate easier integration of LibreFace into various systems, in addition to pytorch code. These works are based on ONNX platform weights exported from the model weights of this project.
 
