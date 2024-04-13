@@ -1,7 +1,7 @@
 __pycache__
 AU_Recognition/__pycache__
 AU_Recognition/models/__pycache__
-AU_Recognition/data
+# AU_Recognition/data
 AU_Detection/__pycache__
 AU_Detection/models/__pycache__
 AU_Detection/data

@@ -1,10 +1,10 @@
 import random
-import numpy as np
+import numpy as np 
 
 import torch
 from torch.utils.data import DataLoader
 
-from data import MyDataset
+from data import MyDataset, MyDataset_Model_Run_Only
 
 def set_seed(seed):
 	# Reproducibility
@@ -26,6 +26,19 @@ def get_data_loader(csv_file, train, config):
 				shuffle=train,
 				collate_fn=dataset.collate_fn,
 				drop_last=train)
+
+	return loader
+
+# Custom:
+def get_inference_only_data_loader(csv_file, config):
+	dataset = MyDataset_Model_Run_Only(csv_file, config)		##
+	loader = DataLoader(
+				dataset=dataset,
+				batch_size=config.batch_size,
+				num_workers=config.num_workers,
+				shuffle=False,
+				collate_fn=dataset.collate_fn,
+				drop_last=False)
 
 	return loader
 

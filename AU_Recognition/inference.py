@@ -2,14 +2,18 @@ import os
 import argparse
 
 from solver_inference import solver_inference
-from utils import set_seed
+from model_inference import model_inference         ## new run inference only
+from utils import set_seed 
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--seed', type=int, default=0)
 
+# Run Type: Single Model Inference only OR Test set Inference ?
+parser.add_argument('--run_type', type=str, default='predict', choices=['predict', 'test']) 
+
 # storage
-parser.add_argument('--data_root', type=str, default='/home/ICT2000/dchang/TAC_project/Face_Heatmap/data')
-parser.add_argument('--ckpt_path', type=str, default='/home/ICT2000/dchang/TAC_project/Face_Heatmap/fm_distillation_all')
+parser.add_argument('--data_root', type=str, default='AU_Recognition/data')
+parser.add_argument('--ckpt_path', type=str, default='AU_Recognition/resnet_disfa_all')
 
 # data
 parser.add_argument('--data', type=str, default='DISFA', choices=['BP4D', 'DISFA'])
@@ -24,7 +28,7 @@ parser.add_argument('--sigma', type=float, default=10.0)
 parser.add_argument('--model_name', type=str, default='resnet', choices=['resnet_heatmap','resnet','swin','mae','emotionnet_mae','gh_feat'])
 parser.add_argument('--dropout', type=float, default=0.1)
 parser.add_argument('--hidden_dim', type=int, default=128) 
-parser.add_argument('--half_precision', action='store_true')
+parser.add_argument('--half_precision', action='store_true')        # Float16
 # training
 parser.add_argument('--num_epochs', type=int, default=30)
 parser.add_argument('--interval', type=int, default=500)
@@ -47,8 +51,17 @@ print(opts)
 # Fix random seed
 set_seed(opts.seed)
 
-# Setup solver 
-solver = solver_inference(opts).cuda()
 
-# Start training
-solver.run()
+if (opts.run_type == 'test'):
+    # Setup solver 
+    solver = solver_inference(opts).cuda()
+
+    # Start training
+    solver.run()
+
+elif (opts.run_type == 'predict'):
+    # Setup solver 
+    solver = model_inference(opts).cuda()
+
+    # Run Model for Output Predicted Label:
+    solver.run()
