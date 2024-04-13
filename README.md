@@ -27,6 +27,22 @@
 </p>
 </div>
 
+## New Features Additions by @ Saurabh Chatterjee:
+Presently, only dataset test mode is available which gives predictions and evaluation score only for test dataset. No prediction-only mode is available by which the model can be used to **ONLY get facial AU values for any video without any test/evaluation score.**
+
+- **Prediction-Only mode** can be used by just setting a new argument '**_run_type_**' to '**predict**', in the '**inference.sh**' file.
+
+**Steps:**
+Open code from LibreFace main folder.
+1. First put your desired face video to the folder '/AU_Recognition/data'.
+2. Open '**video_face_detector_save_tool.py**' and change '_video_file_' value to the video file name. 
+3. Run this python script which will extract face from the video frame by frame and store them in a folder by same name as the video. And it produces a CSV file '**data.csv**' with location of all the video frame images. This 'data.csv' is used by the model for inference.
+4. Now open the 'inference.sh' and set the '_**run_type**_' argument to either '**_predict_**' or '**_test_**'. **Set it to '_predict_' for prediction-only mode which will only predict the AU values and will not run any evaluation.**
+
+Some python packages mentioned in the 'requirement.txt' also doesn't work now, so I have updated the 'requirement.txt' file.
+
+![Changes](https://github.com/ihp-lab/LibreFace/assets/119055623/deabd202-4b05-4b73-8486-7a1470329189)
+
 
 ## Introduction
 
