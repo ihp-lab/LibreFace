@@ -193,13 +193,13 @@ There are several options of flags at the beginning of each train/inference file
 
 This is the accuracy of the model when performing on the Faces dataset, filtered to only include images in the dataset that were deemed correctly labelled by a majority of human raters. This dataset features a variety of ages, and the evaluation particularly denotes the model's performance on elderly people.
 <p align="center">
-  <img src="https://github.com/ihp-lab/LibreFace/blob/main/media/facesAccuracy.png" alt="Faces Accuracy Results" width="480px" />
+  <img src="https://github.com/ihp-lab/LibreFace/blob/main/media/facesAccuracy.jpg" alt="Faces Accuracy Results" width="480px" />
 </p>
 
 ### Cafe Accuracy
 This is the accuracy of the model when performing on the CAFE dataset. This dataset features faces of children across a variety of racial groups. The children in the CAFE dataset are notably younger than those in the Faces dataset, denoting the model's performance on ages 32.5 mos–8.7 yrs and across differnt racial groups. AA = African American, AS = Asian, EA = European American, LA = Latino, PI = Pacific Islander, SA = South Asian
 <p align="center">
-  <img src="https://github.com/ihp-lab/LibreFace/blob/main/media/cafeAccuracy.png" alt="Cafe Accuracy Results" width="480px" />
+  <img src="https://github.com/ihp-lab/LibreFace/blob/main/media/cafeAccuracy.jpg" alt="Cafe Accuracy Results" width="480px" />
 </p>
 
 ## TODO:
