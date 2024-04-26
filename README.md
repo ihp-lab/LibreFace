@@ -189,15 +189,17 @@ There are several options of flags at the beginning of each train/inference file
 
 ## Results and Accuracy
 
-### Faces Accuracy
+We performed a variety of evaluations across several demographic axes to observe how our model performs on different groups of people.
 
-This is the accuracy of the model when performing on the Faces dataset, filtered to only include images in the dataset that were deemed correctly labelled by a majority of human raters. This dataset features a variety of ages, and the evaluation particularly denotes the model's performance on elderly people.
+### FACES Accuracy
+
+This is the accuracy of the model when performing on the [FACES](https://faces.mpdl.mpg.de/imeji/) dataset, filtered to only include images in the dataset that were deemed correctly labelled by a majority of human raters. This dataset features a variety of ages, and the evaluation particularly denotes the model's performance on elderly people.
 <p align="center">
   <img src="https://github.com/ihp-lab/LibreFace/blob/main/media/facesAccuracy.JPG" alt="Faces Accuracy Results" width="480px" />
 </p>
 
-### Cafe Accuracy
-This is the accuracy of the model when performing on the CAFE dataset. This dataset features faces of children across a variety of racial groups. The children in the CAFE dataset are notably younger than those in the Faces dataset, denoting the model's performance on ages 32.5 mos–8.7 yrs and across differnt racial groups. AA = African American, AS = Asian, EA = European American, LA = Latino, PI = Pacific Islander, SA = South Asian
+### CAFE Accuracy
+This is the accuracy of the model when performing on the [CAFE](https://nyu.databrary.org/volume/30) dataset. This dataset features faces of children across a variety of racial groups. The children in the CAFE dataset are notably younger than those in the FACES dataset, denoting the model's performance on ages 32.5 mos–8.7 yrs and across differnt racial groups. AA = African American, AS = Asian, EA = European American, LA = Latino, PI = Pacific Islander, SA = South Asian
 <p align="center">
   <img src="https://github.com/ihp-lab/LibreFace/blob/main/media/cafeAccuracy.JPG" alt="Cafe Accuracy Results" width="480px" />
 </p>
