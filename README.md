@@ -200,6 +200,8 @@ This is the accuracy of the model when performing on the [FACES](https://faces.m
 
 ### CAFE Accuracy
 This is the accuracy of the model when performing on the [CAFE](https://nyu.databrary.org/volume/30) dataset. This dataset features faces of children across a variety of racial groups. The children in the CAFE dataset are notably younger than those in the FACES dataset, denoting the model's performance on ages 32.5 mos–8.7 yrs and across differnt racial groups. AA = African American, AS = Asian, EA = European American, LA = Latino, PI = Pacific Islander, SA = South Asian
+
+The two columns at the bottom compare human raters on this entire dataset against the performance of our model across each emotion.
 <p align="center">
   <img src="https://github.com/ihp-lab/LibreFace/blob/main/media/cafeAccuracy.JPG" alt="Cafe Accuracy Results" width="480px" />
 </p>
