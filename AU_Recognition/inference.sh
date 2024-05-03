@@ -1,1 +1,1 @@
-python inference.py --half_precision --ckpt_path /home/ICT2000/dchang/TAC_project/Face_Heatmap/OpenRecognition/resnet_disfa_all
+python inference.py --run_type predict --batch_size 256 --half_precision --ckpt_path /AU_Recognition/resnet_disfa_all

@@ -2,7 +2,7 @@ import os
 import random
 import pandas as pd
 from PIL import Image
-
+ 
 import torch
 import torch.utils.data as data
 from torchvision import transforms
@@ -146,3 +146,52 @@ class MyDataset(data.Dataset):
 		return len(self.images)
 
 
+
+# -------------------------------------------------------------
+	
+class MyDataset_Model_Run_Only(data.Dataset):
+	def __init__(self, csv_file, config):
+		self.config = config
+		self.csv_file = csv_file
+
+		# self.data = config.data		
+		self.data_root = config.data_root		# /AU_Recognition/data
+		self.img_size = config.image_size
+		self.crop_size = config.crop_size
+		
+		self.transform = image_test(img_size=self.img_size, crop_size=self.crop_size)
+
+		self.file_list = pd.read_csv(csv_file)
+		self.images = self.file_list['image_path']
+		
+
+	def data_augmentation(self, image, flip, crop_size, offset_x, offset_y):
+		image = image[:,offset_x:offset_x+crop_size,offset_y:offset_y+crop_size]
+		if flip:
+			image = torch.flip(image, [2])
+
+		return image
+
+	def pil_loader(self, path):
+		with open(path, 'rb') as f:
+			with Image.open(f) as img:
+				return img.convert('RGB')
+
+	def __getitem__(self, index):
+		image_path = self.images[index]
+		image_name = os.path.join(image_path)	##
+		image = self.pil_loader(image_name)
+
+		image = self.transform(image)
+
+		return image
+
+	def collate_fn(self, data):
+		# images = zip(*data)
+
+		images = torch.stack(data)
+
+		return images
+
+	def __len__(self):
+		return len(self.images)
