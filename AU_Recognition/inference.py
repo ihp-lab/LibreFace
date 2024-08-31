@@ -1,7 +1,7 @@
 import os
 import argparse
 
-from solver_inference import solver_inference
+from solver_inference_image import solver_inference_image
 from utils import set_seed
 
 parser = argparse.ArgumentParser()
@@ -9,7 +9,7 @@ parser.add_argument('--seed', type=int, default=0)
 
 # storage
 parser.add_argument('--data_root', type=str, default='/home/ICT2000/dchang/TAC_project/Face_Heatmap/data')
-parser.add_argument('--ckpt_path', type=str, default='/home/ICT2000/dchang/TAC_project/Face_Heatmap/fm_distillation_all')
+parser.add_argument('--ckpt_path', type=str, default='./resnet_disfa_all')
 
 # data
 parser.add_argument('--data', type=str, default='DISFA', choices=['BP4D', 'DISFA'])
@@ -48,7 +48,7 @@ print(opts)
 set_seed(opts.seed)
 
 # Setup solver 
-solver = solver_inference(opts).cuda()
+solver = solver_inference_image(opts).cuda()
 
 # Start training
-solver.run()
+solver.run("/home/achaubey/Desktop/projects/data/DISFA/output/aligned_images/LeftVideoSN011_comp/LeftVideoSN011_comp_0006.png")
