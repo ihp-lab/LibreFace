@@ -1,7 +1,7 @@
 import os
 import argparse
 
-from solver_inference import solver_in_domain
+from solver_inference_image import solver_in_domain_image
 from utils import set_seed
 
 parser = argparse.ArgumentParser()
@@ -48,7 +48,7 @@ print(opts)
 set_seed(opts.seed)
 
 # Setup solver 
-solver = solver_in_domain(opts).cuda()
+solver = solver_in_domain_image(opts).cuda()
 
 # Start training
-solver.run()
+solver.run("/home/achaubey/Desktop/projects/data/DISFA/output/aligned_images/LeftVideoSN011_comp/LeftVideoSN011_comp_0006.png")
