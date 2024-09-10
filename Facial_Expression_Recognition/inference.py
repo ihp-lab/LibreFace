@@ -4,8 +4,10 @@ import argparse
 
 from utils import set_seed, get_data_loaders 
 from solver_inference import solver_inference
+from solver_inference_image import solver_inference_image
 
 parser = argparse.ArgumentParser()
+parser.add_argument("--image_inference", action="store_true")
 parser.add_argument('--seed', type=int, default=0)
 parser.add_argument('--train_csv', type=str, default='training_filtered.csv')
 parser.add_argument('--test_csv', type=str, default='validation_filtered.csv')
@@ -49,11 +51,16 @@ os.makedirs(opts.ckpt_path,exist_ok=True)
 
 # Fix random seed
 set_seed(opts.seed)
+if opts.image_inference:
+    solver = solver_inference_image(opts).cuda()
+    # Start training
+    solver.run("/home/achaubey/Desktop/projects/data/DISFA/output/aligned_images/LeftVideoSN011_comp/LeftVideoSN011_comp_0006.png")
 
-train_loader, test_loader = get_data_loaders(opts)
+else:
+    train_loader, test_loader = get_data_loaders(opts)
 
 
-# Setup solver 
-solver = solver_inference(opts).cuda()
-# Start training
-solver.run(train_loader, test_loader)
+    # Setup solver 
+    solver = solver_inference(opts).cuda()
+    # Start training
+    solver.run(train_loader, test_loader)
