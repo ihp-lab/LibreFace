@@ -113,5 +113,3 @@ class solver_in_domain_image(nn.Module):
 		pred_labels = self.image_inference(transformed_image)
 		print(pred_labels)
 		print(pred_labels.size())
-		# _, test_f1 = self.test_model(self.test_loader)
-		# self.print_metric(test_f1, 'Test')
