@@ -1,19 +1,12 @@
 import os
-import numpy as np
 from PIL import Image
-from tqdm import tqdm
-from sklearn.metrics import f1_score
 
 import torch
 import torch.nn as nn
 from torchvision import transforms
 
-from utils import get_data_loader
-from data_utils import heatmap2au
+from src.AU_Detection.models.resnet18 import ResNet18
 
-from models.resnet18 import ResNet18
-
-import time
 
 def count_parameters(model):
     return sum(p.numel() for p in model.parameters() if p.requires_grad)

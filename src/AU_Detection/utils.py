@@ -4,7 +4,7 @@ import numpy as np
 import torch
 from torch.utils.data import DataLoader
 
-from data import MyDataset, MyDataset_GH_Feat, MyDataset_with_lm
+from src.AU_Detection.data import MyDataset, MyDataset_GH_Feat, MyDataset_with_lm
 
 def set_seed(seed):
 	# Reproducibility

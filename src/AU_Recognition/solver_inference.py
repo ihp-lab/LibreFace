@@ -6,9 +6,9 @@ from sklearn.metrics import mean_squared_error, mean_absolute_error
 import torch
 import torch.nn as nn
 
-from utils import get_data_loader
-from models.resnet18 import ResNet18
-from models.mae import MaskedAutoEncoder
+from src.AU_Recognition.utils import get_data_loader
+from src.AU_Recognition.models.resnet18 import ResNet18
+from src.AU_Recognition.models.mae import MaskedAutoEncoder
 import time
 
 import matplotlib.pyplot as plt

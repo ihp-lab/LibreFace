@@ -1,17 +1,12 @@
 import os
-import numpy as np
 from PIL import Image
-from tqdm import tqdm
-from sklearn.metrics import mean_squared_error, mean_absolute_error
 
 import torch
 import torch.nn as nn
 from torchvision import transforms
 
-from utils import get_data_loader
-from models.resnet18 import ResNet18
-from models.mae import MaskedAutoEncoder
-import time
+from src.AU_Recognition.models.resnet18 import ResNet18
+from src.AU_Recognition.models.mae import MaskedAutoEncoder
 
 import matplotlib.pyplot as plt
 

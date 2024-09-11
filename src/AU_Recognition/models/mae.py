@@ -1,9 +1,9 @@
 import torch
 import torch.nn as nn
-import models.modeling_pretrain
+# import models.modeling_pretrain
 
 from timm.models import create_model
-from models.masking_generator import RandomMaskingGenerator
+from src.AU_Recognition.models.masking_generator import RandomMaskingGenerator
 
 
 class MaskedAutoEncoder(nn.Module):

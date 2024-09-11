@@ -4,7 +4,7 @@ import numpy as np
 import torch
 from torch.utils.data import DataLoader
 
-from data import MyDataset
+from src.AU_Recognition.data import MyDataset
 
 def set_seed(seed):
 	# Reproducibility
