@@ -10,8 +10,6 @@ from libreface.AU_Recognition.models.mae import MaskedAutoEncoder
 
 import matplotlib.pyplot as plt
 
-def count_parameters(model):
-    return sum(p.numel() for p in model.parameters() if p.requires_grad)
 
 class image_test(object):
 	def __init__(self, img_size=256, crop_size=224):
@@ -42,11 +40,12 @@ class solver_inference_image(nn.Module):
 
 		self.image_transform = image_test(img_size=config.image_size, crop_size=config.crop_size)
 
+		self.device = config.device
 		# Initiate the networks
 		if config.model_name == "resnet":
-			self.model = ResNet18(config).cuda()
+			self.model = ResNet18(config).to(self.device)
 		elif config.model_name == "emotionnet_mae":
-			self.model = MaskedAutoEncoder(config).cuda()
+			self.model = MaskedAutoEncoder(config).to(self.device)
 		else:
 			raise NotImplementedError
 
@@ -54,12 +53,9 @@ class solver_inference_image(nn.Module):
 		if self.config.half_precision:
 			print("Use Half Precision.")
    
-		print("Number of params: ",count_parameters(self.model))
 		# Setup AU index
 		self.aus = [1,2,4,5,6,9,12,15,17,20,25,26]
 
-		# Select the best ckpt
-		self.best_val_metric = -1.0
 
 	def pil_loader(self, path):
 		with open(path, 'rb') as f:
@@ -78,7 +74,7 @@ class solver_inference_image(nn.Module):
 	def image_inference(self, transformed_image):
 		with torch.no_grad():
 			self.eval()
-			input_image = torch.unsqueeze(transformed_image, 0).cuda()
+			input_image = torch.unsqueeze(transformed_image, 0).to(self.device)
 			if self.config.half_precision:
 				input_image = input_image.half()
 				self.model = self.model.half()
@@ -90,18 +86,18 @@ class solver_inference_image(nn.Module):
 
 	def load_best_ckpt(self):
 		ckpt_name = os.path.join(self.config.ckpt_path, self.config.data, self.config.fold, self.config.model_name+'.pt')
-		print("Loading weights from: ",ckpt_name)
-		checkpoints = torch.load(ckpt_name)['model']
+		checkpoints = torch.load(ckpt_name, map_location=self.device)['model']
 		self.model.load_state_dict(checkpoints, strict=True)
 
 
 
 	def run(self, aligned_image_path):
-		torch.backends.cudnn.benchmark = True
+		if "cuda" in self.device:
+			torch.backends.cudnn.benchmark = True
 
 		# Test model
 		self.load_best_ckpt()
 		transformed_image = self.transform_image_inference(aligned_image_path)
 		pred_labels = self.image_inference(transformed_image)
-		print(pred_labels)
-		print(pred_labels.size())
+		pred_labels = pred_labels.squeeze().tolist()
+		return dict(zip(self.aus, pred_labels))

@@ -19,7 +19,7 @@ class MaskedAutoEncoder(nn.Module):
 		)
 
 		self.encoder = self.mae.encoder
-
+		self.device = opts.device
 		self.masked_position_generator = RandomMaskingGenerator((14, 14), 0.)
 
 		self.proj = nn.Linear(196*768, self.hidden_dim)
@@ -37,7 +37,7 @@ class MaskedAutoEncoder(nn.Module):
 		masks = []
 		for _ in range(B):
 			masks.append(torch.Tensor(self.masked_position_generator()).repeat(F, 1))
-		masks = torch.cat(masks, dim=0).to(torch.bool).cuda()
+		masks = torch.cat(masks, dim=0).to(torch.bool).to(self.device)
 
 		features = self.encoder(images, masks)
 		features = features.reshape(B, 196*768)

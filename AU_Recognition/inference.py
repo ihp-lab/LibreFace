@@ -1,103 +1,54 @@
+import os
 import argparse
-import yaml
 
-from libreface.AU_Recognition.solver_inference_image import solver_inference_image
-from libreface.AU_Recognition.solver_inference import solver_inference
-from libreface.AU_Recognition.utils import set_seed
+from solver_inference import solver_inference
+from utils import set_seed
 
-class ConfigObject:
-    def __init__(self, config_dict):
-        # Set each key-value pair in the dictionary as an attribute
-        for key, value in config_dict.items():
-            setattr(self, key, value)
+parser = argparse.ArgumentParser()
+parser.add_argument('--seed', type=int, default=0)
 
+# storage
+parser.add_argument('--data_root', type=str, default='/home/ICT2000/dchang/TAC_project/Face_Heatmap/data')
+parser.add_argument('--ckpt_path', type=str, default='/home/ICT2000/dchang/TAC_project/Face_Heatmap/fm_distillation_all')
 
-def load_config(config_path):
-    with open(config_path, 'r') as file:
-        config = yaml.safe_load(file)
-    return config
+# data
+parser.add_argument('--data', type=str, default='DISFA', choices=['BP4D', 'DISFA'])
+parser.add_argument('--fold', type=str, default='all', choices=['0', '1', '2', '3', '4','all'])
+parser.add_argument('--num_workers', type=int, default=0)
+parser.add_argument('--image_size', type=int, default=256)
+parser.add_argument('--crop_size', type=int, default=224)
+parser.add_argument('--num_labels', type=int, default=12)
+parser.add_argument('--sigma', type=float, default=10.0)
 
-def au_recognition_inference_image(image_path):
-    
-    # Path to the YAML config file
-    config_path = './libreface/AU_Recognition/config_au_recognition.yaml'
+# model
+parser.add_argument('--model_name', type=str, default='resnet', choices=['resnet_heatmap','resnet','swin','mae','emotionnet_mae','gh_feat'])
+parser.add_argument('--dropout', type=float, default=0.1)
+parser.add_argument('--hidden_dim', type=int, default=128) 
+parser.add_argument('--half_precision', action='store_true')
+# training
+parser.add_argument('--num_epochs', type=int, default=30)
+parser.add_argument('--interval', type=int, default=500)
+parser.add_argument('--threshold', type=float, default=0)
+parser.add_argument('--batch_size', type=int, default=256)
+parser.add_argument('--learning_rate', type=float, default=3e-5)
+parser.add_argument('--weight_decay', type=float, default=1e-4)
+parser.add_argument('--loss', type=str, default='unweighted')
+parser.add_argument('--clip', type=int, default=1.0)
+parser.add_argument('--when', type=int, default=10, help='when to decay learning rate')
+parser.add_argument('--patience', type=int, default=5, help='early stopping')
+parser.add_argument('--fm_distillation', action='store_true')
+# device
+parser.add_argument('--device', type=str, default='cuda', choices=['cpu','cuda'])
 
-    # Load the configuration from YAML
-    config = load_config(config_path)
-    opts = ConfigObject(config)
+opts = parser.parse_args()
+print(opts)
+# os.makedirs(opts.ckpt_path,exist_ok=True)
 
-    solver = solver_inference_image(opts).cuda()
+# Fix random seed
+set_seed(opts.seed)
 
-    solver.run(image_path)
+# Setup solver 
+solver = solver_inference(opts).cuda()
 
-# Function to set argparse defaults from the YAML config
-def set_defaults_from_config(parser, config):
-    parser.set_defaults(**config)
-
-def main():
-    # Path to the YAML config file
-    config_path = './libreface/AU_Recognition/config_au_recognition.yaml'
-
-    # Load the configuration from YAML
-    config = load_config(config_path)
-
-    # Create the argument parser
-    parser = argparse.ArgumentParser()
-
-    # Add arguments (same as your original argparse setup)
-    parser.add_argument('--seed', type=int, default=0)
-    parser.add_argument("--image_inference", action="store_true", default=True)
-    # storage
-    parser.add_argument('--data_root', type=str, default='/home/ICT2000/dchang/TAC_project/Face_Heatmap/data')
-    parser.add_argument('--ckpt_path', type=str, default='./libreface/AU_Recognition/resnet_disfa_all')
-
-    # data
-    parser.add_argument('--data', type=str, choices=['BP4D', 'DISFA'])
-    parser.add_argument('--fold', type=str, choices=['0', '1', '2', '3', '4','all'])
-    parser.add_argument('--num_workers', type=int)
-    parser.add_argument('--image_size', type=int)
-    parser.add_argument('--crop_size', type=int)
-    parser.add_argument('--num_labels', type=int)
-    parser.add_argument('--sigma', type=float)
-
-    # model
-    parser.add_argument('--model_name', type=str, choices=['resnet_heatmap','resnet','swin','mae','emotionnet_mae','gh_feat'])
-    parser.add_argument('--dropout', type=float)
-    parser.add_argument('--hidden_dim', type=int) 
-    parser.add_argument('--half_precision', action='store_true')
-
-    # training
-    parser.add_argument('--num_epochs', type=int)
-    parser.add_argument('--interval', type=int)
-    parser.add_argument('--threshold', type=float)
-    parser.add_argument('--batch_size', type=int)
-    parser.add_argument('--learning_rate', type=float)
-    parser.add_argument('--weight_decay', type=float)
-    parser.add_argument('--loss', type=str)
-    parser.add_argument('--clip', type=int)
-    parser.add_argument('--when', type=int, help='when to decay learning rate')
-    parser.add_argument('--patience', type=int, help='early stopping')
-    parser.add_argument('--fm_distillation', action='store_true')
-
-    # device
-    parser.add_argument('--device', type=str, choices=['cpu','cuda'])
-
-    # Set the defaults from the YAML configuration
-    set_defaults_from_config(parser, config)
-
-    opts = parser.parse_args()
-
-    # Fix random seed
-    set_seed(opts.seed)
-
-    if opts.image_inference:
-        au_recognition_inference_image("/home/achaubey/Desktop/projects/data/DISFA/output/aligned_images/LeftVideoSN011_comp/LeftVideoSN011_comp_0001.png")
-    else:
-        solver = solver_inference(opts).cuda()
-
-        solver.run()
-
-
-if __name__ == "__main__":
-    main()
-
+# Start training
+solver.run()

@@ -1,1 +1,0 @@
-python distillation.py --ckpt_path /home/ICT2000/dchang/TAC_project/Face_Heatmap/OpenRecognition/resnet_disfa_all 

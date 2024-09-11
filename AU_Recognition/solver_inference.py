@@ -6,9 +6,9 @@ from sklearn.metrics import mean_squared_error, mean_absolute_error
 import torch
 import torch.nn as nn
 
-from libreface.AU_Recognition.utils import get_data_loader
-from libreface.AU_Recognition.models.resnet18 import ResNet18
-from libreface.AU_Recognition.models.mae import MaskedAutoEncoder
+from utils import get_data_loader
+from models.resnet18 import ResNet18
+from models.mae import MaskedAutoEncoder
 import time
 
 import matplotlib.pyplot as plt

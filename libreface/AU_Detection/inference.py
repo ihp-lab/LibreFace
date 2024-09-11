@@ -18,6 +18,13 @@ def load_config(config_path):
         config = yaml.safe_load(file)
     return config
 
+def set_seed(seed):
+    # Reproducibility
+    torch.manual_seed(seed)
+
+    random.seed(seed)
+    np.random.seed(seed)
+
 def detect_action_units(image_path, device="cuda"):
     
     # Path to the YAML config file
@@ -36,17 +43,6 @@ def detect_action_units(image_path, device="cuda"):
 
     detected_aus = solver.run(image_path)
     return detected_aus
-
-def set_seed(seed):
-    # Reproducibility
-    torch.manual_seed(seed)
-
-    random.seed(seed)
-    np.random.seed(seed)
-
-# Function to set argparse defaults from the YAML config
-def set_defaults_from_config(parser, config):
-    parser.set_defaults(**config)
 
 def main():
 
