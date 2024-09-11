@@ -1,5 +1,4 @@
 seed: 0
-image_inference: true
 
 # Storage
 data_root: "/home/ICT2000/dchang/TAC_project/data"

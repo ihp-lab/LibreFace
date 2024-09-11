@@ -1,66 +1,62 @@
-import os
 import argparse
+import numpy as np
+import random
+import torch
+import yaml
+
+from libreface.Facial_Expression_Recognition.solver_inference_image import solver_inference_image
+
+class ConfigObject:
+    def __init__(self, config_dict):
+        # Set each key-value pair in the dictionary as an attribute
+        for key, value in config_dict.items():
+            setattr(self, key, value)
 
 
-from utils import set_seed, get_data_loaders 
-from solver_inference import solver_inference
-from solver_inference_image import solver_inference_image
+def load_config(config_path):
+    with open(config_path, 'r') as file:
+        config = yaml.safe_load(file)
+    return config
 
-parser = argparse.ArgumentParser()
-parser.add_argument("--image_inference", action="store_true")
-parser.add_argument('--seed', type=int, default=0)
-parser.add_argument('--train_csv', type=str, default='training_filtered.csv')
-parser.add_argument('--test_csv', type=str, default='validation_filtered.csv')
-# storage
-parser.add_argument('--data_root', type=str, default='/home/ICT2000/dchang/AffectNet/data/')
-parser.add_argument('--ckpt_path', type=str, default='./checkpoints_fm_resnet')
-# data
-parser.add_argument('--data', type=str, default='AffectNet')
-parser.add_argument('--num_workers', type=int, default=8)
-parser.add_argument('--image_size', type=int, default=224)
-parser.add_argument('--num_labels', type=int, default=8)
-parser.add_argument('--dropout', type=float, default=0.1)
-parser.add_argument('--hidden_dim', type=int, default=128)
-parser.add_argument('--sigma', type=float, default=10.0)
+def set_seed(seed):
+    # Reproducibility
+    torch.manual_seed(seed)
 
-# model
-parser.add_argument('--student_model_name', type=str, default='resnet', choices=['resnet_heatmap','resnet','swin','mae','emotionnet_mae','gh_feat'])
+    random.seed(seed)
+    np.random.seed(seed)
 
-#distillation
-parser.add_argument('--alpha', type=float, default=1.0)
-parser.add_argument('--T', type=float, default=1.0)
-parser.add_argument('--fm_distillation', default=True)
-parser.add_argument('--grad',  default=True)
-# training
-parser.add_argument('--interval', type=int, default=500)
-parser.add_argument('--threshold', type=float, default=0)
-parser.add_argument('--loss', type=str, default='unweighted')
-parser.add_argument('--num_epochs', type=int, default=50)
-parser.add_argument('--batch_size', type=int, default=256)
-parser.add_argument('--learning_rate', type=float, default=3e-5)
-parser.add_argument('--weight_decay', type=float, default=1e-4)
-parser.add_argument('--clip', type=int, default=1.0)
-parser.add_argument('--when', type=int, default=10, help='when to decay learning rate')
-parser.add_argument('--patience', type=int, default=10, help='early stopping')
-# device
-parser.add_argument('--device', type=str, default='cuda', choices=['cpu','cuda'])
+def get_facial_expression(image_path, device = "cuda"):
+    # Path to the YAML config file
+    config_path = './libreface/Facial_Expression_Recognition/config_fer.yaml'
 
-opts = parser.parse_args()
-print(opts)
-os.makedirs(opts.ckpt_path,exist_ok=True)
+    # Load the configuration from YAML
+    config = load_config(config_path)
+    opts = ConfigObject(config)
 
-# Fix random seed
-set_seed(opts.seed)
-if opts.image_inference:
-    solver = solver_inference_image(opts).cuda()
-    # Start training
-    solver.run("/home/achaubey/Desktop/projects/data/DISFA/output/aligned_images/LeftVideoSN011_comp/LeftVideoSN011_comp_0006.png")
+    #set seed
+    set_seed(opts.seed)
 
-else:
-    train_loader, test_loader = get_data_loaders(opts)
+    opts.device = device
+    print(f"Using device: {opts.device} for inference...")
 
+    solver = solver_inference_image(opts).to(device)
 
-    # Setup solver 
-    solver = solver_inference(opts).cuda()
-    # Start training
-    solver.run(train_loader, test_loader)
+    facial_expression = solver.run(image_path)
+    return facial_expression
+
+def main():
+
+    # Create the argument parser
+    parser = argparse.ArgumentParser()
+
+    # Add arguments (same as your original argparse setup)
+    parser.add_argument("--image_path", type=str, required=True)
+    parser.add_argument("--device", type=str, default="cuda")
+
+    args = parser.parse_args()
+
+    facial_expression = get_facial_expression(args.image_path, device = args.device)
+    print(f"Predicted facial expression : {facial_expression}")
+    
+if __name__ == "__main__":
+    main()

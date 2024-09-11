@@ -1,0 +1,41 @@
+seed: 0
+train_csv: 'training_filtered.csv'
+test_csv: 'validation_filtered.csv'
+
+# storage
+data_root: '/home/ICT2000/dchang/AffectNet/data/'
+ckpt_path: './libreface/Facial_Expression_Recognition/checkpoints_fm_resnet'
+
+# data
+data: 'AffectNet'
+num_workers: 8
+image_size: 224
+num_labels: 8
+dropout: 0.1
+hidden_dim: 128
+sigma: 10.0
+
+# model
+student_model_name: 'resnet'
+student_model_choices: ['resnet_heatmap', 'resnet', 'swin', 'mae', 'emotionnet_mae', 'gh_feat']
+
+# distillation
+alpha: 1.0
+T: 1.0
+fm_distillation: true
+grad: true
+
+# training
+interval: 500
+threshold: 0.0
+loss: 'unweighted'
+num_epochs: 50
+batch_size: 256
+learning_rate: 3e-5
+weight_decay: 1e-4
+clip: 1.0
+when: 10
+patience: 10
+
+# device
+device: 'cuda'  ## cpu or cuda

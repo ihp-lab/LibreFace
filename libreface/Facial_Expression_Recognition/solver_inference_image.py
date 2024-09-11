@@ -6,7 +6,7 @@ import torch
 import torch.nn as nn
 from torchvision import transforms
 
-from models.resnet18 import ResNet
+from libreface.Facial_Expression_Recognition.models.resnet18 import ResNet
 import torch.nn.functional as F
 import pdb
 
@@ -14,11 +14,16 @@ class solver_inference_image(nn.Module):
 	def __init__(self, config):
 		super(solver_inference_image, self).__init__()
 		self.config = config
+
+		self.device = config.device
+
 		# Initiate the networks
 		if config.student_model_name == "resnet":
-			self.student_model = ResNet(config).cuda()
+			self.student_model = ResNet(config).to(self.device)
 		else:
 			raise NotImplementedError
+
+		self.load_best_ckpt()
 
 		self.img_size = (config.image_size, config.image_size)
 		self.convert = transforms.ToTensor()
@@ -34,24 +39,21 @@ class solver_inference_image(nn.Module):
 	def image_inference(self, transformed_image):
 		with torch.no_grad():
 			self.student_model.eval()
-			input_image = torch.unsqueeze(transformed_image, 0).cuda()
+			input_image = torch.unsqueeze(transformed_image, 0).to(self.device)
 			labels_pred, _ = self.student_model(input_image)
-			labels_pred = torch.clamp(labels_pred * 5.0, min=0.0, max=5.0)
 			labels_pred = torch.argmax(labels_pred, 1)
 			return labels_pred
 
 	def load_best_ckpt(self):
 		ckpt_name = os.path.join(self.config.ckpt_path, self.config.data, self.config.student_model_name+'.pt')
-		print("Loading weights from: ",ckpt_name)
-		checkpoints = torch.load(ckpt_name)['model']
+		checkpoints = torch.load(ckpt_name, map_location=self.device)['model']
 		self.student_model.load_state_dict(checkpoints, strict=True)
   
   
 	def run(self, aligned_image_path):
 		
-		self.load_best_ckpt()
 		transformed_image = self.read_and_transform_image(aligned_image_path)
-		print(transformed_image.size())
 		pred_label = self.image_inference(transformed_image)
-		print("Facial emotion:", pred_label)
+		pred_label = pred_label.squeeze().tolist()
+		return pred_label
 
