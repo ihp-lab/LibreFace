@@ -1,9 +1,10 @@
 import argparse
+import numpy as np
+import random
+import torch
 import yaml
 
-from libreface.AU_Detection.solver_inference import solver_in_domain
 from libreface.AU_Detection.solver_inference_image import solver_in_domain_image
-from libreface.AU_Detection.utils import set_seed
 
 class ConfigObject:
     def __init__(self, config_dict):
@@ -17,7 +18,7 @@ def load_config(config_path):
         config = yaml.safe_load(file)
     return config
 
-def au_detection_inference_image(image_path):
+def detect_action_units(image_path, device="cuda"):
     
     # Path to the YAML config file
     config_path = './libreface/AU_Detection/config_au_detection.yaml'
@@ -26,9 +27,22 @@ def au_detection_inference_image(image_path):
     config = load_config(config_path)
     opts = ConfigObject(config)
 
-    solver = solver_in_domain_image(opts).cuda()
+    #set seed
+    set_seed(opts.seed)
 
-    solver.run(image_path)
+    opts.device = device
+    print(f"Using device: {opts.device} for inference...")
+    solver = solver_in_domain_image(opts).to(device)
+
+    detected_aus = solver.run(image_path)
+    return detected_aus
+
+def set_seed(seed):
+    # Reproducibility
+    torch.manual_seed(seed)
+
+    random.seed(seed)
+    np.random.seed(seed)
 
 # Function to set argparse defaults from the YAML config
 def set_defaults_from_config(parser, config):
@@ -36,62 +50,15 @@ def set_defaults_from_config(parser, config):
 
 def main():
 
-    # Path to the YAML config file
-    config_path = './libreface/AU_Detection/config_au_detection.yaml'
-
-    # Load the configuration from YAML
-    config = load_config(config_path)
-
     parser = argparse.ArgumentParser()
-    parser.add_argument('--seed', type=int, default=0)
-    parser.add_argument("--image_inference", action="store_true", default=True)
-    # storage
-    parser.add_argument('--data_root', type=str, default='/home/ICT2000/dchang/TAC_project/data')
-    parser.add_argument('--ckpt_path', type=str, default='./libreface/AU_Detection/fm_distillation_all')
+    parser.add_argument("--image_path", type=str, required=True)
+    parser.add_argument("--device", type=str, default="cuda")
 
-    # data
-    parser.add_argument('--data', type=str, choices=['BP4D'])
-    parser.add_argument('--fold', type=str, choices=['0', '1', '2','all'])
-    parser.add_argument('--num_workers', type=int)
-    parser.add_argument('--image_size', type=int)
-    parser.add_argument('--crop_size', type=int)
-    parser.add_argument('--num_labels', type=int)
-    parser.add_argument('--sigma', type=float)
+    args = parser.parse_args()
 
-    # model
-    parser.add_argument('--model_name', type=str, choices=['resnet_heatmap','resnet','swin','mae','emotionnet_mae','gh_feat'])
-    parser.add_argument('--dropout', type=float)
-    parser.add_argument('--hidden_dim', type=int)
-    parser.add_argument('--half_precision', action='store_true')
-    # training
-    parser.add_argument('--num_epochs', type=int)
-    parser.add_argument('--interval', type=int)
-    parser.add_argument('--threshold', type=float)
-    parser.add_argument('--batch_size', type=int)
-    parser.add_argument('--learning_rate', type=float)
-    parser.add_argument('--weight_decay', type=float)
-    parser.add_argument('--loss', type=str)
-    parser.add_argument('--clip', type=int)
-    parser.add_argument('--when', type=int, help='when to decay learning rate')
-    parser.add_argument('--patience', type=int, help='early stopping')
-    parser.add_argument('--fm_distillation', action='store_true')
-    # device
-    parser.add_argument('--device', type=str, choices=['cpu','cuda'])
-
-    # Set the defaults from the YAML configuration
-    set_defaults_from_config(parser, config)
-
-    opts = parser.parse_args()
-
-    # Fix random seed
-    set_seed(opts.seed)
-
-    if opts.image_inference:
-        au_detection_inference_image("/home/achaubey/Desktop/projects/data/DISFA/output/aligned_images/LeftVideoSN011_comp/LeftVideoSN011_comp_0001.png")
-    else:
-        solver = solver_in_domain(opts).cuda()
-
-        solver.run()
+    detected_aus = detect_action_units(image_path = args.image_path, device = args.device)
+    print(f"Detected action units - {detected_aus}")
+    
 
 if __name__ == "__main__":
     main()
