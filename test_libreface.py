@@ -1,0 +1,3 @@
+from libreface.AU_Detection.inference import au_detection_inference_image
+
+au_detection_inference_image("/home/achaubey/Desktop/projects/data/DISFA/output/aligned_images/LeftVideoSN011_comp/LeftVideoSN011_comp_0001.png")
