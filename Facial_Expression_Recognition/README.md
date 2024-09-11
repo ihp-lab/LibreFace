@@ -1,0 +1,4 @@
+# Inference
+```
+bash inference.sh
+```
