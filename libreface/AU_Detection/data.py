@@ -7,7 +7,7 @@ import torch
 import torch.utils.data as data
 from torchvision import transforms
 
-from src.AU_Detection.data_utils import au2heatmap
+from libreface.AU_Detection.data_utils import au2heatmap
 import numpy as np
 
 class image_train(object):

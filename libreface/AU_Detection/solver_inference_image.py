@@ -5,7 +5,7 @@ import torch
 import torch.nn as nn
 from torchvision import transforms
 
-from src.AU_Detection.models.resnet18 import ResNet18
+from libreface.AU_Detection.models.resnet18 import ResNet18
 
 
 def count_parameters(model):

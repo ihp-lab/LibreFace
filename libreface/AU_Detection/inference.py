@@ -1,9 +1,9 @@
 import argparse
 import yaml
 
-from src.AU_Detection.solver_inference import solver_in_domain
-from src.AU_Detection.solver_inference_image import solver_in_domain_image
-from src.AU_Detection.utils import set_seed
+from libreface.AU_Detection.solver_inference import solver_in_domain
+from libreface.AU_Detection.solver_inference_image import solver_in_domain_image
+from libreface.AU_Detection.utils import set_seed
 
 class ConfigObject:
     def __init__(self, config_dict):
@@ -20,7 +20,7 @@ def load_config(config_path):
 def au_detection_inference_image(image_path):
     
     # Path to the YAML config file
-    config_path = './src/AU_Detection/config_au_detection.yaml'
+    config_path = './libreface/AU_Detection/config_au_detection.yaml'
 
     # Load the configuration from YAML
     config = load_config(config_path)
@@ -37,7 +37,7 @@ def set_defaults_from_config(parser, config):
 def main():
 
     # Path to the YAML config file
-    config_path = './src/AU_Detection/config_au_detection.yaml'
+    config_path = './libreface/AU_Detection/config_au_detection.yaml'
 
     # Load the configuration from YAML
     config = load_config(config_path)
@@ -47,7 +47,7 @@ def main():
     parser.add_argument("--image_inference", action="store_true", default=True)
     # storage
     parser.add_argument('--data_root', type=str, default='/home/ICT2000/dchang/TAC_project/data')
-    parser.add_argument('--ckpt_path', type=str, default='./src/AU_Detection/fm_distillation_all')
+    parser.add_argument('--ckpt_path', type=str, default='./libreface/AU_Detection/fm_distillation_all')
 
     # data
     parser.add_argument('--data', type=str, choices=['BP4D'])

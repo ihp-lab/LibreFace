@@ -5,8 +5,8 @@ import torch
 import torch.nn as nn
 from torchvision import transforms
 
-from src.AU_Recognition.models.resnet18 import ResNet18
-from src.AU_Recognition.models.mae import MaskedAutoEncoder
+from libreface.AU_Recognition.models.resnet18 import ResNet18
+from libreface.AU_Recognition.models.mae import MaskedAutoEncoder
 
 import matplotlib.pyplot as plt
 

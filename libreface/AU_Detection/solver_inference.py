@@ -6,10 +6,10 @@ from sklearn.metrics import f1_score
 import torch
 import torch.nn as nn
 
-from src.AU_Detection.utils import get_data_loader
-from src.AU_Detection.data_utils import heatmap2au
+from libreface.AU_Detection.utils import get_data_loader
+from libreface.AU_Detection.data_utils import heatmap2au
 
-from src.AU_Detection.models.resnet18 import ResNet18
+from libreface.AU_Detection.models.resnet18 import ResNet18
 
 import time
 

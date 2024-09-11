@@ -5,7 +5,7 @@ image_inference: true
 
 # Storage
 data_root: '/home/ICT2000/dchang/TAC_project/Face_Heatmap/data'  # Root directory for the data
-ckpt_path: './src/AU_Recognition/resnet_disfa_all'  # Path for checkpoint storage
+ckpt_path: './libreface/AU_Recognition/resnet_disfa_all'  # Path for checkpoint storage
 
 # Data settings
 data: 'DISFA'                # Dataset to use

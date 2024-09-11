@@ -3,7 +3,7 @@ image_inference: true
 
 # Storage
 data_root: "/home/ICT2000/dchang/TAC_project/data"
-ckpt_path: "./src/AU_Detection/fm_distillation_all"
+ckpt_path: "./libreface/AU_Detection/fm_distillation_all"
 
 # Data
 data: "BP4D"

@@ -1,7 +1,7 @@
 include *.txt
 include *.md
 include *.pt
-recursive-include ./src/*
+recursive-include ./libreface/*
 
 include ./requirements.txt
 exclude *.log

@@ -4,7 +4,7 @@ import numpy as np
 import torch
 from torch.utils.data import DataLoader
 
-from src.AU_Detection.data import MyDataset, MyDataset_GH_Feat, MyDataset_with_lm
+from libreface.AU_Recognition.data import MyDataset
 
 def set_seed(seed):
 	# Reproducibility
@@ -29,29 +29,6 @@ def get_data_loader(csv_file, train, config):
 
 	return loader
 
-def get_data_loader_landmark(csv_file, train, config):
-	dataset = MyDataset_with_lm(csv_file, train, config)
-	loader = DataLoader(
-				dataset=dataset,
-				batch_size=config.batch_size,
-				num_workers=config.num_workers,
-				shuffle=train,
-				collate_fn=dataset.collate_fn,
-				drop_last=train)
-
-	return loader
-
-def get_data_loader_gh(csv_file, train, config):
-	dataset = MyDataset_GH_Feat(csv_file, config)
-	loader = DataLoader(
-				dataset=dataset,
-				batch_size=config.batch_size,
-				num_workers=config.num_workers,
-				shuffle=train,
-				collate_fn=dataset.collate_fn,
-				drop_last=train)
-
-	return loader
 
 class ForeverDataIterator:
 	def __init__(self, data_loader: DataLoader):

@@ -3,7 +3,7 @@ import torch.nn as nn
 # import models.modeling_pretrain
 
 from timm.models import create_model
-from src.AU_Recognition.models.masking_generator import RandomMaskingGenerator
+from libreface.AU_Recognition.models.masking_generator import RandomMaskingGenerator
 
 
 class MaskedAutoEncoder(nn.Module):
