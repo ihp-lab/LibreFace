@@ -1,6 +1,4 @@
 import cv2
-# from google.colab.patches import cv2_imshow
-import math
 import numpy as np
 import os
 import numpy as np
