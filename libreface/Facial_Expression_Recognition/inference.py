@@ -25,6 +25,17 @@ def set_seed(seed):
     random.seed(seed)
     np.random.seed(seed)
 
+def facial_expr_idx_to_class(fe_idx):
+    idx_to_fe = {0: "Neutral",
+                 1: "Happiness",
+                 2: "Sadness",
+                 3: "Surprise",
+                 4: "Fear",
+                 5: "Disgust",
+                 6: "Anger",
+                 7: "Contempt"}
+    return idx_to_fe[fe_idx]
+
 def get_facial_expression(image_path, device = "cpu"):
     # # Path to the YAML config file
     # config_path = './libreface/Facial_Expression_Recognition/config_fer.yaml'
@@ -79,7 +90,7 @@ def get_facial_expression(image_path, device = "cpu"):
     solver = solver_inference_image(opts).to(device)
 
     facial_expression = solver.run(image_path)
-    return facial_expression
+    return facial_expr_idx_to_class(facial_expression)
 
 def main():
 

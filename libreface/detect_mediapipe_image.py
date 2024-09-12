@@ -325,8 +325,6 @@ def get_aligned_image(image_path, temp_dir = "./tmp"):
         np.save(land_save_path, landmark)
 
 
-      
-      
   print("Aligned Image save to: ",aligned_img_save_path)
   print("Annotated Image save to: ",annotated_image_save_path)
   cv2.imwrite(annotated_image_save_path,annotated_image)
