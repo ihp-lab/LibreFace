@@ -27,12 +27,37 @@ def set_seed(seed):
 
 def get_au_intensities(image_path, model_path, device="cuda"):
     
-    # Path to the YAML config file
-    config_path = './libreface/AU_Recognition/config_au_recognition.yaml'
+    # # Path to the YAML config file
+    # config_path = './libreface/AU_Recognition/config_au_recognition.yaml'
 
-    # Load the configuration from YAML
-    config = load_config(config_path)
-    opts = ConfigObject(config)
+    # # Load the configuration from YAML
+    # config = load_config(config_path)
+    opts = ConfigObject({'seed': 0,
+                        'data_root': '',
+                        'ckpt_path': './libreface/AU_Recognition/resnet_disfa_all/DISFA/all/resnet.pt',
+                        'data': 'DISFA',
+                        'fold': 'all',
+                        'num_workers': 0,
+                        'image_size': 256,
+                        'crop_size': 224,
+                        'num_labels': 12,
+                        'sigma': 10.0,
+                        'model_name': 'resnet',
+                        'dropout': 0.1,
+                        'hidden_dim': 128,
+                        'half_precision': False,
+                        'num_epochs': 30,
+                        'interval': 500,
+                        'threshold': 0,
+                        'batch_size': 256,
+                        'learning_rate': '3e-5',
+                        'weight_decay': '1e-4',
+                        'loss': 'unweighted',
+                        'clip': 1.0,
+                        'when': 10,
+                        'patience': 5,
+                        'fm_distillation': False,
+                        'device': 'cuda'})
 
     #set seed
     set_seed(opts.seed)
