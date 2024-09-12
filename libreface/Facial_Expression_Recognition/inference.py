@@ -25,7 +25,7 @@ def set_seed(seed):
     random.seed(seed)
     np.random.seed(seed)
 
-def get_facial_expression(image_path, model_path, device = "cuda"):
+def get_facial_expression(image_path, model_path, device = "cpu"):
     # # Path to the YAML config file
     # config_path = './libreface/Facial_Expression_Recognition/config_fer.yaml'
 
@@ -66,7 +66,7 @@ def get_facial_expression(image_path, model_path, device = "cuda"):
                         'clip': 1.0,
                         'when': 10,
                         'patience': 10,
-                        'device': 'cuda'
+                        'device': 'cpu'
                     })           
 
     #set seed
@@ -89,7 +89,7 @@ def main():
     # Add arguments (same as your original argparse setup)
     parser.add_argument("--image_path", type=str, required=True)
     parser.add_argument("--model_path", type=str, default="./libreface/Facial_Expression_Recognition/checkpoints_fm_resnet/AffectNet/resnet.pt")
-    parser.add_argument("--device", type=str, default="cuda")
+    parser.add_argument("--device", type=str, default="cpu")
 
     args = parser.parse_args()
 

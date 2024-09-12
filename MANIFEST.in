@@ -4,7 +4,7 @@ include MANIFEST.in
 include README.md
 exclude *.log
 
-recursive-include ./libreface/ *.py *.yaml
+recursive-include ./libreface/ *.py
 
 recursive-exclude * __pycache__
 recursive-exclude * *.py[co]Ne

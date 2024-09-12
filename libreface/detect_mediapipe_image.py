@@ -98,16 +98,39 @@ def image_align(img, face_landmarks, output_size=256,
   return out_image
 
 
+def uniquify_dir(dir_path):
+  dir_path = dir_path.rstrip("/")
+  dir_name = dir_path.split("/")[-1]
+  par_dir = "/".join(dir_path.split("/")[:-1])
 
+  counter=1
+  while os.path.exists(dir_path):
+    dir_path = f"{par_dir}/{dir_name}_{counter}"
+    counter+=1
+  return dir_path
 
+def uniquify_file(path):
+    filename, extension = os.path.splitext(path)
+    counter = 1
 
-def main(args):
+    while os.path.exists(path):
+        path = filename + " (" + str(counter) + ")" + extension
+        counter += 1
 
-  # pdb.set_trace()
-  img_path = args.image_path
-  land_save_path = args.land_save_path
-  aligned_img_save_path = args.aligned_image_save_path
-  annotated_image_save_path = args.annotated_image_save_path
+    return path
+
+def get_aligned_image(image_path, temp_dir = "./tmp"):
+
+  # temp_dir = uniquify_dir(temp_dir)
+  os.makedirs(temp_dir, exist_ok=True)
+
+  image_name = ".".join(image_path.split("/")[-1].split(".")[:-1])
+
+  img_path = image_path
+  land_save_path = uniquify_file(os.path.join(temp_dir, f"{image_name}_landmark.npy"))
+  aligned_img_save_path = uniquify_file(os.path.join(temp_dir, f"{image_name}_aligned.png"))
+  annotated_image_save_path = uniquify_file(os.path.join(temp_dir, f"{image_name}_annotated.png"))
+
   image = cv2.imread(img_path)
   mp_face_detection = mp.solutions.face_detection
   mp_face_mesh = mp.solutions.face_mesh
@@ -147,8 +170,8 @@ def main(args):
       Left_eye.append(x)
     if y not in Left_eye:
       Left_eye.append(y)
-  print(Left_eye)
-  print(FACEMESH_LEFT_EYE)
+  # print(Left_eye)
+  # print(FACEMESH_LEFT_EYE)
 
   for (x,y) in FACEMESH_RIGHT_EYE:
     if x not in Right_eye:
@@ -258,15 +281,6 @@ def main(args):
         cv2.putText(annotated_image, "x: " + str(np.round(x,2)), (500, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
         cv2.putText(annotated_image, "y: " + str(np.round(y,2)), (500, 100), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
         cv2.putText(annotated_image, "z: " + str(np.round(z,2)), (500, 150), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
-
-
-
-        # mp_drawing.draw_landmarks(
-        #             image=annotated_image,
-        #             landmark_list=face_landmarks,
-        #             connections=mp_face_mesh.FACE_CONNECTIONS,
-        #             landmark_drawing_spec=drawing_spec,
-        #             connection_drawing_spec=drawing_spec)
         
         mp_drawing.draw_landmarks(
           image=annotated_image,
@@ -319,12 +333,13 @@ def main(args):
   # pdb.set_trace()
   aligned_image = image_align(Image.open(img_path), np.load(land_save_path))
   aligned_image.save(aligned_img_save_path)
+
+  return aligned_img_save_path
   
 if __name__ == "__main__":
   parser = argparse.ArgumentParser()
   parser.add_argument('--image_path', type=str, default='/home/achaubey/Desktop/projects/data/DISFA/images/LeftVideoSN001_comp/LeftVideoSN001_comp_0001.png', help='Input path to input images')
-  parser.add_argument('--aligned_image_save_path', type=str, default='aligned_image.png', help='Output path to images after alignment')
-  parser.add_argument('--land_save_path', type=str, default='landmark.npy', help='Output path to detected landmark with mediapipe')
-  parser.add_argument('--annotated_image_save_path', type=str, default='annotated_image.png', help='Output path to aligned images with visualized landmark and face mesh')
+  
   args = parser.parse_args()
-  main(args)
+  aligned_image_path = get_aligned_image(args.image_path)
+  print("Aligned image saved to ", aligned_image_path)

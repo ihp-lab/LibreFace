@@ -25,7 +25,7 @@ def set_seed(seed):
     random.seed(seed)
     np.random.seed(seed)
 
-def get_au_intensities(image_path, model_path, device="cuda"):
+def get_au_intensities(image_path, model_path, device="cpu"):
     
     # # Path to the YAML config file
     # config_path = './libreface/AU_Recognition/config_au_recognition.yaml'
@@ -57,7 +57,7 @@ def get_au_intensities(image_path, model_path, device="cuda"):
                         'when': 10,
                         'patience': 5,
                         'fm_distillation': False,
-                        'device': 'cuda'})
+                        'device': 'cpu'})
 
     #set seed
     set_seed(opts.seed)
@@ -79,7 +79,7 @@ def main():
     # Add arguments (same as your original argparse setup)
     parser.add_argument("--image_path", type=str, required=True)
     parser.add_argument("--model_path", type=str, default="./libreface/AU_Recognition/resnet_disfa_all/DISFA/all/resnet.pt")
-    parser.add_argument("--device", type=str, default="cuda")
+    parser.add_argument("--device", type=str, default="cpu")
 
     args = parser.parse_args()
 
