@@ -18,9 +18,9 @@ REQUIRES_PYTHON = '>=3.8.0'
 
 
 # What packages are required for this module to be executed?
-# def list_reqs(fname='requirements.txt'):
-#     with open(fname) as fd:
-#         return fd.read().splitlines()
+def list_reqs(fname='requirements_new.txt'):
+    with open(fname) as fd:
+        return fd.read().splitlines()
 
 
 # The rest you shouldn't have to touch too much :)
@@ -47,7 +47,7 @@ about = {}
 # with open(PACKAGE_DIR / 'VERSION') as f:
 #     _version = f.read().strip()
 
-about['__version__'] = "0.0.1"
+about['__version__'] = "0.0.7"
 
 
 # Where the magic happens:
@@ -61,9 +61,9 @@ setup(
     author_email=EMAIL,
     python_requires=REQUIRES_PYTHON,
     url=URL,
-    packages=find_packages(exclude=('tests',)),
+    packages=find_packages(),
     package_data={'libreface': ['VERSION']},
-    # install_requires=list_reqs(),
+    install_requires=list_reqs(),
     extras_require={},
     include_package_data=True,
     license='MIT',

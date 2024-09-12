@@ -25,7 +25,7 @@ def set_seed(seed):
     random.seed(seed)
     np.random.seed(seed)
 
-def get_au_intensities(image_path, device="cuda"):
+def get_au_intensities(image_path, model_path, device="cuda"):
     
     # Path to the YAML config file
     config_path = './libreface/AU_Recognition/config_au_recognition.yaml'
@@ -38,6 +38,7 @@ def get_au_intensities(image_path, device="cuda"):
     set_seed(opts.seed)
 
     opts.device = device
+    opts.ckpt_path = model_path
     print(f"Using device: {opts.device} for inference...")
 
     solver = solver_inference_image(opts).to(device)
@@ -52,11 +53,14 @@ def main():
 
     # Add arguments (same as your original argparse setup)
     parser.add_argument("--image_path", type=str, required=True)
+    parser.add_argument("--model_path", type=str, default="./libreface/AU_Recognition/resnet_disfa_all/DISFA/all/resnet.pt")
     parser.add_argument("--device", type=str, default="cuda")
 
     args = parser.parse_args()
 
-    au_intensities = get_au_intensities(args.image_path, device = args.device)
+    au_intensities = get_au_intensities(args.image_path, 
+                                        model_path = args.model_path,
+                                        device = args.device)
     print(f"Predicted action unit intensities (On scale 0-5): {au_intensities}")
     
 

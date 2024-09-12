@@ -45,7 +45,7 @@ class solver_inference_image(nn.Module):
 			return labels_pred
 
 	def load_best_ckpt(self):
-		ckpt_name = os.path.join(self.config.ckpt_path, self.config.data, self.config.student_model_name+'.pt')
+		ckpt_name = self.config.ckpt_path
 		checkpoints = torch.load(ckpt_name, map_location=self.device)['model']
 		self.student_model.load_state_dict(checkpoints, strict=True)
   

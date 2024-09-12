@@ -25,7 +25,7 @@ def set_seed(seed):
     random.seed(seed)
     np.random.seed(seed)
 
-def detect_action_units(image_path, device="cuda"):
+def detect_action_units(image_path, model_path, device="cuda"):
     
     # Path to the YAML config file
     config_path = './libreface/AU_Detection/config_au_detection.yaml'
@@ -38,6 +38,7 @@ def detect_action_units(image_path, device="cuda"):
     set_seed(opts.seed)
 
     opts.device = device
+    opts.ckpt_path = model_path
     print(f"Using device: {opts.device} for inference...")
     solver = solver_in_domain_image(opts).to(device)
 
@@ -48,11 +49,14 @@ def main():
 
     parser = argparse.ArgumentParser()
     parser.add_argument("--image_path", type=str, required=True)
+    parser.add_argument("--model_path", type=str, default="./libreface/AU_Detection/fm_distillation_all/BP4D/all/resnet.pt")
     parser.add_argument("--device", type=str, default="cuda")
 
     args = parser.parse_args()
 
-    detected_aus = detect_action_units(image_path = args.image_path, device = args.device)
+    detected_aus = detect_action_units(image_path = args.image_path,
+                                       model_path = args.model_path,
+                                       device = args.device)
     print(f"Detected action units - {detected_aus}")
     
 

@@ -1,10 +1,14 @@
-include *.txt
-include *.md
-include *.pt
-recursive-include ./libreface/*
-
-include ./requirements.txt
+include requirements.txt
+include requirements_new.txt
+include MANIFEST.in
+include README.md
 exclude *.log
+
+recursive-include ./libreface/ *.py *.yaml
 
 recursive-exclude * __pycache__
 recursive-exclude * *.py[co]Ne
+
+prune ./AU_Detection/*
+prune ./AU_Recognition/*
+prune ./Facial_Emotion_Recognition/*
