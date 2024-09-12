@@ -25,7 +25,7 @@ def set_seed(seed):
     random.seed(seed)
     np.random.seed(seed)
 
-def get_facial_expression(image_path, model_path, device = "cpu"):
+def get_facial_expression(image_path, device = "cpu"):
     # # Path to the YAML config file
     # config_path = './libreface/Facial_Expression_Recognition/config_fer.yaml'
 
@@ -35,7 +35,8 @@ def get_facial_expression(image_path, model_path, device = "cpu"):
                         'train_csv': 'training_filtered.csv',
                         'test_csv': 'validation_filtered.csv',
                         'data_root': '',
-                        'ckpt_path': './libreface/Facial_Expression_Recognition/checkpoints_fm_resnet/AffectNet/resnet.pt',
+                        'ckpt_path': './libreface/Facial_Expression_Recognition/weights/resnet.pt',
+                        'weights_download_id': '1PeoPj8rga4vU2nuh_PciyX3HqaXp6LP7',
                         'data': 'AffectNet',
                         'num_workers': 8,
                         'image_size': 224,
@@ -73,7 +74,6 @@ def get_facial_expression(image_path, model_path, device = "cpu"):
     set_seed(opts.seed)
 
     opts.device = device
-    opts.ckpt_path = model_path
     print(f"Using device: {opts.device} for inference...")
 
     solver = solver_inference_image(opts).to(device)
@@ -88,13 +88,11 @@ def main():
 
     # Add arguments (same as your original argparse setup)
     parser.add_argument("--image_path", type=str, required=True)
-    parser.add_argument("--model_path", type=str, default="./libreface/Facial_Expression_Recognition/checkpoints_fm_resnet/AffectNet/resnet.pt")
     parser.add_argument("--device", type=str, default="cpu")
 
     args = parser.parse_args()
 
     facial_expression = get_facial_expression(args.image_path, 
-                                              model_path = args.model_path, 
                                               device = args.device)
     print(f"Predicted facial expression : {facial_expression}")
     

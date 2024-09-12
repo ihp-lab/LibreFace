@@ -25,7 +25,7 @@ def set_seed(seed):
     random.seed(seed)
     np.random.seed(seed)
 
-def get_au_intensities(image_path, model_path, device="cpu"):
+def get_au_intensities(image_path, device="cpu"):
     
     # # Path to the YAML config file
     # config_path = './libreface/AU_Recognition/config_au_recognition.yaml'
@@ -34,7 +34,8 @@ def get_au_intensities(image_path, model_path, device="cpu"):
     # config = load_config(config_path)
     opts = ConfigObject({'seed': 0,
                         'data_root': '',
-                        'ckpt_path': './libreface/AU_Recognition/resnet_disfa_all/DISFA/all/resnet.pt',
+                        'ckpt_path': './libreface/AU_Recognition/weights/resnet.pt',
+                        'weights_download_id': '14qEnWRew2snhdMdOVyqKFJ5rq5VZrfAX',
                         'data': 'DISFA',
                         'fold': 'all',
                         'num_workers': 0,
@@ -63,7 +64,6 @@ def get_au_intensities(image_path, model_path, device="cpu"):
     set_seed(opts.seed)
 
     opts.device = device
-    opts.ckpt_path = model_path
     print(f"Using device: {opts.device} for inference...")
 
     solver = solver_inference_image(opts).to(device)
@@ -78,13 +78,11 @@ def main():
 
     # Add arguments (same as your original argparse setup)
     parser.add_argument("--image_path", type=str, required=True)
-    parser.add_argument("--model_path", type=str, default="./libreface/AU_Recognition/resnet_disfa_all/DISFA/all/resnet.pt")
     parser.add_argument("--device", type=str, default="cpu")
 
     args = parser.parse_args()
 
     au_intensities = get_au_intensities(args.image_path, 
-                                        model_path = args.model_path,
                                         device = args.device)
     print(f"Predicted action unit intensities (On scale 0-5): {au_intensities}")
     

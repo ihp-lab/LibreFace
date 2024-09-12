@@ -7,8 +7,7 @@ from torchvision import transforms
 
 from libreface.AU_Recognition.models.resnet18 import ResNet18
 from libreface.AU_Recognition.models.mae import MaskedAutoEncoder
-
-import matplotlib.pyplot as plt
+from libreface.utils import download_weights
 
 
 class image_test(object):
@@ -85,8 +84,8 @@ class solver_inference_image(nn.Module):
 			return labels_pred
 
 	def load_best_ckpt(self):
-		ckpt_name = self.config.ckpt_path
-		checkpoints = torch.load(ckpt_name, map_location=self.device)['model']
+		download_weights(self.config.weights_download_id, self.config.ckpt_path)
+		checkpoints = torch.load(self.config.ckpt_path, map_location=self.device)['model']
 		self.model.load_state_dict(checkpoints, strict=True)
 
 

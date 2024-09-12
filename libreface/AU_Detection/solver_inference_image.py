@@ -6,7 +6,7 @@ import torch.nn as nn
 from torchvision import transforms
 
 from libreface.AU_Detection.models.resnet18 import ResNet18
-
+from libreface.utils import download_weights
 
 class image_test(object):
 	def __init__(self, img_size=256, crop_size=224):
@@ -80,8 +80,8 @@ class solver_in_domain_image(nn.Module):
 
 
 	def load_best_ckpt(self):
-		ckpt_name = self.config.ckpt_path
-		checkpoints = torch.load(ckpt_name, map_location=self.device)['model']
+		download_weights(self.config.weights_download_id, self.config.ckpt_path)
+		checkpoints = torch.load(self.config.ckpt_path, map_location=self.device)['model']
 		self.model.load_state_dict(checkpoints, strict=True)
 
 

@@ -25,7 +25,7 @@ def set_seed(seed):
     random.seed(seed)
     np.random.seed(seed)
 
-def detect_action_units(image_path, model_path, device="cpu"):
+def detect_action_units(image_path, device="cpu"):
     
     # Path to the YAML config file
     # config_path = './libreface/AU_Detection/config_au_detection.yaml'
@@ -33,8 +33,9 @@ def detect_action_units(image_path, model_path, device="cpu"):
     # Load the configuration from YAML
     # config = load_config(config_path)
     opts = ConfigObject({'seed': 0,
-                        'data_root': '/home/ICT2000/dchang/TAC_project/data',
-                        'ckpt_path': './libreface/AU_Detection/fm_distillation_all/BP4D/all/resnet.pt',
+                        'data_root': '',
+                        'ckpt_path': './libreface/AU_Detection/weights/resnet.pt',
+                        'weights_download_id': '17v_vxQ09upLG3Yh0Zlx12rpblP7uoA8x',
                         'data': 'BP4D',
                         'fold': 'all',
                         'num_workers': 0,
@@ -64,7 +65,7 @@ def detect_action_units(image_path, model_path, device="cpu"):
     set_seed(opts.seed)
 
     opts.device = device
-    opts.ckpt_path = model_path
+    # opts.ckpt_path = model_path
     print(f"Using device: {opts.device} for inference...")
     solver = solver_in_domain_image(opts).to(device)
 
@@ -75,13 +76,13 @@ def main():
 
     parser = argparse.ArgumentParser()
     parser.add_argument("--image_path", type=str, required=True)
-    parser.add_argument("--model_path", type=str, default="./libreface/AU_Detection/fm_distillation_all/BP4D/all/resnet.pt")
+    # parser.add_argument("--model_path", type=str, default="./libreface/AU_Detection/fm_distillation_all/BP4D/all/resnet.pt")
     parser.add_argument("--device", type=str, default="cpu")
 
     args = parser.parse_args()
 
     detected_aus = detect_action_units(image_path = args.image_path,
-                                       model_path = args.model_path,
+                                    #    model_path = args.model_path,
                                        device = args.device)
     print(f"Detected action units - {detected_aus}")
     

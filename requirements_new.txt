@@ -1,5 +1,6 @@
 cmake==3.30.3
 dlib==19.24.6
+gdown==5.2.0
 importlib-metadata==8.4.0
 importlib-resources==6.4.5
 imutils==0.5.4
