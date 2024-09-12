@@ -16,7 +16,9 @@ libreface/AU_Detection/data
 libreface/Facial_Expression_Recognition/__pycache__
 libreface/Facial_Expression_Recognition/models/__pycache__
 libreface/Facial_Expression_Recognition/data
-libreface/*pt
+libreface/AU_Detection/weights/
+libreface/AU_Recognition/weights/
+libreface/Facial_Expression_Recognition/weights/
 build/
 dist/
 *.egg-info/*
