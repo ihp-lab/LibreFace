@@ -31,7 +31,8 @@ def format_output(out_dict):
         new_dict[f"au_{k}_intensity"] = round(v, 3)
     return new_dict
 
-def get_au_intensities(image_path, device="cpu"):
+def get_au_intensities(image_path, device="cpu",
+                        weights_download_dir = "./weights_libreface"):
     
     # # Path to the YAML config file
     # config_path = './libreface/AU_Recognition/config_au_recognition.yaml'
@@ -40,7 +41,7 @@ def get_au_intensities(image_path, device="cpu"):
     # config = load_config(config_path)
     opts = ConfigObject({'seed': 0,
                         'data_root': '',
-                        'ckpt_path': './libreface/AU_Recognition/weights/resnet.pt',
+                        'ckpt_path': f'{weights_download_dir}/AU_Recognition/weights/resnet.pt',
                         'weights_download_id': '14qEnWRew2snhdMdOVyqKFJ5rq5VZrfAX',
                         'data': 'DISFA',
                         'fold': 'all',

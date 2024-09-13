@@ -9,7 +9,8 @@ from libreface.utils import get_frames_from_video_opencv, uniquify_file, check_f
 
 def get_facial_attributes_image(image_path:str, 
                                 temp_dir:str="./tmp", 
-                                device:str="cpu")->dict:
+                                device:str="cpu",
+                                weights_download_dir = "./weights_libreface")->dict:
     """Get facial attributes for an image. This function reads an image and returns a dictionary containing
     some detected facial action units and expressions.
 
@@ -18,6 +19,7 @@ def get_facial_attributes_image(image_path:str,
         temp_dir (str, optional): Path where the temporary aligned image, facial landmarks 
         and landmark annotated image will be stored. Defaults to "./tmp".
         device (str, optional): device to be used for inference. Can be "cpu" or "cuda". Defaults to "cpu".
+        weights_download_dir(str, optional): directory where you want to download and save the model weights.
 
     Returns:
         dict: dictionary containing the following keys
@@ -30,9 +32,9 @@ def get_facial_attributes_image(image_path:str,
     
     print(f"Using device: {device} for inference...")
     aligned_image_path = get_aligned_image(image_path, temp_dir=temp_dir, verbose=True)
-    detected_aus = detect_action_units(aligned_image_path, device = device)
-    au_intensities = get_au_intensities(aligned_image_path, device = device)
-    facial_expression = get_facial_expression(aligned_image_path, device = device)
+    detected_aus = detect_action_units(aligned_image_path, device = device, weights_download_dir=weights_download_dir)
+    au_intensities = get_au_intensities(aligned_image_path, device = device, weights_download_dir=weights_download_dir)
+    facial_expression = get_facial_expression(aligned_image_path, device = device, weights_download_dir=weights_download_dir)
     return {"input_image_path": image_path,
             "aligned_image_path": aligned_image_path,
             "detected_aus": detected_aus,

@@ -36,7 +36,8 @@ def facial_expr_idx_to_class(fe_idx):
                  7: "Contempt"}
     return idx_to_fe[fe_idx]
 
-def get_facial_expression(image_path, device = "cpu"):
+def get_facial_expression(image_path, device = "cpu",
+                        weights_download_dir = "./weights_libreface"):
     # # Path to the YAML config file
     # config_path = './libreface/Facial_Expression_Recognition/config_fer.yaml'
 
@@ -46,7 +47,7 @@ def get_facial_expression(image_path, device = "cpu"):
                         'train_csv': 'training_filtered.csv',
                         'test_csv': 'validation_filtered.csv',
                         'data_root': '',
-                        'ckpt_path': './libreface/Facial_Expression_Recognition/weights/resnet.pt',
+                        'ckpt_path': f'{weights_download_dir}/Facial_Expression_Recognition/weights/resnet.pt',
                         'weights_download_id': '1PeoPj8rga4vU2nuh_PciyX3HqaXp6LP7',
                         'data': 'AffectNet',
                         'num_workers': 8,

@@ -19,6 +19,7 @@ libreface/Facial_Expression_Recognition/data
 libreface/AU_Detection/weights/
 libreface/AU_Recognition/weights/
 libreface/Facial_Expression_Recognition/weights/
+weights_libreface/
 build/
 dist/
 *.egg-info/*

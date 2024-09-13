@@ -32,7 +32,8 @@ def format_output(out_dict):
     return new_dict
 
 def detect_action_units(image_path:str, 
-                        device:str = "cpu")->dict:
+                        device:str = "cpu",
+                        weights_download_dir = "./weights_libreface")->dict:
     """This method takes an image path as input and detects the action 
     units present in the image. Right now the action units covered are 
 
@@ -46,7 +47,7 @@ def detect_action_units(image_path:str,
     """
     opts = ConfigObject({'seed': 0,
                         'data_root': '',
-                        'ckpt_path': './libreface/AU_Detection/weights/resnet.pt',
+                        'ckpt_path': f'{weights_download_dir}/AU_Detection/weights/resnet.pt',
                         'weights_download_id': '17v_vxQ09upLG3Yh0Zlx12rpblP7uoA8x',
                         'data': 'BP4D',
                         'fold': 'all',
