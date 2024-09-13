@@ -117,7 +117,7 @@ def uniquify_file(path):
 
     return path
 
-def get_aligned_image(image_path, temp_dir = "./tmp"):
+def get_aligned_image(image_path, temp_dir = "./tmp", verbose=False):
 
   # temp_dir = uniquify_dir(temp_dir)
   os.makedirs(temp_dir, exist_ok=True)
@@ -322,9 +322,9 @@ def get_aligned_image(image_path, temp_dir = "./tmp"):
         landmark = np.array([lm_x,lm_y]).T
         np.save(land_save_path, landmark)
 
-
-  print("Aligned Image save to: ",aligned_img_save_path)
-  print("Annotated Image save to: ",annotated_image_save_path)
+  if verbose:
+    print("Aligned Image save to: ",aligned_img_save_path)
+    print("Annotated Image save to: ",annotated_image_save_path)
   cv2.imwrite(annotated_image_save_path,annotated_image)
   # pdb.set_trace()
   aligned_image = image_align(Image.open(img_path), np.load(land_save_path))
@@ -334,7 +334,7 @@ def get_aligned_image(image_path, temp_dir = "./tmp"):
 
 def get_aligned_video_frames(frames_df, temp_dir="./tmp"):
   aligned_frames_paths = []
-  for _, row in frames_df.iterrows():
+  for _, row in tqdm(frames_df.iterrows(), desc="Aligning face for video frames..."):
       aligned_image_path = get_aligned_image(row["path_to_frame"], temp_dir)
       aligned_frames_paths.append(aligned_image_path)
   

@@ -8,7 +8,7 @@ class ResNet18(nn.Module):
 		super(ResNet18, self).__init__()
 		self.fm_distillation = opts.fm_distillation
 		self.dropout = opts.dropout
-		resnet18 = torchvision.models.resnet18(pretrained=True)
+		resnet18 = torchvision.models.resnet18(weights=torchvision.models.ResNet18_Weights.IMAGENET1K_V1)
 		resnet18_layers = list(resnet18.children())[:-1]
 		self.encoder = nn.Sequential(*resnet18_layers)
 

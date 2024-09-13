@@ -45,7 +45,7 @@ class solver_inference_image(nn.Module):
 
 	def load_best_ckpt(self):
 		download_weights(self.config.weights_download_id, self.config.ckpt_path)
-		checkpoints = torch.load(self.config.ckpt_path, map_location=self.device)['model']
+		checkpoints = torch.load(self.config.ckpt_path, map_location=self.device, weights_only=True)['model']
 		self.student_model.load_state_dict(checkpoints, strict=True)
   
   

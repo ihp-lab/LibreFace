@@ -66,7 +66,7 @@ def detect_action_units(image_path, device="cpu"):
 
     opts.device = device
     # opts.ckpt_path = model_path
-    print(f"Using device: {opts.device} for inference...")
+    # print(f"Using device: {opts.device} for inference...")
     solver = solver_in_domain_image(opts).to(device)
 
     detected_aus = solver.run(image_path)

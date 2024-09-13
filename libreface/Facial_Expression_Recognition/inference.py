@@ -85,7 +85,7 @@ def get_facial_expression(image_path, device = "cpu"):
     set_seed(opts.seed)
 
     opts.device = device
-    print(f"Using device: {opts.device} for inference...")
+    # print(f"Using device: {opts.device} for inference...")
 
     solver = solver_inference_image(opts).to(device)
 
