@@ -11,8 +11,8 @@ import pdb
 import argparse
 
 def image_align(img, face_landmarks, output_size=256,
-				transform_size=4096, enable_padding=True, x_scale=1,
-				y_scale=1, em_scale=0.1, alpha=False, pad_mode='const'):
+        transform_size=4096, enable_padding=True, x_scale=1,
+        y_scale=1, em_scale=0.1, alpha=False, pad_mode='const'):
 
   lm = np.array(face_landmarks)
   lm[:,0] *= img.size[0]
@@ -21,12 +21,12 @@ def image_align(img, face_landmarks, output_size=256,
   lm_eye_right      = lm[0:16]  
   lm_eye_left     = lm[16:32]  
   lm_mouth_outer   = lm[32:]  
-	# lm_mouth_inner   = lm[60 : 68]  # left-clockwise
+  # lm_mouth_inner   = lm[60 : 68]  # left-clockwise
   lm_mouth_outer_x = lm_mouth_outer[:,0].tolist()
   left_index = lm_mouth_outer_x.index(min(lm_mouth_outer_x))
   right_index = lm_mouth_outer_x.index(max(lm_mouth_outer_x))
   # print(left_index,right_index)
-	# Calculate auxiliary vectors.
+  # Calculate auxiliary vectors.
   eye_left     = np.mean(lm_eye_left, axis=0)
   # eye_left[[0,1]] = eye_left[[1,0]]
   eye_right    = np.mean(lm_eye_right, axis=0)
@@ -38,7 +38,7 @@ def image_align(img, face_landmarks, output_size=256,
   # mouth_avg[[0,1]] = mouth_avg[[1,0]]
   
   eye_to_mouth = mouth_avg - eye_avg
-	# Choose oriented crop rectangle.
+  # Choose oriented crop rectangle.
   x = eye_to_eye - np.flipud(eye_to_mouth) * [-1, 1]
   x /= np.hypot(*x)
   x *= max(np.hypot(*eye_to_eye) * 2.0, np.hypot(*eye_to_mouth) * 1.8)
@@ -48,7 +48,7 @@ def image_align(img, face_landmarks, output_size=256,
   quad = np.stack([c - x - y, c - x + y, c + x + y, c + x - y])
   qsize = np.hypot(*x) * 2
 
-	# Shrink.
+  # Shrink.
   shrink = int(np.floor(qsize / output_size * 0.5))
   if shrink > 1:
     rsize = (int(np.rint(float(img.size[0]) / shrink)), int(np.rint(float(img.size[1]) / shrink)))
@@ -56,7 +56,7 @@ def image_align(img, face_landmarks, output_size=256,
     quad /= shrink
     qsize /= shrink
 
-	# Crop.
+  # Crop.
   border = max(int(np.rint(qsize * 0.1)), 3)
   crop = (int(np.floor(min(quad[:,0]))), int(np.floor(min(quad[:,1]))), int(np.ceil(max(quad[:,0]))), int(np.ceil(max(quad[:,1]))))
   crop = (max(crop[0] - border, 0), max(crop[1] - border, 0), min(crop[2] + border, img.size[0]), min(crop[3] + border, img.size[1]))
@@ -64,7 +64,7 @@ def image_align(img, face_landmarks, output_size=256,
     img = img.crop(crop)
     quad -= crop[0:2]
 
-	# Pad.
+  # Pad.
   pad = (int(np.floor(min(quad[:,0]))), int(np.floor(min(quad[:,1]))), int(np.ceil(max(quad[:,0]))), int(np.ceil(max(quad[:,1]))))
   pad = (max(-pad[0] + border, 0), max(-pad[1] + border, 0), max(pad[2] - img.size[0] + border, 0), max(pad[3] - img.size[1] + border, 0))
   if enable_padding and max(pad) > border - 4:
@@ -90,7 +90,7 @@ def image_align(img, face_landmarks, output_size=256,
     quad += pad[:2]
 
   img = img.transform((transform_size, transform_size), Image.Transform.QUAD,
-						(quad + 0.5).flatten(), Image.Resampling.BILINEAR)
+            (quad + 0.5).flatten(), Image.Resampling.BILINEAR)
   out_image = img.resize((output_size, output_size), Image.Resampling.LANCZOS)
 
   return out_image
@@ -331,7 +331,15 @@ def get_aligned_image(image_path, temp_dir = "./tmp"):
   aligned_image.save(aligned_img_save_path)
 
   return aligned_img_save_path
+
+def get_aligned_video_frames(frames_df, temp_dir="./tmp"):
+  aligned_frames_paths = []
+  for _, row in frames_df.iterrows():
+      aligned_image_path = get_aligned_image(row["path_to_frame"], temp_dir)
+      aligned_frames_paths.append(aligned_image_path)
   
+  return aligned_frames_paths
+
 if __name__ == "__main__":
   parser = argparse.ArgumentParser()
   parser.add_argument('--image_path', type=str, default='/home/achaubey/Desktop/projects/data/DISFA/images/LeftVideoSN001_comp/LeftVideoSN001_comp_0001.png', help='Input path to input images')
