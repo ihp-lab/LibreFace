@@ -65,3 +65,41 @@ if __name__=="__main__":
     
     frames_df.to_csv("video_frames.csv")
     print(cur_video_frames_path)
+
+def uniquify_dir(dir_path):
+    dir_path = dir_path.rstrip("/")
+    dir_name = dir_path.split("/")[-1]
+    par_dir = "/".join(dir_path.split("/")[:-1])
+
+    counter=1
+    while os.path.exists(dir_path):
+        dir_path = f"{par_dir}/{dir_name}_{counter}"
+        counter+=1
+    return dir_path
+
+def uniquify_file(path):
+    filename, extension = os.path.splitext(path)
+    counter = 1
+
+    while os.path.exists(path):
+        path = filename + " (" + str(counter) + ")" + extension
+        counter += 1
+
+    return path
+
+def check_file_type(file_path):
+    IMAGE_EXTENSIONS = ['.jpg', '.jpeg', '.png', '.gif', '.bmp', '.tiff', '.webp']
+    VIDEO_EXTENSIONS = ['.mp4', '.avi', '.mov', '.wmv', '.flv', '.mkv', '.webm', '.mpeg', '.mpg']
+
+    # Extract the file extension
+    _, ext = os.path.splitext(file_path)
+    
+    # Convert extension to lowercase to avoid case-sensitivity issues
+    ext = ext.lower()
+
+    if ext in IMAGE_EXTENSIONS:
+        return "image"
+    elif ext in VIDEO_EXTENSIONS:
+        return "video"
+    else:
+        return "unknown"

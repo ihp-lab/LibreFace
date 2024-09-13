@@ -25,6 +25,12 @@ def set_seed(seed):
     random.seed(seed)
     np.random.seed(seed)
 
+def format_output(out_dict):
+    new_dict = {}
+    for k, v in out_dict.items():
+        new_dict[f"au_{k}"] = v
+    return new_dict
+
 def detect_action_units(image_path, device="cpu"):
     
     # Path to the YAML config file
@@ -70,7 +76,7 @@ def detect_action_units(image_path, device="cpu"):
     solver = solver_in_domain_image(opts).to(device)
 
     detected_aus = solver.run(image_path)
-    return detected_aus
+    return format_output(detected_aus)
 
 def main():
 

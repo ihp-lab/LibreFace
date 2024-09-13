@@ -25,6 +25,12 @@ def set_seed(seed):
     random.seed(seed)
     np.random.seed(seed)
 
+def format_output(out_dict):
+    new_dict = {}
+    for k, v in out_dict.items():
+        new_dict[f"au_{k}_intensity"] = round(v, 3)
+    return new_dict
+
 def get_au_intensities(image_path, device="cpu"):
     
     # # Path to the YAML config file
@@ -69,7 +75,7 @@ def get_au_intensities(image_path, device="cpu"):
     solver = solver_inference_image(opts).to(device)
 
     au_intensities = solver.run(image_path)
-    return au_intensities
+    return format_output(au_intensities)
 
 def main():
 

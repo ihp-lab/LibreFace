@@ -10,6 +10,8 @@ import mediapipe as mp
 import pdb
 import argparse
 
+from libreface.utils import uniquify_file, uniquify_dir
+
 def image_align(img, face_landmarks, output_size=256,
         transform_size=4096, enable_padding=True, x_scale=1,
         y_scale=1, em_scale=0.1, alpha=False, pad_mode='const'):
