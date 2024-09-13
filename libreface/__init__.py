@@ -5,7 +5,7 @@ from libreface.detect_mediapipe_image import *
 from libreface.AU_Detection.inference import detect_action_units
 from libreface.AU_Recognition.inference import get_au_intensities
 from libreface.Facial_Expression_Recognition.inference import get_facial_expression
-from libreface.utils import get_frames_from_video_decord, uniquify_file, check_file_type
+from libreface.utils import get_frames_from_video_opencv, uniquify_file, check_file_type
 
 def get_facial_attributes_image(image_path:str, 
                                 temp_dir:str="./tmp", 
@@ -43,7 +43,7 @@ def get_facial_attributes_video(video_path,
                                 temp_dir="./tmp", 
                                 device="cpu"):
     print(f"Using device: {device} for inference...")
-    frames_df = get_frames_from_video_decord(video_path, temp_dir=temp_dir)
+    frames_df = get_frames_from_video_opencv(video_path, temp_dir=temp_dir)
     cur_video_name = ".".join(video_path.split("/")[-1].split(".")[:-1])
     aligned_frames_path_list = get_aligned_video_frames(frames_df, temp_dir=os.path.join(temp_dir, cur_video_name))
     frames_df["aligned_frame_path"] = aligned_frames_path_list

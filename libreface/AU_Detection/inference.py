@@ -80,7 +80,6 @@ def detect_action_units(image_path:str,
     # opts.ckpt_path = model_path
     # print(f"Using device: {opts.device} for inference...")
     solver = solver_in_domain_image(opts).to(device)
-
     detected_aus = solver.run(image_path)
     return format_output(detected_aus)
 

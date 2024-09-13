@@ -1,6 +1,6 @@
 import cv2
-from decord import VideoReader
-from decord import cpu, gpu
+# from decord import VideoReader  ## decord causes issues with torch running on GPU
+# from decord import cpu          ## Uncomment these lines only when you really want to
 import gdown
 import os
 import pandas as pd
@@ -29,6 +29,32 @@ def get_frames_from_video(video_path, temp_dir="./tmp"):
     os.system(ffmpeg_command)
     
     return cur_video_save_path
+
+def get_frames_from_video_opencv(video_path, temp_dir="./tmp"):
+    cur_video_name = ".".join(video_path.split("/")[-1].split(".")[:-1])
+    cur_video_save_path = os.path.join(temp_dir, cur_video_name)
+    os.makedirs(cur_video_save_path, exist_ok=True)
+
+    vidcap = cv2.VideoCapture(video_path)
+    success, image = vidcap.read()
+
+    count=0
+    frame_paths = []
+    frame_idxs = []
+    frame_timestamps = []
+
+    while(success):
+        cur_frame_path = os.path.join(cur_video_save_path, "{:010d}.png".format(count))
+        frame_timestamps.append(vidcap.get(cv2.CAP_PROP_POS_MSEC))
+        frame_paths.append(cur_frame_path)
+        frame_idxs.append(count)
+        cv2.imwrite(cur_frame_path, image)
+        success, image = vidcap.read()
+        count+=1
+    
+    frames_df = pd.DataFrame({"frame_idx":frame_idxs, "frame_time_in_ms":frame_timestamps, "path_to_frame":frame_paths})
+    
+    return frames_df
 
 ## Adapted from https://gist.github.com/HaydenFaulkner/3aa69130017d6405a8c0580c63bee8e6
 def get_frames_from_video_decord(video_path, temp_dir="./temp"):

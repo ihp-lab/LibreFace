@@ -47,7 +47,7 @@ about = {}
 # with open(PACKAGE_DIR / 'VERSION') as f:
 #     _version = f.read().strip()
 
-about['__version__'] = "0.0.8"
+about['__version__'] = "0.0.10"
 
 
 # Where the magic happens:
