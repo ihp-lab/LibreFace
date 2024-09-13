@@ -7,7 +7,27 @@ from libreface.AU_Recognition.inference import get_au_intensities
 from libreface.Facial_Expression_Recognition.inference import get_facial_expression
 from libreface.utils import get_frames_from_video_decord, uniquify_file, check_file_type
 
-def get_facial_attributes_image(image_path, temp_dir="./tmp", device="cpu"):
+def get_facial_attributes_image(image_path:str, 
+                                temp_dir:str="./tmp", 
+                                device:str="cpu")->dict:
+    """Get facial attributes for an image. This function reads an image and returns a dictionary containing
+    some detected facial action units and expressions.
+
+    Args:
+        image_path (str): Input image path.
+        temp_dir (str, optional): Path where the temporary aligned image, facial landmarks 
+        and landmark annotated image will be stored. Defaults to "./tmp".
+        device (str, optional): device to be used for inference. Can be "cpu" or "cuda". Defaults to "cpu".
+
+    Returns:
+        dict: dictionary containing the following keys
+            input_image_path - copied from the image_path
+            aligned_image_path - path to the aligned image, i.e. image with the only the face of the person cropped from original image
+            detected_action_units - dictionary of detected action units. Units which are detected have value of 1, else 0.
+            au_intensities - dictionary of action unit intensities, with each intensity in the range (0, 5)
+            facial_expression - detected facial expression. Can be one from ["Neutral", "Happiness", "Sadness", "Surprise", "Fear", "Disgust", "Anger", "Contempt"]
+    """
+    
     print(f"Using device: {device} for inference...")
     aligned_image_path = get_aligned_image(image_path, temp_dir=temp_dir, verbose=True)
     detected_aus = detect_action_units(aligned_image_path, device = device)

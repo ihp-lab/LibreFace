@@ -31,13 +31,19 @@ def format_output(out_dict):
         new_dict[f"au_{k}"] = v
     return new_dict
 
-def detect_action_units(image_path, device="cpu"):
-    
-    # Path to the YAML config file
-    # config_path = './libreface/AU_Detection/config_au_detection.yaml'
+def detect_action_units(image_path:str, 
+                        device:str = "cpu")->dict:
+    """This method takes an image path as input and detects the action 
+    units present in the image. Right now the action units covered are 
 
-    # Load the configuration from YAML
-    # config = load_config(config_path)
+    Args:
+        image_path (str): Path to the input image
+        device (str, optional): Device to be used for pytorch inference. Can be "cpu" or "cuda". Defaults to "cpu".
+
+    Returns:
+        dict: Dictionary containing the different action unit numbers as keys and having values `1` for the action
+            units that are detected and `0` for the ones that are not detected. 
+    """
     opts = ConfigObject({'seed': 0,
                         'data_root': '',
                         'ckpt_path': './libreface/AU_Detection/weights/resnet.pt',
