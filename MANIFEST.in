@@ -1,5 +1,7 @@
 include requirements.txt
 include requirements_new.txt
+include README_pypi.rst
+include LICENSE.rst
 include MANIFEST.in
 include README.md
 exclude *.log

@@ -33,12 +33,17 @@ here = os.path.abspath(os.path.dirname(__file__))
 
 # Import the README and use it as the long-description.
 # Note: this will only work if 'README.md' is present in your MANIFEST.in file!
-# try:
-#     import pypandoc
-#     long_description = pypandoc.convert_file("README.md", "rst")
-# except FileNotFoundError:
-long_description = DESCRIPTION
+try:
+    with open("README_pypi.rst") as f:
+        long_description = f.read()
+except FileNotFoundError:
+    long_description = DESCRIPTION
 
+try:
+    with open("LICENSE.rst") as f:
+        license = f.read()
+except FileNotFoundError:
+    license = "USC"
 
 # Load the package's __version__.py module as a dictionary.
 ROOT_DIR = Path(__file__).resolve().parent
@@ -47,7 +52,7 @@ about = {}
 # with open(PACKAGE_DIR / 'VERSION') as f:
 #     _version = f.read().strip()
 
-about['__version__'] = "0.0.10"
+about['__version__'] = "0.0.13"
 
 
 # Where the magic happens:
@@ -55,7 +60,7 @@ setup(
     name=NAME,
     version=about['__version__'],
     description='LibreFace model for facial analysis',
-    long_descripation_content_type='text/markdown',
+    long_descripation_content_type='text/x-rst',
     long_description=long_description,
     author=AUTHOR,
     author_email=EMAIL,
@@ -66,7 +71,7 @@ setup(
     install_requires=list_reqs(),
     extras_require={},
     include_package_data=True,
-    license='MIT',
+    license=license,
     classifiers=[
         # Trove classifiers
         # Full list: https://pypi.python.org/pypi?%3Aaction=list_classifiers
