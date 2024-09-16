@@ -3,19 +3,21 @@ from tqdm import tqdm
 
 from libreface.detect_mediapipe_image import *
 from libreface.AU_Detection.inference import detect_action_units
-from libreface.AU_Recognition.inference import get_au_intensities
+from libreface.AU_Recognition.inference import get_au_intensities, get_au_intensities_and_detect_aus
 from libreface.Facial_Expression_Recognition.inference import get_facial_expression
 from libreface.utils import get_frames_from_video_opencv, uniquify_file, check_file_type
 
 def get_facial_attributes_image(image_path:str, 
+                                model_choice:str="joint_au_detection_intensity_estimator", 
                                 temp_dir:str="./tmp", 
                                 device:str="cpu",
-                                weights_download_dir = "./weights_libreface")->dict:
+                                weights_download_dir:str = "./weights_libreface")->dict:
     """Get facial attributes for an image. This function reads an image and returns a dictionary containing
     some detected facial action units and expressions.
 
     Args:
         image_path (str): Input image path.
+        model_choice (str, optional): Model to use when doing predictions. Defaults to "joint_au_detection_intensity_estimator".
         temp_dir (str, optional): Path where the temporary aligned image, facial landmarks 
         and landmark annotated image will be stored. Defaults to "./tmp".
         device (str, optional): device to be used for inference. Can be "cpu" or "cuda". Defaults to "cpu".
@@ -32,8 +34,14 @@ def get_facial_attributes_image(image_path:str,
     
     print(f"Using device: {device} for inference...")
     aligned_image_path = get_aligned_image(image_path, temp_dir=temp_dir, verbose=True)
-    detected_aus = detect_action_units(aligned_image_path, device = device, weights_download_dir=weights_download_dir)
-    au_intensities = get_au_intensities(aligned_image_path, device = device, weights_download_dir=weights_download_dir)
+    if model_choice == "joint_au_detection_intensity_estimator":
+        detected_aus, au_intensities = get_au_intensities_and_detect_aus(aligned_image_path, device=device, weights_download_dir=weights_download_dir)
+    elif model_choice == "separate_prediction_heads":
+        detected_aus = detect_action_units(aligned_image_path, device = device, weights_download_dir=weights_download_dir)
+        au_intensities = get_au_intensities(aligned_image_path, device = device, weights_download_dir=weights_download_dir)
+    else:
+        print(f"Undefined model_choice = {model_choice} for get_facial_attributes_image()")
+        raise NotImplementedError
     facial_expression = get_facial_expression(aligned_image_path, device = device, weights_download_dir=weights_download_dir)
     return {"input_image_path": image_path,
             "aligned_image_path": aligned_image_path,
@@ -42,8 +50,10 @@ def get_facial_attributes_image(image_path:str,
             "facial_expression": facial_expression}
 
 def get_facial_attributes_video(video_path, 
+                                model_choice:str="joint_au_detection_intensity_estimator", 
                                 temp_dir="./tmp", 
-                                device="cpu"):
+                                device="cpu",
+                                weights_download_dir:str = "./weights_libreface"):
     print(f"Using device: {device} for inference...")
     frames_df = get_frames_from_video_opencv(video_path, temp_dir=temp_dir)
     cur_video_name = ".".join(video_path.split("/")[-1].split(".")[:-1])
@@ -52,9 +62,17 @@ def get_facial_attributes_video(video_path,
 
     detected_aus, au_intensities, facial_expression = [], [], []
     for _, row in tqdm(frames_df.iterrows(), "Detecting action units and facial expression on video frames..."):
-        detected_aus.append(detect_action_units(row["aligned_frame_path"], device = device))
-        au_intensities.append(get_au_intensities(row["aligned_frame_path"], device = device))
-        facial_expression.append(get_facial_expression(row["aligned_frame_path"], device = device))
+        if model_choice == "joint_au_detection_intensity_estimator":
+            detected_aus_frame, au_intensities_frame = get_au_intensities_and_detect_aus(row["aligned_frame_path"], device=device, weights_download_dir=weights_download_dir)
+            detected_aus.append(detected_aus_frame)
+            au_intensities.append(au_intensities_frame)
+        elif model_choice == "separate_prediction_heads":
+            detected_aus.append(detect_action_units(row["aligned_frame_path"], device = device, weights_download_dir=weights_download_dir))
+            au_intensities.append(get_au_intensities(row["aligned_frame_path"], device = device, weights_download_dir=weights_download_dir))
+        else:
+            print(f"Undefined model_choice = {model_choice} for get_facial_attributes_video()")
+            raise NotImplementedError
+        facial_expression.append(get_facial_expression(row["aligned_frame_path"], device = device, weights_download_dir=weights_download_dir))
     frames_df["detected_aus"] = detected_aus
     frames_df["au_intensities"] = au_intensities
     frames_df["facial_expression"] = facial_expression
@@ -64,11 +82,15 @@ def get_facial_attributes_video(video_path,
 
 def save_facial_attributes_video(video_path, 
                             output_save_path = "video_results.csv", 
+                            model_choice:str="joint_au_detection_intensity_estimator",
                             temp_dir="./tmp", 
-                            device="cpu"):
+                            device="cpu",
+                            weights_download_dir:str = "./weights_libreface"):
     frames_df = get_facial_attributes_video(video_path,
-                                            temp_dir,
-                                            device)
+                                            model_choice=model_choice,
+                                            temp_dir=temp_dir,
+                                            device=device, 
+                                            weights_download_dir=weights_download_dir)
     save_path = uniquify_file(output_save_path)
     frames_df.to_csv(save_path)
     print(f"Facial attributes of the video saved to {save_path}")
@@ -76,9 +98,15 @@ def save_facial_attributes_video(video_path,
 
 def save_facial_attributes_image(image_path, 
                                  output_save_path = "image_results.csv", 
+                                 model_choice:str="joint_au_detection_intensity_estimator",
                                  temp_dir="./tmp", 
-                                 device="cpu"):
-    attr_dict = get_facial_attributes_image(image_path, temp_dir, device)
+                                 device="cpu",
+                                 weights_download_dir:str = "./weights_libreface"):
+    attr_dict = get_facial_attributes_image(image_path, 
+                                            model_choice=model_choice, 
+                                            temp_dir=temp_dir, 
+                                            device=device,
+                                            weights_download_dir=weights_download_dir)
     for k, v in attr_dict.items():
         attr_dict[k] = [v]
     attr_df = pd.DataFrame(attr_dict)
@@ -89,23 +117,34 @@ def save_facial_attributes_image(image_path,
     print(f"Facial attributes of the image saved to {save_path}")
     return save_path
 
-def get_facial_attributes(file_path, output_save_path=None, temp_dir="./tmp", device="cpu"):
+def get_facial_attributes(file_path, 
+                          output_save_path=None, 
+                          model_choice:str="joint_au_detection_intensity_estimator",
+                          temp_dir="./tmp", 
+                          device="cpu",
+                          weights_download_dir:str = "./weights_libreface"):
     file_type = check_file_type(file_path)
     if file_type == "image":
         if output_save_path is None:
-            return get_facial_attributes_image(file_path, temp_dir=temp_dir, device=device)
+            return get_facial_attributes_image(file_path, model_choice=model_choice, 
+                                               temp_dir=temp_dir, device=device, weights_download_dir=weights_download_dir)
         else:
             try:
-                return save_facial_attributes_image(file_path, output_save_path=output_save_path, temp_dir=temp_dir, device=device)
+                return save_facial_attributes_image(file_path, output_save_path=output_save_path, 
+                                                    model_choice=model_choice, temp_dir=temp_dir, 
+                                                    device=device, weights_download_dir=weights_download_dir)
             except Exception as e:
                 print(e)
                 print("Some error in saving the results.")
     elif file_type == "video":
         if output_save_path is None:
-            return get_facial_attributes_video(file_path, temp_dir=temp_dir, device=device)
+            return get_facial_attributes_video(file_path, model_choice=model_choice, 
+                                               temp_dir=temp_dir, device=device, weights_download_dir=weights_download_dir)
         else:
             try:
-                return save_facial_attributes_video(file_path, output_save_path=output_save_path, temp_dir=temp_dir, device=device)
+                return save_facial_attributes_video(file_path, output_save_path=output_save_path, 
+                                                    model_choice=model_choice, temp_dir=temp_dir, 
+                                                    device=device, weights_download_dir=weights_download_dir)
             except Exception as e:
                 print(e)
                 print("Some error in saving the results.")

@@ -5,6 +5,7 @@ import torch
 import yaml
 
 from libreface.AU_Recognition.solver_inference_image import solver_inference_image
+from libreface.AU_Recognition.solver_inference_combine import solver_inference_image_task_combine
 
 class ConfigObject:
     def __init__(self, config_dict):
@@ -25,11 +26,69 @@ def set_seed(seed):
     random.seed(seed)
     np.random.seed(seed)
 
-def format_output(out_dict):
+def format_output(out_dict, task = "au_recognition"):
     new_dict = {}
     for k, v in out_dict.items():
-        new_dict[f"au_{k}_intensity"] = round(v, 3)
+        if task == "au_recognition":
+            new_dict[f"au_{k}_intensity"] = round(v, 3)
+        elif task == "au_detection":
+            new_dict[f"au_{k}"] = v
+        else:
+            raise NotImplementedError(f"format_output() not defined for the task - {task}")
     return new_dict
+
+def get_au_intensities_and_detect_aus(image_path, device="cpu",
+                                      weights_download_dir="./weights_libreface"):
+    opts = ConfigObject({'seed':0,
+                        'ckpt_path': f'{weights_download_dir}/AU_Recognition/weights/combined_resnet.pt',
+                        'weights_download_id':"1CbnBr8OBt8Wb73sL1ENcrtrWAFWSSRv0", 
+                        'image_inference': False,
+                        'au_recognition_data_root': '',
+                        'au_recognition_data': 'DISFA',
+                        'au_detection_data_root': '',
+                        'au_detection_data': 'BP4D',
+                        'fer_train_csv': 'training_filtered.csv',
+                        'fer_test_csv': 'validation_filtered.csv',
+                        'fer_data_root': '',
+                        'fer_data': 'AffectNet',
+                        'fold': 'all',
+                        'num_workers': 4,
+                        'image_size': 256,
+                        'crop_size': 224,
+                        'au_recognition_num_labels': 12,
+                        'au_detection_num_labels': 12,
+                        'fer_num_labels': 8,
+                        'sigma': 10.0,
+                        'jitter': False,
+                        'copy_classifier': False,
+                        'model_name': 'resnet',
+                        'dropout': 0.1,
+                        'ffhq_pretrain': '',
+                        'hidden_dim': 128,
+                        'fm_distillation': False,
+                        'num_epochs': 30,
+                        'interval': 500,
+                        'threshold': 0,
+                        'batch_size': 256,
+                        'learning_rate': 3e-5,
+                        'weight_decay': 1e-4,
+                        'clip': 1.0,
+                        'when': 10,
+                        'patience': 5,
+                        'device': 'cuda'
+                    })
+    
+    #set seed
+    set_seed(opts.seed)
+
+    opts.device = device
+    # print(f"Using device: {opts.device} for inference...")
+
+    solver = solver_inference_image_task_combine(opts).to(device)
+
+    detected_aus = solver.run(image_path, task = "au_detection")
+    au_intensities = solver.run(image_path, task = "au_recognition")
+    return format_output(detected_aus, task="au_detection"), format_output(au_intensities, task = "au_recognition")
 
 def get_au_intensities(image_path, device="cpu",
                         weights_download_dir = "./weights_libreface"):
