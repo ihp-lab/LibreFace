@@ -4,7 +4,7 @@ gdown==5.2.0
 importlib-metadata==8.4.0
 importlib-resources==6.4.5
 imutils==0.5.4
-mediapipe==0.10.11
+mediapipe==0.9.3
 opencv-python==4.10.0.84
 pandas==2.0.3
 pyyaml==6.0.2
