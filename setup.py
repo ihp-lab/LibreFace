@@ -41,7 +41,7 @@ except FileNotFoundError:
 
 try:
     with open("LICENSE.rst") as f:
-        license = f.read()
+        license = "USC Research Licence \n"+f.read()
 except FileNotFoundError:
     license = "USC"
 
@@ -52,7 +52,7 @@ about = {}
 # with open(PACKAGE_DIR / 'VERSION') as f:
 #     _version = f.read().strip()
 
-about['__version__'] = "0.0.13"
+about['__version__'] = "0.0.14"
 
 
 # Where the magic happens:
@@ -75,7 +75,7 @@ setup(
     classifiers=[
         # Trove classifiers
         # Full list: https://pypi.python.org/pypi?%3Aaction=list_classifiers
-        'License :: OSI Approved :: MIT License',
+        # 'License :: OSI Approved :: MIT License',
         'Programming Language :: Python',
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.8',

@@ -9,7 +9,7 @@ Libreface
 |badge1| |badge2|
 
 
-.. |badge1| image:: https://img.shields.io/badge/version-0.0.13-blue
+.. |badge1| image:: https://img.shields.io/badge/version-0.0.14-blue
    :alt: Static Badge
 
 
@@ -43,7 +43,7 @@ You can install this package using `pip` from the testPyPI hub:
 
 .. code-block:: bash
 
-    python -m pip install --index-url https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple libreface==0.0.13
+    python -m pip install --index-url https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple libreface==0.0.14
 
 
 Usage
@@ -108,4 +108,6 @@ We welcome contributions! Here’s how you can help:
 
 License
 =======
-This project is licensed under the MIT License. 
+Please refer to our github repo for License_
+
+.. _license : https://github.com/ihp-lab/LibreFace/blob/main/LICENSE.txt
