@@ -14,7 +14,7 @@ DESCRIPTION = 'LibreFace model for facial analysis'
 URL = 'https://boese0601.github.io/libreface'
 EMAIL = 'achaubey@usc.edu'
 AUTHOR = 'IHP-Lab'
-REQUIRES_PYTHON = '>=3.8.0'
+REQUIRES_PYTHON = '>=3.8'
 
 
 # What packages are required for this module to be executed?
@@ -43,7 +43,7 @@ try:
     with open("LICENSE.rst") as f:
         license = "USC Research Licence \n"+f.read()
 except FileNotFoundError:
-    license = "USC"
+    license = "USC Research License"
 
 # Load the package's __version__.py module as a dictionary.
 ROOT_DIR = Path(__file__).resolve().parent
@@ -52,7 +52,7 @@ about = {}
 # with open(PACKAGE_DIR / 'VERSION') as f:
 #     _version = f.read().strip()
 
-about['__version__'] = "0.0.14"
+about['__version__'] = "0.0.16"
 
 
 # Where the magic happens:
@@ -72,10 +72,12 @@ setup(
     extras_require={},
     include_package_data=True,
     license=license,
+    entry_points={
+        'console_scripts': 'libreface=libreface.commandline:main_func'
+    },
     classifiers=[
         # Trove classifiers
         # Full list: https://pypi.python.org/pypi?%3Aaction=list_classifiers
-        # 'License :: OSI Approved :: MIT License',
         'Programming Language :: Python',
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.8',

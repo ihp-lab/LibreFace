@@ -9,7 +9,7 @@ Libreface
 |badge1| |badge2|
 
 
-.. |badge1| image:: https://img.shields.io/badge/version-0.0.14-blue
+.. |badge1| image:: https://img.shields.io/badge/version-0.0.16-blue
    :alt: Static Badge
 
 
@@ -43,13 +43,63 @@ You can install this package using `pip` from the testPyPI hub:
 
 .. code-block:: bash
 
-    python -m pip install --index-url https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple libreface==0.0.14
+    python -m pip install --index-url https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple libreface==0.0.16
 
 
 Usage
 =====
 
-Here’s how to use this package.
+Commandline
+----------------
+
+You can use this package through commandline using the following command.
+
+.. code-block:: bash
+
+    libreface --input_path="path/to/your_image_or_video.jpg"
+
+Note that the above script would save results in a CSV at the default location - :code:`sample_results.csv`. If you want to specify your own path, use the :code:`--output_path`  commandline argument,
+
+.. code-block:: bash
+
+    libreface --input_path="path/to/your_image_or_video.jpg" --output_path="path/to/save_results.csv"
+
+To change the device used for inference, use the :code:`--device` commandline argument,
+
+.. code-block:: bash
+
+    libreface --input_path="path/to/your_image_or_video.jpg" --device="cuda:0"
+
+To save intermediate files, :code:`libreface` uses a temporary directory that defaults to ./tmp. To change the temporary directory path,
+
+.. code-block:: bash
+
+    libreface --input_path="path/to/your_image_or_video.jpg" --temp="your/temp/path"
+
+**Examples**
+
+Download a `sample image`_ from our github repository. To get the facial attributes for this image and save to a CSV file simply run,
+
+.. _`sample image`: https://github.com/ihp-lab/LibreFace/blob/pypi_wrap/sample_disfa.png
+
+.. code-block:: bash
+
+    libreface --input_path="sample_disfa.png"
+
+Download a `sample video`_ from our github repository. To run the inference on this video using a GPU and save the results to :code:`my_custom_file.csv` run the following command,
+
+.. _`sample video`: https://github.com/ihp-lab/LibreFace/blob/pypi_wrap/sample_disfa.avi
+
+.. code-block:: bash
+    
+    libreface --input_path="sample_disfa.avi" --output_path="my_custom_file.csv" --device="cuda:0"
+
+Note that for videos, each row in the saved csv file correspond to individual frames in the given video.
+
+Python API
+--------------
+
+Here’s how to use this package in your python scripts.
 
 To assign the results to a python variable,
 
@@ -74,7 +124,7 @@ To change the device used for inference, use the :code:`device` parameter,
     libreface.get_facial_attributes(image_or_video_path,
                                     device = "cuda:0") # can be "cpu" or "cuda:0", "cuda:1", ...
 
-To save intermediate files, libreface uses a temporary directory which defaults to :code:`./tmp`. To change the temporary directory path,
+To save intermediate files, libreface uses a temporary directory that defaults to :code:`./tmp`. To change the temporary directory path,
 
 .. code-block:: python
 
