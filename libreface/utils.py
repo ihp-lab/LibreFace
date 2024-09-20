@@ -45,7 +45,7 @@ def get_frames_from_video_opencv(video_path, temp_dir="./tmp"):
 
     while(success):
         cur_frame_path = os.path.join(cur_video_save_path, "{:010d}.png".format(count))
-        frame_timestamps.append(vidcap.get(cv2.CAP_PROP_POS_MSEC))
+        frame_timestamps.append(round(vidcap.get(cv2.CAP_PROP_POS_MSEC), 3))
         frame_paths.append(cur_frame_path)
         frame_idxs.append(count)
         cv2.imwrite(cur_frame_path, image)
@@ -85,13 +85,6 @@ def get_frames_from_video_decord(video_path, temp_dir="./temp"):
     
     return frames_df
 
-if __name__=="__main__":
-    video_path = "/home/achaubey/Desktop/projects/data/DISFA/Videos_LeftCamera/LeftVideoSN001_comp.avi"
-    cur_video_frames_path, frames_df = get_frames_from_video_decord(video_path, temp_dir="./tmp")
-    
-    frames_df.to_csv("video_frames.csv")
-    print(cur_video_frames_path)
-
 def uniquify_dir(dir_path):
     dir_path = dir_path.rstrip("/")
     dir_name = dir_path.split("/")[-1]
@@ -129,3 +122,18 @@ def check_file_type(file_path):
         return "video"
     else:
         return "unknown"
+    
+def restructure_landmark_dict(lm_dict):
+    new_lm_dict = {}
+    for k, v in lm_dict.items():
+        for lm_idx, lm_v in enumerate(v):
+            new_lm_dict[f"{k}_{lm_idx}"] = lm_v
+    return new_lm_dict
+
+
+if __name__=="__main__":
+    video_path = "/home/achaubey/Desktop/projects/data/DISFA/Videos_LeftCamera/LeftVideoSN001_comp.avi"
+    cur_video_frames_path, frames_df = get_frames_from_video_decord(video_path, temp_dir="./tmp")
+    
+    frames_df.to_csv("video_frames.csv")
+    print(cur_video_frames_path)

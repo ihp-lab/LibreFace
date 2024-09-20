@@ -10,7 +10,7 @@ import mediapipe as mp
 import pdb
 import argparse
 
-from libreface.utils import uniquify_file, uniquify_dir
+from libreface.utils import uniquify_file, uniquify_dir, restructure_landmark_dict
 
 def image_align(img, face_landmarks, output_size=256,
         transform_size=4096, enable_padding=True, x_scale=1,
@@ -189,6 +189,8 @@ def get_aligned_image(image_path, temp_dir = "./tmp", verbose=False):
   # print(Lips)
   # print(FACEMESH_LIPS)
 
+  landmark_dict = {}
+
 
   with mp_face_mesh.FaceMesh(
       static_image_mode=True,
@@ -254,7 +256,12 @@ def get_aligned_image(image_path, temp_dir = "./tmp", verbose=False):
         x = angles[0] * 360
         y = angles[1] * 360
         z = angles[2] * 360
-      
+
+        pitch = x
+        yaw = y
+        roll = z
+
+        head_pose = f"pitch:{pitch:.1f}, yaw:{yaw:.1f}, roll:{roll:.1f}"
 
         # See where the user's head tilting
         if y < -10:
@@ -278,9 +285,10 @@ def get_aligned_image(image_path, temp_dir = "./tmp", verbose=False):
 
         # Add the text on the image
         cv2.putText(annotated_image, text, (20, 50), cv2.FONT_HERSHEY_SIMPLEX, 2, (0, 255, 0), 2)
-        cv2.putText(annotated_image, "x: " + str(np.round(x,2)), (500, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
-        cv2.putText(annotated_image, "y: " + str(np.round(y,2)), (500, 100), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
-        cv2.putText(annotated_image, "z: " + str(np.round(z,2)), (500, 150), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
+        cv2.putText(annotated_image, head_pose, (20, 100), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
+        # cv2.putText(annotated_image, "x: " + str(np.round(x,2)), (500, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
+        # cv2.putText(annotated_image, "y: " + str(np.round(y,2)), (500, 100), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
+        # cv2.putText(annotated_image, "z: " + str(np.round(z,2)), (500, 150), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
         
         mp_drawing.draw_landmarks(
           image=annotated_image,
@@ -323,6 +331,14 @@ def get_aligned_image(image_path, temp_dir = "./tmp", verbose=False):
         lm_y = lm_left_eye_y + lm_right_eye_y + lm_lips_y
         landmark = np.array([lm_x,lm_y]).T
         np.save(land_save_path, landmark)
+        landmark_dict = {"lm_left_eye_x":lm_left_eye_x,
+                         "lm_left_eye_y":lm_left_eye_y,
+                         "lm_right_eye_x":lm_right_eye_x,
+                         "lm_right_eye_y":lm_right_eye_y,
+                         "lm_lips_x":lm_lips_x,
+                         "lm_lips_y":lm_lips_y}
+
+  landmark_dict = restructure_landmark_dict(landmark_dict)
 
   if verbose:
     print("Aligned Image save to: ",aligned_img_save_path)
@@ -330,22 +346,31 @@ def get_aligned_image(image_path, temp_dir = "./tmp", verbose=False):
   cv2.imwrite(annotated_image_save_path,annotated_image)
   # pdb.set_trace()
   aligned_image = image_align(Image.open(img_path), np.load(land_save_path))
+  os.remove(land_save_path)
   aligned_image.save(aligned_img_save_path)
 
-  return aligned_img_save_path
+  head_pose = {"pitch":pitch,
+               "yaw":yaw,
+               "roll":roll}
+
+  return aligned_img_save_path, head_pose, landmark_dict
 
 def get_aligned_video_frames(frames_df, temp_dir="./tmp"):
   aligned_frames_paths = []
+  head_pose_list = []
+  landmark_list = []
   for _, row in tqdm(frames_df.iterrows(), desc="Aligning face for video frames..."):
-      aligned_image_path = get_aligned_image(row["path_to_frame"], temp_dir)
+      aligned_image_path, head_pose, landmark_dict = get_aligned_image(row["path_to_frame"], temp_dir)
       aligned_frames_paths.append(aligned_image_path)
+      head_pose_list.append(head_pose)
+      landmark_list.append(landmark_dict)
   
-  return aligned_frames_paths
+  return aligned_frames_paths, head_pose_list, landmark_list
 
 if __name__ == "__main__":
   parser = argparse.ArgumentParser()
   parser.add_argument('--image_path', type=str, default='/home/achaubey/Desktop/projects/data/DISFA/images/LeftVideoSN001_comp/LeftVideoSN001_comp_0001.png', help='Input path to input images')
   
   args = parser.parse_args()
-  aligned_image_path = get_aligned_image(args.image_path)
+  aligned_image_path, _, _ = get_aligned_image(args.image_path)
   print("Aligned image saved to ", aligned_image_path)

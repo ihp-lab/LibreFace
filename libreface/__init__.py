@@ -33,7 +33,7 @@ def get_facial_attributes_image(image_path:str,
     """
     
     print(f"Using device: {device} for inference...")
-    aligned_image_path = get_aligned_image(image_path, temp_dir=temp_dir, verbose=True)
+    aligned_image_path, headpose, landmarks_2d = get_aligned_image(image_path, temp_dir=temp_dir, verbose=True)
     if model_choice == "joint_au_detection_intensity_estimator":
         detected_aus, au_intensities = get_au_intensities_and_detect_aus(aligned_image_path, device=device, weights_download_dir=weights_download_dir)
     elif model_choice == "separate_prediction_heads":
@@ -43,11 +43,14 @@ def get_facial_attributes_image(image_path:str,
         print(f"Undefined model_choice = {model_choice} for get_facial_attributes_image()")
         raise NotImplementedError
     facial_expression = get_facial_expression(aligned_image_path, device = device, weights_download_dir=weights_download_dir)
-    return {"input_image_path": image_path,
-            "aligned_image_path": aligned_image_path,
+    return_dict =  {
             "detected_aus": detected_aus,
             "au_intensities": au_intensities,
             "facial_expression": facial_expression}
+    
+    return_dict = {**return_dict, **headpose, **landmarks_2d}
+
+    return return_dict
 
 def get_facial_attributes_video(video_path, 
                                 model_choice:str="joint_au_detection_intensity_estimator", 
@@ -57,22 +60,28 @@ def get_facial_attributes_video(video_path,
     print(f"Using device: {device} for inference...")
     frames_df = get_frames_from_video_opencv(video_path, temp_dir=temp_dir)
     cur_video_name = ".".join(video_path.split("/")[-1].split(".")[:-1])
-    aligned_frames_path_list = get_aligned_video_frames(frames_df, temp_dir=os.path.join(temp_dir, cur_video_name))
+    aligned_frames_path_list, headpose_list, landmarks_2d_list = get_aligned_video_frames(frames_df, temp_dir=os.path.join(temp_dir, cur_video_name))
     frames_df["aligned_frame_path"] = aligned_frames_path_list
+    frames_df["headpose"] = headpose_list
+    frames_df["landmarks_2d"] = landmarks_2d_list
+
+    frames_df = frames_df.join(pd.json_normalize(frames_df['headpose'])).drop('headpose', axis='columns')
+    frames_df = frames_df.join(pd.json_normalize(frames_df['landmarks_2d'])).drop('landmarks_2d', axis='columns')
 
     detected_aus, au_intensities, facial_expression = [], [], []
-    for _, row in tqdm(frames_df.iterrows(), "Detecting action units and facial expression on video frames..."):
+    # for _, row in tqdm(frames_df.iterrows(), "Detecting action units and facial expression on video frames..."):
+    for aligned_frame_path in tqdm(aligned_frames_path_list, "Detecting action units and facial expression on video frames..."):
         if model_choice == "joint_au_detection_intensity_estimator":
-            detected_aus_frame, au_intensities_frame = get_au_intensities_and_detect_aus(row["aligned_frame_path"], device=device, weights_download_dir=weights_download_dir)
+            detected_aus_frame, au_intensities_frame = get_au_intensities_and_detect_aus(aligned_frame_path, device=device, weights_download_dir=weights_download_dir)
             detected_aus.append(detected_aus_frame)
             au_intensities.append(au_intensities_frame)
         elif model_choice == "separate_prediction_heads":
-            detected_aus.append(detect_action_units(row["aligned_frame_path"], device = device, weights_download_dir=weights_download_dir))
-            au_intensities.append(get_au_intensities(row["aligned_frame_path"], device = device, weights_download_dir=weights_download_dir))
+            detected_aus.append(detect_action_units(aligned_frame_path, device = device, weights_download_dir=weights_download_dir))
+            au_intensities.append(get_au_intensities(aligned_frame_path, device = device, weights_download_dir=weights_download_dir))
         else:
             print(f"Undefined model_choice = {model_choice} for get_facial_attributes_video()")
             raise NotImplementedError
-        facial_expression.append(get_facial_expression(row["aligned_frame_path"], device = device, weights_download_dir=weights_download_dir))
+        facial_expression.append(get_facial_expression(aligned_frame_path, device = device, weights_download_dir=weights_download_dir))
     frames_df["detected_aus"] = detected_aus
     frames_df["au_intensities"] = au_intensities
     frames_df["facial_expression"] = facial_expression
@@ -92,7 +101,7 @@ def save_facial_attributes_video(video_path,
                                             device=device, 
                                             weights_download_dir=weights_download_dir)
     save_path = uniquify_file(output_save_path)
-    frames_df.to_csv(save_path)
+    frames_df.to_csv(save_path, index=False)
     print(f"Facial attributes of the video saved to {save_path}")
     return save_path
 
@@ -112,8 +121,9 @@ def save_facial_attributes_image(image_path,
     attr_df = pd.DataFrame(attr_dict)
     attr_df = attr_df.join(pd.json_normalize(attr_df['detected_aus'])).drop('detected_aus', axis='columns')
     attr_df = attr_df.join(pd.json_normalize(attr_df['au_intensities'])).drop('au_intensities', axis='columns')
+    attr_df.index.name = 'frame_idx'
     save_path = uniquify_file(output_save_path)
-    attr_df.to_csv(save_path)
+    attr_df.to_csv(save_path, index=False)
     print(f"Facial attributes of the image saved to {save_path}")
     return save_path
 

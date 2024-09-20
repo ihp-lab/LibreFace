@@ -13,13 +13,13 @@ Libreface
    :alt: Static Badge
 
 
-.. |badge2| image:: https://img.shields.io/badge/python-%3E%3D3.8-green
+.. |badge2| image:: https://img.shields.io/badge/python-%3D%3D3.8-green
    :alt: Static Badge
 
 
 This is the python package for `LibreFace: An Open-Source Toolkit for Deep Facial Expression Analysis`_.
 LibreFace is an open-source and comprehensive toolkit for accurate and real-time facial expression analysis with both CPU and GPU acceleration versions.
-LibreFace eliminates the gap between cutting-edge research and an easy and free-to-use non-commercial toolbox. We propose to adaptively pre-train the vision encoders with various face datasets and then distillate them to a lightweight ResNet-18 model in a feature-wise matching manner.
+LibreFace eliminates the gap between cutting-edge research and an easy and free-to-use non-commercial toolbox. We propose to adaptively pre-train the vision encoders with various face datasets and then distill them to a lightweight ResNet-18 model in a feature-wise matching manner.
 We conduct extensive experiments of pre-training and distillation to demonstrate that our proposed pipeline achieves comparable results to state-of-the-art works while maintaining real-time efficiency.
 
 .. _`LibreFace: An Open-Source Toolkit for Deep Facial Expression Analysis`: https://boese0601.github.io/libreface
@@ -29,7 +29,7 @@ We conduct extensive experiments of pre-training and distillation to demonstrate
 Dependencies
 ============
 
-- Python>=3.8
+- Python==3.8
 - You should have `cmake` installed in your system.
     - **For Linux users** - :code:`sudo apt-get install cmake`. If you run into troubles, consider upgrading to the latest version (`instructions`_).
     - **For Mac users** - :code:`brew install cmake`.
