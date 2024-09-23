@@ -9,7 +9,7 @@ Libreface
 |badge1| |badge2|
 
 
-.. |badge1| image:: https://img.shields.io/badge/version-0.0.16-blue
+.. |badge1| image:: https://img.shields.io/badge/version-0.0.17-blue
    :alt: Static Badge
 
 
@@ -43,7 +43,7 @@ You can install this package using `pip` from the testPyPI hub:
 
 .. code-block:: bash
 
-    python -m pip install --index-url https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple libreface==0.0.16
+    python -m pip install --index-url https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple libreface==0.0.17
 
 
 Usage
@@ -142,6 +142,25 @@ Weights of the model are automatically downloaded at :code:`./libreface_weights/
     import libreface 
     libreface.get_facial_attributes(image_or_video_path,
                                     weights_download_dir = "your/directory/path")
+
+Output Format
+==================
+
+For an image processed through LibreFace, we save the following information in the CSV file,
+
+- :code:`lm_mp_idx_x`, :code:`lm_mp_idx_y`, :code:`lm_mp_idx_z` :  x, y, z co-ordinate of the 3D landmark indexed at :code:`idx` (total 478) obtained from mediapipe. Refer to the `mediapipe documentation`_ for getting the index to landmark map.
+
+- :code:`pitch`, :code:`yaw`, :code:`roll` : contains the angles in degrees for the 3D head pose for the person.
+
+- :code:`facial_expression` : contains the detected facial expression. Can be "Neutral", "Happiness", "Sadness", "Surprise", "Fear", "Disgust", "Anger", or "Contempt".
+
+- :code:`au_idx` : contains the output of our action unit (AU) detection model, which predicts whether an action unit at index :code:`idx` is activated. 0 means not activated, and 1 means activated. We detect AU at the indices :code:`[1, 2, 4, 6, 7, 10, 12, 14, 15, 17, 23, 24]`.
+
+- :code:`au_idx_intensity` : contains the output of our action unit (AU) intensity prediction model, which predicts the intensity of an action unit at index :code:`idx` between 0 and 5. 0 is least intensity and 5 is maximum intensity. We predict AU intensities for the AU indices :code:`[1, 2, 4, 5, 6, 9, 12, 15, 17, 20, 25, 26]`.
+
+.. _`mediapipe documentation`: https://github.com/google-ai-edge/mediapipe/blob/7c28c5d58ffbcb72043cbe8c9cc32b40aaebac41/mediapipe/modules/face_geometry/data/canonical_face_model_uv_visualization.png
+
+For a video, we save the same features for each frame in the video at index :code:`frame_idx` and timestamp :code:`frame_time_in_ms`.
 
 Contributing
 ============

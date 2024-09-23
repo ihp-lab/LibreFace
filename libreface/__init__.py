@@ -1,11 +1,12 @@
 import pandas as pd
+import time
 from tqdm import tqdm
 
 from libreface.detect_mediapipe_image import *
 from libreface.AU_Detection.inference import detect_action_units
 from libreface.AU_Recognition.inference import get_au_intensities, get_au_intensities_and_detect_aus
 from libreface.Facial_Expression_Recognition.inference import get_facial_expression
-from libreface.utils import get_frames_from_video_opencv, uniquify_file, check_file_type
+from libreface.utils import get_frames_from_video_ffmpeg, uniquify_file, check_file_type
 
 def get_facial_attributes_image(image_path:str, 
                                 model_choice:str="joint_au_detection_intensity_estimator", 
@@ -58,16 +59,23 @@ def get_facial_attributes_video(video_path,
                                 device="cpu",
                                 weights_download_dir:str = "./weights_libreface"):
     print(f"Using device: {device} for inference...")
-    frames_df = get_frames_from_video_opencv(video_path, temp_dir=temp_dir)
+    frame_extraction_start = time.time()
+    frames_df = get_frames_from_video_ffmpeg(video_path, temp_dir=temp_dir)
     cur_video_name = ".".join(video_path.split("/")[-1].split(".")[:-1])
     aligned_frames_path_list, headpose_list, landmarks_2d_list = get_aligned_video_frames(frames_df, temp_dir=os.path.join(temp_dir, cur_video_name))
-    frames_df["aligned_frame_path"] = aligned_frames_path_list
+    # frames_df["aligned_frame_path"] = aligned_frames_path_list
+    frames_df = frames_df.drop("path_to_frame", axis=1)
     frames_df["headpose"] = headpose_list
     frames_df["landmarks_2d"] = landmarks_2d_list
+    frame_extraction_end = time.time()
+    frame_extraction_fps = len(frames_df.index) / (frame_extraction_end - frame_extraction_start)
+    print(f"Frame extraction took a total of {(frame_extraction_end - frame_extraction_start):.3f} seconds - {frame_extraction_fps:.2f} FPS")
+     
 
     frames_df = frames_df.join(pd.json_normalize(frames_df['headpose'])).drop('headpose', axis='columns')
     frames_df = frames_df.join(pd.json_normalize(frames_df['landmarks_2d'])).drop('landmarks_2d', axis='columns')
 
+    fac_attr_start = time.time()
     detected_aus, au_intensities, facial_expression = [], [], []
     # for _, row in tqdm(frames_df.iterrows(), "Detecting action units and facial expression on video frames..."):
     for aligned_frame_path in tqdm(aligned_frames_path_list, "Detecting action units and facial expression on video frames..."):
@@ -82,6 +90,10 @@ def get_facial_attributes_video(video_path,
             print(f"Undefined model_choice = {model_choice} for get_facial_attributes_video()")
             raise NotImplementedError
         facial_expression.append(get_facial_expression(aligned_frame_path, device = device, weights_download_dir=weights_download_dir))
+    fac_attr_end = time.time()
+    fac_attr__fps = len(frames_df.index) / (fac_attr_end - fac_attr_start)
+    print(f"Detecting facial attributes took a total of {(fac_attr_end - fac_attr_start):.3f} seconds - {fac_attr__fps:.2f} FPS")
+
     frames_df["detected_aus"] = detected_aus
     frames_df["au_intensities"] = au_intensities
     frames_df["facial_expression"] = facial_expression

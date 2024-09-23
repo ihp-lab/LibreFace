@@ -4,6 +4,7 @@ import cv2
 import gdown
 import os
 import pandas as pd
+import subprocess
 from tqdm import tqdm
 
 # Define a function to download the model weights
@@ -29,6 +30,54 @@ def get_frames_from_video(video_path, temp_dir="./tmp"):
     os.system(ffmpeg_command)
     
     return cur_video_save_path
+
+def get_frames_from_video_ffmpeg(video_path, temp_dir="./tmp"):
+    
+    cur_video_name = ".".join(video_path.split("/")[-1].split(".")[:-1])
+    cur_video_save_path = uniquify_dir(os.path.join(temp_dir, cur_video_name))
+    os.makedirs(cur_video_save_path, exist_ok=True)
+
+    if not os.path.exists(temp_dir):
+        os.makedirs(temp_dir)
+
+    # FFmpeg command to extract frames
+    output_pattern = os.path.join(cur_video_save_path, 'frame_%09d.png')
+    ffmpeg_command = [
+        'ffmpeg', '-i', video_path,
+        output_pattern
+    ]
+    
+    # Run the ffmpeg command
+    subprocess.run(ffmpeg_command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+
+    # Create DataFrame to store frame index, path, and timestamp
+    frame_files = sorted(os.listdir(cur_video_save_path))
+    frame_index = []
+    frame_paths = []
+    frame_timestamps = []
+
+    # Get frame rate of the video
+    ffprobe_command = [
+        'ffprobe', '-v', 'error', '-select_streams', 'v:0', '-show_entries', 
+        'stream=r_frame_rate', '-of', 'default=noprint_wrappers=1:nokey=1', video_path
+    ]
+    fps_output = subprocess.check_output(ffprobe_command, text=True).strip()
+    fps = eval(fps_output)  # Get frames per second as a float
+
+    # Populate DataFrame
+    for i, frame_file in enumerate(frame_files):
+        frame_index.append(i)
+        frame_paths.append(os.path.join(cur_video_save_path, frame_file))
+        frame_timestamps.append(i / fps)
+
+    # Create DataFrame
+    df = pd.DataFrame({
+        'frame_idx': frame_index,
+        'frame_time_in_ms': frame_timestamps,
+        'path_to_frame': frame_paths
+    })
+    
+    return df
 
 def get_frames_from_video_opencv(video_path, temp_dir="./tmp"):
     cur_video_name = ".".join(video_path.split("/")[-1].split(".")[:-1])
@@ -129,6 +178,14 @@ def restructure_landmark_dict(lm_dict):
         for lm_idx, lm_v in enumerate(v):
             new_lm_dict[f"{k}_{lm_idx}"] = lm_v
     return new_lm_dict
+
+def restructure_landmark_mediapipe(lm_object):
+    lm_dict = {}
+    for idx, lmi in enumerate(lm_object):
+        lm_dict[f"lm_mp_{idx}_x"] = lmi.x
+        lm_dict[f"lm_mp_{idx}_y"] = lmi.y
+        lm_dict[f"lm_mp_{idx}_z"] = lmi.z
+    return lm_dict
 
 
 if __name__=="__main__":

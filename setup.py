@@ -14,7 +14,7 @@ DESCRIPTION = 'LibreFace model for facial analysis'
 URL = 'https://boese0601.github.io/libreface'
 EMAIL = 'achaubey@usc.edu'
 AUTHOR = 'IHP-Lab'
-REQUIRES_PYTHON = '>=3.8'
+REQUIRES_PYTHON = '==3.8'
 
 
 # What packages are required for this module to be executed?
@@ -52,7 +52,7 @@ about = {}
 # with open(PACKAGE_DIR / 'VERSION') as f:
 #     _version = f.read().strip()
 
-about['__version__'] = "0.0.16"
+about['__version__'] = "0.0.17"
 
 
 # Where the magic happens:

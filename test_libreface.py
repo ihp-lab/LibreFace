@@ -11,7 +11,7 @@ libreface.save_facial_attributes_image(image_path = "sample_disfa.png",
                                        temp_dir = "./temp",
                                        device = "cuda")
 
-# ## inference on a video and store the results to a pandas dataframe
+## inference on a video and store the results to a pandas dataframe
 detected_facial_attributes_df = libreface.get_facial_attributes_video(video_path = "sample_disfa.avi",
                                                                       temp_dir = "./temp",
                                                                       device = "cuda")

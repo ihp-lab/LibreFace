@@ -7,10 +7,10 @@ from PIL import Image, ImageDraw
 from tqdm import tqdm
 from multiprocessing import Process
 import mediapipe as mp
-import pdb
+import pickle
 import argparse
 
-from libreface.utils import uniquify_file, uniquify_dir, restructure_landmark_dict
+from libreface.utils import uniquify_file, restructure_landmark_mediapipe
 
 def image_align(img, face_landmarks, output_size=256,
         transform_size=4096, enable_padding=True, x_scale=1,
@@ -213,6 +213,13 @@ def get_aligned_image(image_path, temp_dir = "./tmp", verbose=False):
       # print(len(results.multi_face_landmarks)) 1
       # pdb.set_trace()
       for face_landmarks in results.multi_face_landmarks:
+        
+        # with open("landmarks.pkl", "wb") as handle:
+        #    pickle.dump(face_landmarks, handle)
+        # print(1)
+
+        landmark_dict = restructure_landmark_mediapipe(face_landmarks.landmark)
+
         for idx, lm in enumerate(face_landmarks.landmark):
           if idx == 33 or idx == 263 or idx == 1 or idx == 61 or idx == 291 or idx == 199:
               if idx == 1:
@@ -331,14 +338,14 @@ def get_aligned_image(image_path, temp_dir = "./tmp", verbose=False):
         lm_y = lm_left_eye_y + lm_right_eye_y + lm_lips_y
         landmark = np.array([lm_x,lm_y]).T
         np.save(land_save_path, landmark)
-        landmark_dict = {"lm_left_eye_x":lm_left_eye_x,
-                         "lm_left_eye_y":lm_left_eye_y,
-                         "lm_right_eye_x":lm_right_eye_x,
-                         "lm_right_eye_y":lm_right_eye_y,
-                         "lm_lips_x":lm_lips_x,
-                         "lm_lips_y":lm_lips_y}
+        # landmark_dict = {"lm_left_eye_x":lm_left_eye_x,
+        #                  "lm_left_eye_y":lm_left_eye_y,
+        #                  "lm_right_eye_x":lm_right_eye_x,
+        #                  "lm_right_eye_y":lm_right_eye_y,
+        #                  "lm_lips_x":lm_lips_x,
+        #                  "lm_lips_y":lm_lips_y}
 
-  landmark_dict = restructure_landmark_dict(landmark_dict)
+  # landmark_dict = restructure_landmark_dict(landmark_dict)
 
   if verbose:
     print("Aligned Image save to: ",aligned_img_save_path)
