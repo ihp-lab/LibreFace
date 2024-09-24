@@ -1,5 +1,6 @@
 import argparse
 import numpy as np
+import pandas as pd
 import random
 import torch
 import yaml
@@ -30,6 +31,12 @@ def format_output(out_dict):
     for k, v in out_dict.items():
         new_dict[f"au_{k}"] = v
     return new_dict
+
+def format_output_video(aus, detected_aus):
+    df_columns = [f"au_{k}" for k in aus]
+    detected_au_df = pd.DataFrame(detected_aus, columns = df_columns)
+    # detected_au_df["frame_idx"] = list(range(len(detected_au_df.index)))
+    return detected_au_df
 
 def detect_action_units(image_path:str, 
                         device:str = "cpu",
@@ -83,6 +90,48 @@ def detect_action_units(image_path:str,
     solver = solver_in_domain_image(opts).to(device)
     detected_aus = solver.run(image_path)
     return format_output(detected_aus)
+
+def detect_action_units_video(aligned_frames_path_list:list, 
+                        device:str = "cpu",
+                        batch_size:int = 256,
+                        weights_download_dir = "./weights_libreface")->dict:
+    
+    opts = ConfigObject({'seed': 0,
+                        'data_root': '',
+                        'ckpt_path': f'{weights_download_dir}/AU_Detection/weights/resnet.pt',
+                        'weights_download_id': '17v_vxQ09upLG3Yh0Zlx12rpblP7uoA8x',
+                        'data': 'BP4D',
+                        'fold': 'all',
+                        'num_workers': 0,
+                        'image_size': 256,
+                        'crop_size': 224,
+                        'num_labels': 12,
+                        'sigma': 10.0,
+                        'model_name': 'resnet',
+                        'dropout': 0.1,
+                        'hidden_dim': 128,
+                        'half_precision': False,
+                        'num_epochs': 30,
+                        'interval': 500,
+                        'threshold': 0.0,
+                        'batch_size': batch_size,
+                        'learning_rate': '3e-5',
+                        'weight_decay': '1e-4',
+                        'loss': 'unweighted',
+                        'clip': 1.0,
+                        'when': 10,
+                        'patience': 5,
+                        'fm_distillation': False,
+                        'device': 'cpu'
+                    })
+
+    #set seed
+    set_seed(opts.seed)
+
+    opts.device = device
+    solver = solver_in_domain_image(opts).to(device)
+    aus, detected_aus = solver.run_video(aligned_frames_path_list)
+    return format_output_video(aus, detected_aus)
 
 def main():
 

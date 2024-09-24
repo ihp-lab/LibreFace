@@ -17,11 +17,6 @@ def image_align(img, face_landmarks, output_size=256,
         transform_size=512, enable_padding=True, x_scale=1,
         y_scale=1, em_scale=0.1, alpha=False, pad_mode='const'):
 
-  cur_time = time.time()
-  last_time = cur_time
-  print(f"Before lm fixed operations - cur: {cur_time:.3f}s, diff:{cur_time-last_time:.5f}s")
-  last_time = cur_time
-
   lm = np.array(face_landmarks)
   lm[:,0] *= img.size[0]
   lm[:,1] *= img.size[1]
@@ -56,10 +51,6 @@ def image_align(img, face_landmarks, output_size=256,
   quad = np.stack([c - x - y, c - x + y, c + x + y, c + x - y])
   qsize = np.hypot(*x) * 2
 
-  cur_time = time.time()
-  print(f"After lm fixed operations - cur: {cur_time:.3f}s, diff:{cur_time-last_time:.5f}s")
-  last_time = cur_time
-
   # Shrink.
   shrink = int(np.floor(qsize / output_size * 0.5))
   if shrink > 1:
@@ -68,10 +59,6 @@ def image_align(img, face_landmarks, output_size=256,
     quad /= shrink
     qsize /= shrink
 
-  cur_time = time.time()
-  print(f"After shrink - cur: {cur_time:.3f}s, diff:{cur_time-last_time:.5f}s")
-  last_time = cur_time
-
   # Crop.
   border = max(int(np.rint(qsize * 0.1)), 3)
   crop = (int(np.floor(min(quad[:,0]))), int(np.floor(min(quad[:,1]))), int(np.ceil(max(quad[:,0]))), int(np.ceil(max(quad[:,1]))))
@@ -79,10 +66,6 @@ def image_align(img, face_landmarks, output_size=256,
   if crop[2] - crop[0] < img.size[0] or crop[3] - crop[1] < img.size[1]:
     img = img.crop(crop)
     quad -= crop[0:2]
-
-  cur_time = time.time()
-  print(f"After crop - cur: {cur_time:.3f}s, diff:{cur_time-last_time:.5f}s")
-  last_time = cur_time
 
   # Pad.
   pad = (int(np.floor(min(quad[:,0]))), int(np.floor(min(quad[:,1]))), int(np.ceil(max(quad[:,0]))), int(np.ceil(max(quad[:,1]))))
@@ -109,22 +92,10 @@ def image_align(img, face_landmarks, output_size=256,
       img = Image.fromarray(img, 'RGB')
     quad += pad[:2]
 
-  cur_time = time.time()
-  print(f"After pad - cur: {cur_time:.3f}s, diff:{cur_time-last_time:.5f}s")
-  last_time = cur_time
-
   img = img.transform((transform_size, transform_size), Image.Transform.QUAD,
             (quad + 0.5).flatten(), Image.Resampling.NEAREST)
-  
-  cur_time = time.time()
-  print(f"After transform - cur: {cur_time:.3f}s, diff:{cur_time-last_time:.5f}s")
-  last_time = cur_time
 
   out_image = img.resize((output_size, output_size), Image.Resampling.NEAREST)
-
-  cur_time = time.time()
-  print(f"After resize - cur: {cur_time:.3f}s, diff:{cur_time-last_time:.5f}s")
-  last_time = cur_time
 
   return out_image
 
@@ -162,28 +133,15 @@ def get_aligned_image(image_path, temp_dir = "./tmp", verbose=False):
   aligned_img_save_path = uniquify_file(os.path.join(temp_dir, f"{image_name}_aligned.png"))
   annotated_image_save_path = uniquify_file(os.path.join(temp_dir, f"{image_name}_annotated.png"))
 
-  last_time = 0
-  cur_time = time.time()
-  print(f"Before image read - cur: {cur_time:.3f}s, diff:{last_time-cur_time:.3f}s")
-  last_time = cur_time
-
   image = cv2.imread(img_path)
   # mp_face_detection = mp.solutions.face_detection
   mp_face_mesh = mp.solutions.face_mesh
   # help(mp_face_detection.FaceDetection)
 
-  cur_time = time.time()
-  print(f"Before mp_drawing specs - cur: {cur_time:.3f}s, diff:{last_time-cur_time:.3f}s")
-  last_time = cur_time
-
   # mp_drawing = mp.solutions.drawing_utils 
   # drawing_spec = mp_drawing.DrawingSpec(thickness=1, circle_radius=1)
   # # mp_drawing = mp.solutions.drawing_utils 
   # mp_drawing_styles = mp.solutions.drawing_styles
-
-  cur_time = time.time()
-  print(f"After mp drawing specs - cur: {cur_time:.3f}s, diff:{last_time-cur_time:.3f}s")
-  last_time = cur_time
 
   FACEMESH_LIPS = [(61, 146), (146, 91), (91, 181), (181, 84), (84, 17),
                             (17, 314), (314, 405), (405, 321), (321, 375),
@@ -235,10 +193,6 @@ def get_aligned_image(image_path, temp_dir = "./tmp", verbose=False):
   landmark_dict = {}
 
   image_rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-
-  cur_time = time.time()
-  print(f"Before face mesh loop - cur: {cur_time:.3f}s, diff:{last_time-cur_time:.3f}s")
-  last_time = cur_time
 
   with mp_face_mesh.FaceMesh(
       static_image_mode=True,
@@ -382,17 +336,8 @@ def get_aligned_image(image_path, temp_dir = "./tmp", verbose=False):
   #   print("Annotated Image save to: ",annotated_image_save_path)
   # cv2.imwrite(annotated_image_save_path,annotated_image)
   # pdb.set_trace()
-  
-  cur_time = time.time()
-  print(f"Before aligned_image - cur: {cur_time:.3f}s, diff:{last_time-cur_time:.3f}s")
-  last_time = cur_time
 
   aligned_image = image_align(Image.fromarray(image_rgb), landmark)
-
-  cur_time = time.time()
-  print(f"After aligned_image - cur: {cur_time:.3f}s, diff:{last_time-cur_time:.3f}s")
-  last_time = cur_time
-
   aligned_image.save(aligned_img_save_path)
 
   head_pose = {"pitch":pitch,

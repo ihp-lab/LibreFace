@@ -1,5 +1,6 @@
 import argparse
 import numpy as np
+import pandas as pd
 import random
 import torch
 import yaml
@@ -36,13 +37,11 @@ def facial_expr_idx_to_class(fe_idx):
                  7: "Contempt"}
     return idx_to_fe[fe_idx]
 
+def facial_expr_idx_to_class_video(fe_idx_list):
+    return pd.DataFrame([[facial_expr_idx_to_class(idx)] for idx in fe_idx_list], columns = ["facial_expression"])
+
 def get_facial_expression(image_path, device = "cpu",
                         weights_download_dir = "./weights_libreface"):
-    # # Path to the YAML config file
-    # config_path = './libreface/Facial_Expression_Recognition/config_fer.yaml'
-
-    # # Load the configuration from YAML
-    # config = load_config(config_path)
     opts = ConfigObject({'seed': 0,
                         'train_csv': 'training_filtered.csv',
                         'test_csv': 'validation_filtered.csv',
@@ -92,6 +91,59 @@ def get_facial_expression(image_path, device = "cpu",
 
     facial_expression = solver.run(image_path)
     return facial_expr_idx_to_class(facial_expression)
+
+def get_facial_expression_video(aligned_frames_path, device = "cpu",
+                                batch_size = 256,
+                        weights_download_dir = "./weights_libreface"):
+    opts = ConfigObject({'seed': 0,
+                        'train_csv': 'training_filtered.csv',
+                        'test_csv': 'validation_filtered.csv',
+                        'data_root': '',
+                        'ckpt_path': f'{weights_download_dir}/Facial_Expression_Recognition/weights/resnet.pt',
+                        'weights_download_id': '1PeoPj8rga4vU2nuh_PciyX3HqaXp6LP7',
+                        'data': 'AffectNet',
+                        'num_workers': 8,
+                        'image_size': 224,
+                        'num_labels': 8,
+                        'dropout': 0.1,
+                        'hidden_dim': 128,
+                        'sigma': 10.0,
+                        'student_model_name': 'resnet',
+                        'student_model_choices': [
+                            'resnet_heatmap', 
+                            'resnet', 
+                            'swin', 
+                            'mae', 
+                            'emotionnet_mae', 
+                            'gh_feat'
+                        ],
+                        'alpha': 1.0,
+                        'T': 1.0,
+                        'fm_distillation': True,
+                        'grad': True,
+                        'interval': 500,
+                        'threshold': 0.0,
+                        'loss': 'unweighted',
+                        'num_epochs': 50,
+                        'batch_size': batch_size,
+                        'learning_rate': '3e-5',
+                        'weight_decay': '1e-4',
+                        'clip': 1.0,
+                        'when': 10,
+                        'patience': 10,
+                        'device': 'cpu'
+                    })           
+
+    #set seed
+    set_seed(opts.seed)
+
+    opts.device = device
+    # print(f"Using device: {opts.device} for inference...")
+
+    solver = solver_inference_image(opts).to(device)
+
+    facial_expression = solver.run_video(aligned_frames_path)
+    return facial_expr_idx_to_class_video(facial_expression)
 
 def main():
 
