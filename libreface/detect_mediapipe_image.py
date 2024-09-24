@@ -8,13 +8,19 @@ from tqdm import tqdm
 from multiprocessing import Process
 import mediapipe as mp
 import pickle
+import time
 import argparse
 
 from libreface.utils import uniquify_file, restructure_landmark_mediapipe
 
 def image_align(img, face_landmarks, output_size=256,
-        transform_size=4096, enable_padding=True, x_scale=1,
+        transform_size=512, enable_padding=True, x_scale=1,
         y_scale=1, em_scale=0.1, alpha=False, pad_mode='const'):
+
+  cur_time = time.time()
+  last_time = cur_time
+  print(f"Before lm fixed operations - cur: {cur_time:.3f}s, diff:{cur_time-last_time:.5f}s")
+  last_time = cur_time
 
   lm = np.array(face_landmarks)
   lm[:,0] *= img.size[0]
@@ -50,6 +56,10 @@ def image_align(img, face_landmarks, output_size=256,
   quad = np.stack([c - x - y, c - x + y, c + x + y, c + x - y])
   qsize = np.hypot(*x) * 2
 
+  cur_time = time.time()
+  print(f"After lm fixed operations - cur: {cur_time:.3f}s, diff:{cur_time-last_time:.5f}s")
+  last_time = cur_time
+
   # Shrink.
   shrink = int(np.floor(qsize / output_size * 0.5))
   if shrink > 1:
@@ -58,6 +68,10 @@ def image_align(img, face_landmarks, output_size=256,
     quad /= shrink
     qsize /= shrink
 
+  cur_time = time.time()
+  print(f"After shrink - cur: {cur_time:.3f}s, diff:{cur_time-last_time:.5f}s")
+  last_time = cur_time
+
   # Crop.
   border = max(int(np.rint(qsize * 0.1)), 3)
   crop = (int(np.floor(min(quad[:,0]))), int(np.floor(min(quad[:,1]))), int(np.ceil(max(quad[:,0]))), int(np.ceil(max(quad[:,1]))))
@@ -65,6 +79,10 @@ def image_align(img, face_landmarks, output_size=256,
   if crop[2] - crop[0] < img.size[0] or crop[3] - crop[1] < img.size[1]:
     img = img.crop(crop)
     quad -= crop[0:2]
+
+  cur_time = time.time()
+  print(f"After crop - cur: {cur_time:.3f}s, diff:{cur_time-last_time:.5f}s")
+  last_time = cur_time
 
   # Pad.
   pad = (int(np.floor(min(quad[:,0]))), int(np.floor(min(quad[:,1]))), int(np.ceil(max(quad[:,0]))), int(np.ceil(max(quad[:,1]))))
@@ -91,9 +109,22 @@ def image_align(img, face_landmarks, output_size=256,
       img = Image.fromarray(img, 'RGB')
     quad += pad[:2]
 
+  cur_time = time.time()
+  print(f"After pad - cur: {cur_time:.3f}s, diff:{cur_time-last_time:.5f}s")
+  last_time = cur_time
+
   img = img.transform((transform_size, transform_size), Image.Transform.QUAD,
-            (quad + 0.5).flatten(), Image.Resampling.BILINEAR)
-  out_image = img.resize((output_size, output_size), Image.Resampling.LANCZOS)
+            (quad + 0.5).flatten(), Image.Resampling.NEAREST)
+  
+  cur_time = time.time()
+  print(f"After transform - cur: {cur_time:.3f}s, diff:{cur_time-last_time:.5f}s")
+  last_time = cur_time
+
+  out_image = img.resize((output_size, output_size), Image.Resampling.NEAREST)
+
+  cur_time = time.time()
+  print(f"After resize - cur: {cur_time:.3f}s, diff:{cur_time-last_time:.5f}s")
+  last_time = cur_time
 
   return out_image
 
@@ -131,16 +162,28 @@ def get_aligned_image(image_path, temp_dir = "./tmp", verbose=False):
   aligned_img_save_path = uniquify_file(os.path.join(temp_dir, f"{image_name}_aligned.png"))
   annotated_image_save_path = uniquify_file(os.path.join(temp_dir, f"{image_name}_annotated.png"))
 
+  last_time = 0
+  cur_time = time.time()
+  print(f"Before image read - cur: {cur_time:.3f}s, diff:{last_time-cur_time:.3f}s")
+  last_time = cur_time
+
   image = cv2.imread(img_path)
-  mp_face_detection = mp.solutions.face_detection
+  # mp_face_detection = mp.solutions.face_detection
   mp_face_mesh = mp.solutions.face_mesh
   # help(mp_face_detection.FaceDetection)
 
+  cur_time = time.time()
+  print(f"Before mp_drawing specs - cur: {cur_time:.3f}s, diff:{last_time-cur_time:.3f}s")
+  last_time = cur_time
 
-  mp_drawing = mp.solutions.drawing_utils 
-  drawing_spec = mp_drawing.DrawingSpec(thickness=1, circle_radius=1)
   # mp_drawing = mp.solutions.drawing_utils 
-  mp_drawing_styles = mp.solutions.drawing_styles
+  # drawing_spec = mp_drawing.DrawingSpec(thickness=1, circle_radius=1)
+  # # mp_drawing = mp.solutions.drawing_utils 
+  # mp_drawing_styles = mp.solutions.drawing_styles
+
+  cur_time = time.time()
+  print(f"After mp drawing specs - cur: {cur_time:.3f}s, diff:{last_time-cur_time:.3f}s")
+  last_time = cur_time
 
   FACEMESH_LIPS = [(61, 146), (146, 91), (91, 181), (181, 84), (84, 17),
                             (17, 314), (314, 405), (405, 321), (321, 375),
@@ -191,6 +234,11 @@ def get_aligned_image(image_path, temp_dir = "./tmp", verbose=False):
 
   landmark_dict = {}
 
+  image_rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+
+  cur_time = time.time()
+  print(f"Before face mesh loop - cur: {cur_time:.3f}s, diff:{last_time-cur_time:.3f}s")
+  last_time = cur_time
 
   with mp_face_mesh.FaceMesh(
       static_image_mode=True,
@@ -199,7 +247,7 @@ def get_aligned_image(image_path, temp_dir = "./tmp", verbose=False):
       min_detection_confidence=0.5) as face_mesh:
   #   for name, image in images.items():
       # Convert the BGR image to RGB and process it with MediaPipe Face Mesh.
-      results = face_mesh.process(cv2.cvtColor(image, cv2.COLOR_BGR2RGB))
+      results = face_mesh.process(image_rgb)
       if results == None:
         print("Processing face mesh had some issue...")
       # Draw face landmarks of each face.
@@ -209,22 +257,13 @@ def get_aligned_image(image_path, temp_dir = "./tmp", verbose=False):
       img_h, img_w, img_c = image.shape
       face_3d = []
       face_2d = []
-      annotated_image = image.copy()
-      # print(len(results.multi_face_landmarks)) 1
-      # pdb.set_trace()
+      
       for face_landmarks in results.multi_face_landmarks:
         
-        # with open("landmarks.pkl", "wb") as handle:
-        #    pickle.dump(face_landmarks, handle)
-        # print(1)
-
         landmark_dict = restructure_landmark_mediapipe(face_landmarks.landmark)
 
         for idx, lm in enumerate(face_landmarks.landmark):
           if idx == 33 or idx == 263 or idx == 1 or idx == 61 or idx == 291 or idx == 199:
-              if idx == 1:
-                  nose_2d = (lm.x * img_w, lm.y * img_h)
-                  nose_3d = (lm.x * img_w, lm.y * img_h, lm.z * 3000)
 
               x, y = int(lm.x * img_w), int(lm.y * img_h)
 
@@ -271,53 +310,53 @@ def get_aligned_image(image_path, temp_dir = "./tmp", verbose=False):
         head_pose = f"pitch:{pitch:.1f}, yaw:{yaw:.1f}, roll:{roll:.1f}"
 
         # See where the user's head tilting
-        if y < -10:
-            text = "Looking Left"
-        elif y > 10:
-            text = "Looking Right"
-        elif x < -10:
-            text = "Looking Down"
-        elif x > 10:
-            text = "Looking Up"
-        else:
-            text = "Forward"
+        # if y < -10:
+        #     text = "Looking Left"
+        # elif y > 10:
+        #     text = "Looking Right"
+        # elif x < -10:
+        #     text = "Looking Down"
+        # elif x > 10:
+        #     text = "Looking Up"
+        # else:
+        #     text = "Forward"
 
         # Display the nose direction
-        nose_3d_projection, jacobian = cv2.projectPoints(nose_3d, rot_vec, trans_vec, cam_matrix, dist_matrix)
+        # nose_3d_projection, jacobian = cv2.projectPoints(nose_3d, rot_vec, trans_vec, cam_matrix, dist_matrix)
 
-        p1 = (int(nose_2d[0]), int(nose_2d[1]))
-        p2 = (int(nose_2d[0] + y * 10) , int(nose_2d[1] - x * 10))
+        # p1 = (int(nose_2d[0]), int(nose_2d[1]))
+        # p2 = (int(nose_2d[0] + y * 10) , int(nose_2d[1] - x * 10))
         
-        cv2.line(annotated_image, p1, p2, (255, 0, 0), 3)
+        # cv2.line(annotated_image, p1, p2, (255, 0, 0), 3)
 
         # Add the text on the image
-        cv2.putText(annotated_image, text, (20, 50), cv2.FONT_HERSHEY_SIMPLEX, 2, (0, 255, 0), 2)
-        cv2.putText(annotated_image, head_pose, (20, 100), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
+        # cv2.putText(annotated_image, text, (20, 50), cv2.FONT_HERSHEY_SIMPLEX, 2, (0, 255, 0), 2)
+        # cv2.putText(annotated_image, head_pose, (20, 100), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
         # cv2.putText(annotated_image, "x: " + str(np.round(x,2)), (500, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
         # cv2.putText(annotated_image, "y: " + str(np.round(y,2)), (500, 100), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
         # cv2.putText(annotated_image, "z: " + str(np.round(z,2)), (500, 150), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
         
-        mp_drawing.draw_landmarks(
-          image=annotated_image,
-          landmark_list=face_landmarks,
-          connections=mp_face_mesh.FACEMESH_TESSELATION,
-          landmark_drawing_spec=None,
-          connection_drawing_spec=mp_drawing_styles
-          .get_default_face_mesh_tesselation_style())
-        mp_drawing.draw_landmarks(
-          image=annotated_image,
-          landmark_list=face_landmarks,
-          connections=mp_face_mesh.FACEMESH_CONTOURS,
-          landmark_drawing_spec=None,
-          connection_drawing_spec=mp_drawing_styles
-          .get_default_face_mesh_contours_style())
-        mp_drawing.draw_landmarks(
-          image=annotated_image,
-          landmark_list=face_landmarks,
-          connections=mp_face_mesh.FACEMESH_IRISES,
-          landmark_drawing_spec=None,
-          connection_drawing_spec=mp_drawing_styles
-          .get_default_face_mesh_iris_connections_style())
+        # mp_drawing.draw_landmarks(
+        #   image=annotated_image,
+        #   landmark_list=face_landmarks,
+        #   connections=mp_face_mesh.FACEMESH_TESSELATION,
+        #   landmark_drawing_spec=None,
+        #   connection_drawing_spec=mp_drawing_styles
+        #   .get_default_face_mesh_tesselation_style())
+        # mp_drawing.draw_landmarks(
+        #   image=annotated_image,
+        #   landmark_list=face_landmarks,
+        #   connections=mp_face_mesh.FACEMESH_CONTOURS,
+        #   landmark_drawing_spec=None,
+        #   connection_drawing_spec=mp_drawing_styles
+        #   .get_default_face_mesh_contours_style())
+        # mp_drawing.draw_landmarks(
+        #   image=annotated_image,
+        #   landmark_list=face_landmarks,
+        #   connections=mp_face_mesh.FACEMESH_IRISES,
+        #   landmark_drawing_spec=None,
+        #   connection_drawing_spec=mp_drawing_styles
+        #   .get_default_face_mesh_iris_connections_style())
 
         lm_left_eye_x = []
         lm_left_eye_y = []
@@ -337,29 +376,29 @@ def get_aligned_image(image_path, temp_dir = "./tmp", verbose=False):
         lm_x = lm_left_eye_x + lm_right_eye_x + lm_lips_x
         lm_y = lm_left_eye_y + lm_right_eye_y + lm_lips_y
         landmark = np.array([lm_x,lm_y]).T
-        np.save(land_save_path, landmark)
-        # landmark_dict = {"lm_left_eye_x":lm_left_eye_x,
-        #                  "lm_left_eye_y":lm_left_eye_y,
-        #                  "lm_right_eye_x":lm_right_eye_x,
-        #                  "lm_right_eye_y":lm_right_eye_y,
-        #                  "lm_lips_x":lm_lips_x,
-        #                  "lm_lips_y":lm_lips_y}
 
-  # landmark_dict = restructure_landmark_dict(landmark_dict)
-
-  if verbose:
-    print("Aligned Image save to: ",aligned_img_save_path)
-    print("Annotated Image save to: ",annotated_image_save_path)
-  cv2.imwrite(annotated_image_save_path,annotated_image)
+  # if verbose:
+  #   print("Aligned Image save to: ",aligned_img_save_path)
+  #   print("Annotated Image save to: ",annotated_image_save_path)
+  # cv2.imwrite(annotated_image_save_path,annotated_image)
   # pdb.set_trace()
-  aligned_image = image_align(Image.open(img_path), np.load(land_save_path))
-  os.remove(land_save_path)
+  
+  cur_time = time.time()
+  print(f"Before aligned_image - cur: {cur_time:.3f}s, diff:{last_time-cur_time:.3f}s")
+  last_time = cur_time
+
+  aligned_image = image_align(Image.fromarray(image_rgb), landmark)
+
+  cur_time = time.time()
+  print(f"After aligned_image - cur: {cur_time:.3f}s, diff:{last_time-cur_time:.3f}s")
+  last_time = cur_time
+
   aligned_image.save(aligned_img_save_path)
 
   head_pose = {"pitch":pitch,
                "yaw":yaw,
                "roll":roll}
-
+  
   return aligned_img_save_path, head_pose, landmark_dict
 
 def get_aligned_video_frames(frames_df, temp_dir="./tmp"):
