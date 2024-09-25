@@ -5,10 +5,7 @@ import numpy as np
 import scipy.ndimage
 from PIL import Image, ImageDraw
 from tqdm import tqdm
-from multiprocessing import Process
 import mediapipe as mp
-import pickle
-import time
 import argparse
 
 from libreface.utils import uniquify_file, restructure_landmark_mediapipe
@@ -93,9 +90,10 @@ def image_align(img, face_landmarks, output_size=256,
     quad += pad[:2]
 
   img = img.transform((transform_size, transform_size), Image.Transform.QUAD,
-            (quad + 0.5).flatten(), Image.Resampling.NEAREST)
+            (quad + 0.5).flatten(), Image.Resampling.BILINEAR)
 
-  out_image = img.resize((output_size, output_size), Image.Resampling.NEAREST)
+  out_image = img.resize((output_size, output_size), Image.Resampling.LANCZOS)
+  out_image = img
 
   return out_image
 

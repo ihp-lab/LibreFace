@@ -58,6 +58,7 @@ def get_facial_attributes_video(video_path,
                                 temp_dir="./tmp", 
                                 device="cpu",
                                 batch_size = 256,
+                                num_workers = 2,
                                 weights_download_dir:str = "./weights_libreface"):
     print(f"Using device: {device} for inference...")
     frame_extraction_start = time.time()
@@ -83,15 +84,18 @@ def get_facial_attributes_video(video_path,
         detected_aus, au_intensities = get_au_intensities_and_detect_aus_video(aligned_frames_path_list, 
                                                                            device = device, 
                                                                            batch_size=batch_size,
+                                                                           num_workers=num_workers,
                                                                            weights_download_dir=weights_download_dir)
     elif model_choice == "separate_prediction_heads":
         detected_aus = detect_action_units_video(aligned_frames_path_list, 
                                                 device=device,
                                                 batch_size=batch_size,
+                                                num_workers=num_workers,
                                                 weights_download_dir=weights_download_dir)
         au_intensities = get_au_intensities_video(aligned_frames_path_list, 
                                                 device=device,
                                                 batch_size=batch_size,
+                                                num_workers=num_workers,
                                                 weights_download_dir=weights_download_dir)
     else:
         print(f"Undefined model_choice = {model_choice} for get_facial_attributes_video()")
@@ -117,12 +121,14 @@ def save_facial_attributes_video(video_path,
                             temp_dir="./tmp", 
                             device="cpu",
                             batch_size = 256,
+                            num_workers = 2,
                             weights_download_dir:str = "./weights_libreface"):
     frames_df = get_facial_attributes_video(video_path,
                                             model_choice=model_choice,
                                             temp_dir=temp_dir,
                                             device=device, 
                                             batch_size=batch_size,
+                                            num_workers=num_workers,
                                             weights_download_dir=weights_download_dir)
     save_path = uniquify_file(output_save_path)
     frames_df.to_csv(save_path, index=False)
@@ -157,6 +163,7 @@ def get_facial_attributes(file_path,
                           temp_dir="./tmp", 
                           device="cpu",
                           batch_size = 256,
+                          num_workers = 2,
                           weights_download_dir:str = "./weights_libreface"):
     file_type = check_file_type(file_path)
     if file_type == "image":
@@ -175,13 +182,14 @@ def get_facial_attributes(file_path,
         if output_save_path is None:
             return get_facial_attributes_video(file_path, model_choice=model_choice, 
                                                temp_dir=temp_dir, device=device, 
-                                               batch_size=batch_size, weights_download_dir=weights_download_dir)
+                                               batch_size=batch_size, 
+                                               num_workers=num_workers, weights_download_dir=weights_download_dir)
         else:
             try:
                 return save_facial_attributes_video(file_path, output_save_path=output_save_path, 
                                                     model_choice=model_choice, temp_dir=temp_dir, 
                                                     device=device, batch_size=batch_size, 
-                                                    weights_download_dir=weights_download_dir)
+                                                    num_workers=num_workers, weights_download_dir=weights_download_dir)
             except Exception as e:
                 print(e)
                 print("Some error in saving the results.")
