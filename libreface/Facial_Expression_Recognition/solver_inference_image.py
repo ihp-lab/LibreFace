@@ -11,7 +11,6 @@ from libreface.utils import download_weights
 
 class Facial_Expression_Dataset(data.Dataset):
     def __init__(self, frames_path_list, img_size):
-        self.data = data
         self.img_size = img_size
 
         self.images = frames_path_list

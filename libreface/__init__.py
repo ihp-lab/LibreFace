@@ -1,6 +1,8 @@
 import pandas as pd
 import time
 from tqdm import tqdm
+import warnings
+warnings.filterwarnings('ignore', category=UserWarning, message='TypedStorage is deprecated')
 
 from libreface.detect_mediapipe_image import *
 from libreface.AU_Detection.inference import detect_action_units, detect_action_units_video
