@@ -61,7 +61,7 @@ def get_facial_attributes_video(video_path,
                                 num_workers = 2,
                                 weights_download_dir:str = "./weights_libreface"):
     print(f"Using device: {device} for inference...")
-    frame_extraction_start = time.time()
+    
     frames_df = get_frames_from_video_ffmpeg(video_path, temp_dir=temp_dir)
     cur_video_name = ".".join(video_path.split("/")[-1].split(".")[:-1])
     aligned_frames_path_list, headpose_list, landmarks_3d_list = get_aligned_video_frames(frames_df, temp_dir=os.path.join(temp_dir, cur_video_name))
@@ -69,15 +69,11 @@ def get_facial_attributes_video(video_path,
     frames_df = frames_df.drop("path_to_frame", axis=1)
     frames_df["headpose"] = headpose_list
     frames_df["landmarks_3d"] = landmarks_3d_list
-    frame_extraction_end = time.time()
-    frame_extraction_fps = len(frames_df.index) / (frame_extraction_end - frame_extraction_start)
-    print(f"Frame extraction took a total of {(frame_extraction_end - frame_extraction_start):.3f} seconds - {frame_extraction_fps:.2f} FPS")
      
 
     frames_df = frames_df.join(pd.json_normalize(frames_df['headpose'])).drop('headpose', axis='columns')
     frames_df = frames_df.join(pd.json_normalize(frames_df['landmarks_3d'])).drop('landmarks_3d', axis='columns')
 
-    fac_attr_start = time.time()
     detected_aus, au_intensities, facial_expression = [], [], []
     
     if model_choice == "joint_au_detection_intensity_estimator":
@@ -106,9 +102,6 @@ def get_facial_attributes_video(video_path,
                                                     batch_size=batch_size,
                                                     weights_download_dir=weights_download_dir)
     
-    fac_attr_end = time.time()
-    fac_attr__fps = len(frames_df.index) / (fac_attr_end - fac_attr_start)
-    print(f"Detecting facial attributes took a total of {(fac_attr_end - fac_attr_start):.3f} seconds - {fac_attr__fps:.2f} FPS")
 
     frames_df = frames_df.join(detected_aus)
     frames_df = frames_df.join(au_intensities)

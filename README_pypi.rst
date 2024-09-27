@@ -9,7 +9,7 @@ Libreface
 |badge1| |badge2|
 
 
-.. |badge1| image:: https://img.shields.io/badge/version-0.0.17-blue
+.. |badge1| image:: https://img.shields.io/badge/version-0.0.19-blue
    :alt: Static Badge
 
 
@@ -17,7 +17,7 @@ Libreface
    :alt: Static Badge
 
 
-This is the python package for `LibreFace: An Open-Source Toolkit for Deep Facial Expression Analysis`_.
+This is the Python package for `LibreFace: An Open-Source Toolkit for Deep Facial Expression Analysis`_.
 LibreFace is an open-source and comprehensive toolkit for accurate and real-time facial expression analysis with both CPU and GPU acceleration versions.
 LibreFace eliminates the gap between cutting-edge research and an easy and free-to-use non-commercial toolbox. We propose to adaptively pre-train the vision encoders with various face datasets and then distill them to a lightweight ResNet-18 model in a feature-wise matching manner.
 We conduct extensive experiments of pre-training and distillation to demonstrate that our proposed pipeline achieves comparable results to state-of-the-art works while maintaining real-time efficiency.
@@ -31,7 +31,7 @@ Dependencies
 
 - Python==3.8
 - You should have `cmake` installed in your system.
-    - **For Linux users** - :code:`sudo apt-get install cmake`. If you run into troubles, consider upgrading to the latest version (`instructions`_).
+    - **For Linux users** - :code:`sudo apt-get install cmake`. If you run into trouble, consider upgrading to the latest version (`instructions`_).
     - **For Mac users** - :code:`brew install cmake`.
 
 .. _`instructions`: https://askubuntu.com/questions/355565/how-do-i-install-the-latest-version-of-cmake-from-the-command-line
@@ -43,7 +43,7 @@ You can install this package using `pip` from the testPyPI hub:
 
 .. code-block:: bash
 
-    python -m pip install --index-url https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple libreface==0.0.17
+    python -m pip install --index-url https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple libreface==0.0.19
 
 
 Usage
@@ -52,33 +52,41 @@ Usage
 Commandline
 ----------------
 
-You can use this package through commandline using the following command.
+You can use this package through the command line using the following command.
 
 .. code-block:: bash
 
-    libreface --input_path="path/to/your_image_or_video.jpg"
+    libreface --input_path="path/to/your_image_or_video"
 
-Note that the above script would save results in a CSV at the default location - :code:`sample_results.csv`. If you want to specify your own path, use the :code:`--output_path`  commandline argument,
-
-.. code-block:: bash
-
-    libreface --input_path="path/to/your_image_or_video.jpg" --output_path="path/to/save_results.csv"
-
-To change the device used for inference, use the :code:`--device` commandline argument,
+Note that the above script would save results in a CSV at the default location - :code:`sample_results.csv`. If you want to specify your own path, use the :code:`--output_path`  command line argument,
 
 .. code-block:: bash
 
-    libreface --input_path="path/to/your_image_or_video.jpg" --device="cuda:0"
+    libreface --input_path="path/to/your_image_or_video" --output_path="path/to/save_results.csv"
+
+To change the device used for inference, use the :code:`--device` command line argument,
+
+.. code-block:: bash
+
+    libreface --input_path="path/to/your_image_or_video" --device="cuda:0"
 
 To save intermediate files, :code:`libreface` uses a temporary directory that defaults to ./tmp. To change the temporary directory path,
 
 .. code-block:: bash
 
-    libreface --input_path="path/to/your_image_or_video.jpg" --temp="your/temp/path"
+    libreface --input_path="path/to/your_image_or_video" --temp="your/temp/path"
+
+For video inference, our code processes the frames of your video in batches. You can specify the batch size and the number of workers for data loading as follows,
+
+.. code-block:: bash
+
+    libreface --input_path="path/to/your_video" --batch_size=256 --num_workers=2 --device="cuda:0"
+
+Note that by default, the :code:`--batch_size` argument is 256, and :code:`--num_workers` argument is 2. You can increase or decrease these values according to your machine's capacity.
 
 **Examples**
 
-Download a `sample image`_ from our github repository. To get the facial attributes for this image and save to a CSV file simply run,
+Download a `sample image`_ from our GitHub repository. To get the facial attributes for this image and save to a CSV file, simply run,
 
 .. _`sample image`: https://github.com/ihp-lab/LibreFace/blob/pypi_wrap/sample_disfa.png
 
@@ -86,7 +94,7 @@ Download a `sample image`_ from our github repository. To get the facial attribu
 
     libreface --input_path="sample_disfa.png"
 
-Download a `sample video`_ from our github repository. To run the inference on this video using a GPU and save the results to :code:`my_custom_file.csv` run the following command,
+Download a `sample video`_ from our GitHub repository. To run the inference on this video using a GPU and save the results to :code:`my_custom_file.csv` run the following command,
 
 .. _`sample video`: https://github.com/ihp-lab/LibreFace/blob/pypi_wrap/sample_disfa.avi
 
@@ -94,14 +102,14 @@ Download a `sample video`_ from our github repository. To run the inference on t
     
     libreface --input_path="sample_disfa.avi" --output_path="my_custom_file.csv" --device="cuda:0"
 
-Note that for videos, each row in the saved csv file correspond to individual frames in the given video.
+Note that for videos, each row in the saved CSV file corresponds to individual frames in the given video.
 
 Python API
 --------------
 
-Here’s how to use this package in your python scripts.
+Here’s how to use this package in your Python scripts.
 
-To assign the results to a python variable,
+To assign the results to a Python variable,
 
 .. code-block:: python
 
@@ -130,7 +138,18 @@ To save intermediate files, libreface uses a temporary directory that defaults t
 
     import libreface 
     libreface.get_facial_attributes(image_or_video_path,
-                                    temp_dir = "your/temp/path") 
+                                    temp_dir = "your/temp/path")
+
+For video inference, our code processes the frames of your video in batches. You can specify the batch size and the number of workers for data loading as follows, 
+
+.. code-block:: python
+
+    import libreface 
+    libreface.get_facial_attributes(video_path,
+                                    batch_size = 256,
+                                    num_workers = 2)
+
+Note that by default, the :code:`batch_size` is 256, and :code:`num_workers` is 2. You can increase or decrease these values according to your machine's capacity.
 
 Downloading Model Weights
 ================================
@@ -161,6 +180,11 @@ For an image processed through LibreFace, we save the following information in t
 .. _`mediapipe documentation`: https://github.com/google-ai-edge/mediapipe/blob/7c28c5d58ffbcb72043cbe8c9cc32b40aaebac41/mediapipe/modules/face_geometry/data/canonical_face_model_uv_visualization.png
 
 For a video, we save the same features for each frame in the video at index :code:`frame_idx` and timestamp :code:`frame_time_in_ms`.
+
+Inference Speed
+====================
+
+LibreFace is able to process long-form videos at :code:`~30 FPS`, on a machine that has a :code:`13th Gen Intel Core i9-13900K` CPU and a :code:`NVIDIA GeForce RTX 3080` GPU. Please note that the default code runs on CPU and you have to use the :code:`device` parameter for Python or the :code:`--device` command line option to specify your GPU device ("cuda:0", "cuda:1", ...).
 
 Contributing
 ============
