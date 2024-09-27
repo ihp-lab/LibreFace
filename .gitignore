@@ -23,3 +23,4 @@ weights_libreface/
 build/
 dist/
 *.egg-info/*
+*.DS_Store
