@@ -9,7 +9,7 @@ Libreface
 |badge1| |badge2|
 
 
-.. |badge1| image:: https://img.shields.io/badge/version-0.0.19-blue
+.. |badge1| image:: https://img.shields.io/badge/version-1.0.0-blue
    :alt: Static Badge
 
 
@@ -29,7 +29,7 @@ We conduct extensive experiments of pre-training and distillation to demonstrate
 Dependencies
 ============
 
-- Python==3.8
+- Python 3.8
 - You should have `cmake` installed in your system.
     - **For Linux users** - :code:`sudo apt-get install cmake`. If you run into trouble, consider upgrading to the latest version (`instructions`_).
     - **For Mac users** - :code:`brew install cmake`.
@@ -39,11 +39,13 @@ Dependencies
 
 Installation
 ============
-You can install this package using `pip` from the testPyPI hub:
+You can first create a new Python 3.8 environment using `conda` and then install this package using `pip` from the PyPI hub:
 
 .. code-block:: bash
-
-    python -m pip install --index-url https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple libreface==0.0.19
+    
+    conda create -n libreface_env python=3.8
+    conda activate libreface_env
+    pip install --upgrade libreface
 
 
 Usage
@@ -198,6 +200,8 @@ We welcome contributions! Here’s how you can help:
 5. Create a Pull Request.
 
 .. _repository: https://github.com/ihp-lab/LibreFace
+
+If you have questions about this package, please direct them to achaubey@usc.edu or achaubey@ict.usc.edu
 
 License
 =======

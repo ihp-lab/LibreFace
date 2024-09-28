@@ -54,7 +54,7 @@ You can first create a new Python 3.8 environment using `conda` and then install
 ```console
 conda create -n libreface_env python=3.8
 conda activate libreface_env
-pip install libreface==0.1.0
+pip install --upgrade libreface
 ```
 
 ### Usage
