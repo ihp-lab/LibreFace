@@ -1,0 +1,16 @@
+include requirements.txt
+include requirements_new.txt
+include README_pypi.rst
+include LICENSE.rst
+include MANIFEST.in
+include README.md
+exclude *.log
+
+recursive-include ./libreface/ *.py
+
+recursive-exclude * __pycache__
+recursive-exclude * *.py[co]Ne
+
+prune ./AU_Detection/*
+prune ./AU_Recognition/*
+prune ./Facial_Emotion_Recognition/*

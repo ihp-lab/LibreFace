@@ -1,4 +1,5 @@
 
+  
 
 <div align="center">
   <h1 align="center">LibreFace: An Open-Source Toolkit for Deep Facial Expression Analysis</h1>
@@ -36,6 +37,121 @@ This is the official implementation of our WACV 2024 Application Track paper: Li
   <img src="https://github.com/ihp-lab/LibreFace/blob/main/media/System.png" width="350px" />
 </p>
 
+## Getting started with Python installation
+
+### Dependencies
+
+- Python 3.8
+- You should have `cmake` installed in your system.
+    - **For Linux users** - `sudo apt-get install cmake`. If you run into trouble, consider upgrading to the latest version ([instructions](https://askubuntu.com/questions/355565/how-do-i-install-the-latest-version-of-cmake-from-the-command-line)).
+    - **For Mac users** - `brew install cmake`.
+
+
+### Installation
+
+You can first create a new Python 3.8 environment using `conda` and then install this package using `pip` from the PyPI hub:
+
+```console
+conda create -n libreface_env python=3.8
+conda activate libreface_env
+pip install --upgrade libreface
+```
+
+### Usage
+
+#### Using commandline
+
+You can use this package through the command line using the following command.
+```console
+libreface --input_path="path/to/your_image_or_video"
+```
+
+Note that the above script would save results in a CSV at the default location - `sample_results.csv`. If you want to specify your own path, use the `--output_path`  command line argument,
+```console
+libreface --input_path="path/to/your_image_or_video" --output_path="path/to/save_results.csv"
+```
+
+To change the device used for inference, use the `--device` command line argument,
+```console
+libreface --input_path="path/to/your_image_or_video" --device="cuda:0"
+```
+
+To save intermediate files, `libreface` uses a temporary directory that defaults to `./tmp`. To change the temporary directory path,
+```console
+libreface --input_path="path/to/your_image_or_video" --temp="your/temp/path"
+```
+
+For video inference, our code processes the frames of your video in batches. You can specify the batch size and the number of workers for data loading as follows,
+```console
+libreface --input_path="path/to/your_video" --batch_size=256 --num_workers=2 --device="cuda:0"
+```
+
+Note that by default, the `--batch_size` argument is 256, and `--num_workers` argument is 2. You can increase or decrease these values according to your machine's capacity.
+
+**Examples**
+
+Download a [sample image](https://github.com/ihp-lab/LibreFace/blob/main/examples/sample_disfa.png) from our GitHub repository. To get the facial attributes for this image and save to a CSV file, simply run,
+```console
+libreface --input_path="sample_disfa.png"
+```
+
+Download a [sample video](https://github.com/ihp-lab/LibreFace/blob/main/examples/sample_disfa.avi) from our GitHub repository. To run the inference on this video using a GPU and save the results to `my_custom_file.csv` run the following command,
+```console
+libreface --input_path="sample_disfa.avi" --output_path="my_custom_file.csv" --device="cuda:0"
+```
+
+Note that for videos, each row in the saved CSV file corresponds to individual frames in the given video.
+
+#### Using Python script
+
+Here’s how to use this package in your Python scripts.
+
+To assign the results to a Python variable,
+```python
+import libreface 
+detected_attributes = libreface.get_facial_attributes(image_or_video_path)
+```
+
+To save the results to a csv file, use the `output_save_path` parameter,
+```python
+import libreface 
+libreface.get_facial_attributes(image_or_video_path,
+                                output_save_path = "your_save_path.csv")
+```
+
+To change the device used for inference, use the `device` parameter,
+```python
+
+import libreface 
+libreface.get_facial_attributes(image_or_video_path,
+                                device = "cuda:0") # can be "cpu" or "cuda:0", "cuda:1", ...
+```
+
+To save intermediate files, libreface uses a temporary directory that defaults to `./tmp`. To change the temporary directory path, use the `temp_dir` parameter,
+```python
+import libreface 
+libreface.get_facial_attributes(image_or_video_path,
+                                temp_dir = "your/temp/path")
+```
+
+For video inference, our code processes the frames of your video in batches. You can specify the batch size and the number of workers for data loading as follows, 
+```python
+import libreface 
+libreface.get_facial_attributes(video_path,
+                                batch_size = 256,
+                                num_workers = 2)
+```
+
+Note that by default, the `batch_size` is 256, and `num_workers` is 2. You can increase or decrease these values according to your machine's capacity.
+
+Weights of the model are automatically downloaded at `./libreface_weights/` directory. If you want to download and save the weights to a separate directory, please specify the parent folder for weights using the `weights_download_dir` as follows,
+```python
+import libreface 
+libreface.get_facial_attributes(image_or_video_path,
+                                weights_download_dir = "your/directory/path")
+```
+ 
+
 ## Getting Started with Derivative Tools (New 2.0 Models Available! Recommended)
 
 We offer several derivative tools on the .NET platform to facilitate easier integration of LibreFace into various systems, in addition to pytorch code. These works are based on ONNX platform weights exported from the model weights of this project.
@@ -54,7 +170,7 @@ We offer several derivative tools on the .NET platform to facilitate easier inte
   <img src="https://github.com/ihp-lab/LibreFace/blob/main/media/ConsoleApplication.png" alt="A screenshot of LibreFace Console Application, showing it built-in documentation." width="480px" />
 </p>
   
-## Getting Started with Python - Installation
+## Training models using Python
 
 Clone repo:
 
@@ -72,7 +188,7 @@ conda activate libreface
 pip install -r requirements.txt
 ```
 
-## Facial Landmark/Mesh Detection and Alignment
+### Facial Landmark/Mesh Detection and Alignment
 
 As described in our paper, we first pre-process the input image by mediapipe to obatain facial landmark and mesh. The detected landmark are used to calculate the corresponding positions of the eyes and mouth in the image. We finally use these positions to align the images and center the face area.
 
@@ -82,9 +198,9 @@ To process the image, simpy run following commad:
 python detect_mediapipe.py
 ```
 
-## AU Intensity Estimation
+### AU Intensity Estimation
 
-### DISFA
+#### DISFA
 
 Download the [DISFA](http://mohammadmahoor.com/disfa/) dataset from the official website here. Please be reminded that the original format of the dataset are video sequences, you need to manually process them into image frames.
 
@@ -103,7 +219,7 @@ data
 └── RAF-DB
 ```
 
-### Training/Inference
+#### Training/Inference
 
 ```
 cd AU_Recognition
@@ -111,9 +227,9 @@ bash train.sh
 bash inference.sh
 ```
 
-## AU Detection
+### AU Detection
 
-### BP4D
+#### BP4D
 
 Download the [BP4D](https://www.cs.binghamton.edu/~lijun/Research/3DFE/3DFE_Analysis.html) dataset from the official website. Extract it and put it under the folder `data/BP4D`.
 
@@ -133,7 +249,7 @@ data
 └── RAF-DB
 ```
 
-### Training/Inference
+#### Training/Inference
 
 ```
 cd AU_Detection
@@ -141,9 +257,9 @@ bash train.sh
 bash inference.sh
 ```
 
-## Facial Expression Recognition
+### Facial Expression Recognition
 
-### AffectNet
+#### AffectNet
 
 Download the [AffectNet](http://mohammadmahoor.com/affectnet/) dataset from the official website. Extract it and put it under the folder `data/AffectNet`.
 
@@ -166,7 +282,7 @@ data
 └── RAF-DB
 ```
 
-### Training/Inference
+#### Training/Inference
 
 ```
 cd Facial_Expression_Recognition
@@ -174,7 +290,7 @@ bash train.sh
 bash inference.sh
 ```
 
-## Configure
+### Configure
 
 There are several options of flags at the beginning of each train/inference files. Several key options are explained below. Other options are self-explanatory in the codes. Before running our codes, you may need to change the `device`, `data_root` , `ckpt_path` , `data` and `fold`.
 
@@ -207,7 +323,14 @@ The two columns at the bottom compare human raters on this entire dataset agains
 </p>
 
 ## TODO:
+Package
+- [ ] Optimize facial alignment using mediapipe face aligner.
+- [ ] Add option for the user to choose which model to run.
+- [ ] Add multiple file inference by passing a list.
+- [x] Add batch inference for video files.
+- [x] Release pip package.
 
+Validation
 - [ ]  Upload Training/Validation Split csv files and CSV creation python code for model training
 - [ ]  Upload Facial Expression Recognition code on RAF-DB Dataset
 
@@ -229,7 +352,7 @@ Our code is distributed under the USC research license. See `LICENSE.txt` file f
 
 ## Contact
 
-If you have any questions, please raise an issue or email to Di Chang (`dchang@ict.usc.edu`or `dichang@usc.edu`).
+If you have any questions, please raise an issue or email to Di Chang (`dchang@ict.usc.edu`or `dichang@usc.edu`). For issues related to the python package, write to Ashutosh Chaubey (`achaubey@usc.edu` or `achaubey@ict.usc.edu`).
 
 ## Acknowledgments
 
