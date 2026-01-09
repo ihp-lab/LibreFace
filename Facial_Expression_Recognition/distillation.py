@@ -36,7 +36,7 @@ parser.add_argument('--teacher_model_name', type=str, default='emotionnet_mae', 
 parser.add_argument('--teacher_model_path', type=str, default='/home/ICT2000/dchang/AffectNet/code/checkpoints_ffhq_mae/')
 parser.add_argument('--student_model_name', type=str, default='resnet', choices=['resnet_heatmap','resnet','swin','mae','emotionnet_mae','gh_feat'])
 parser.add_argument('--student_model_path', type=str, default='/home/ICT2000/dchang/FFHQ/code/checkpoints_res18/FFHQ/ResNet_18.pt')
-
+# parser.add_argument('--student_model_path', type=str, default='/home/xguan/libreface2_cleancode/LibreFace/Facial_Expression_Recognition/new_checkpoints_fm_repvgg/AffectNet/repvgg.pt')
 
 #distillation
 parser.add_argument('--alpha', type=float, default=1.0)

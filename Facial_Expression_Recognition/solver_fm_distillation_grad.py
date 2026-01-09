@@ -5,6 +5,7 @@ from sklearn.metrics import mean_squared_error, mean_absolute_error,f1_score
 from torch.optim.lr_scheduler import ReduceLROnPlateau
 import torch
 import torch.nn as nn
+from models.repvgg import RepVGG
 
 
 from models.resnet18 import ResNet
@@ -27,6 +28,12 @@ class solver_fm_distillation_grad(nn.Module):
 				del checkpoints['classifier.4.weight']
 				del checkpoints['classifier.4.bias']
 				self.student_model.load_state_dict(checkpoints, strict=False)
+		elif config.student_model_name == "repvgg":
+			self.student_model = RepVGG(config).cuda()
+			if config.student_model_path is not None:
+				print("Load pretrain weights from FFHQ/AffectNet ...")
+				checkpoints = torch.load(config.student_model_path)['model']
+				self.student_model.load_state_dict(checkpoints, strict=True)
 		else:
 			raise NotImplementedError
 
@@ -39,7 +46,7 @@ class solver_fm_distillation_grad(nn.Module):
 				self.teacher_model.load_state_dict(checkpoints, strict=True)
 		else:
 			raise NotImplementedError
-
+        
 		# Setup the optimizers and loss function
 		opt_params = list(self.student_model.parameters())
 		self.optimizer = torch.optim.AdamW(opt_params, lr=config.learning_rate, weight_decay=config.weight_decay)

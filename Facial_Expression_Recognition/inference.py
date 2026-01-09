@@ -22,7 +22,7 @@ parser.add_argument('--hidden_dim', type=int, default=128)
 parser.add_argument('--sigma', type=float, default=10.0)
 
 # model
-parser.add_argument('--student_model_name', type=str, default='resnet', choices=['resnet_heatmap','resnet','swin','mae','emotionnet_mae','gh_feat'])
+parser.add_argument('--student_model_name', type=str, default='resnet', choices=['resnet_heatmap','resnet','swin','mae','emotionnet_mae','gh_feat','repvgg'])
 
 #distillation
 parser.add_argument('--alpha', type=float, default=1.0)
