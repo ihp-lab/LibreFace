@@ -9,6 +9,7 @@ import torch.nn as nn
 from utils import get_data_loader
 from models.resnet18 import ResNet18
 from models.mae import MaskedAutoEncoder
+from models.RepVGG import RepVGG
 import time
 
 import matplotlib.pyplot as plt
@@ -35,6 +36,12 @@ class solver_inference(nn.Module):
 			self.model = ResNet18(config).cuda()
 		elif config.model_name == "emotionnet_mae":
 			self.model = MaskedAutoEncoder(config).cuda()
+		elif config.student_model_name == "repvgg":
+			self.student_model = RepVGG(config).cuda()
+			if config.student_model_path is not None:
+				print("Load pretrain weights from FFHQ/AffectNet ...")
+				checkpoints = torch.load(config.student_model_path)['model']
+				self.student_model.load_state_dict(checkpoints, strict=True)
 		else:
 			raise NotImplementedError
 

@@ -19,8 +19,8 @@ parser.add_argument('--test_csv', type=str, default='validation_filtered.csv')
 
 
 # storage
-parser.add_argument('--data_root', type=str, default='/home/ICT2000/dchang/AffectNet/data/')
-parser.add_argument('--ckpt_path', type=str, default='/home/ICT2000/dchang/AffectNet/code/checkpoints_fm_resnet')
+parser.add_argument('--data_root', type=str, default='/data/perception-working/DiChang/dchang/AffectNet/data')
+parser.add_argument('--ckpt_path', type=str, default='/home/xguan/IHP_projects/GEN_Libreface_save/AffectNet_Libreface2/checkpoints_fm_repvgg_perception/')
 
 # data
 parser.add_argument('--data', type=str, default='AffectNet')
@@ -32,10 +32,10 @@ parser.add_argument('--hidden_dim', type=int, default=128)
 parser.add_argument('--sigma', type=float, default=10.0)
 
 # model
-parser.add_argument('--teacher_model_name', type=str, default='emotionnet_mae', choices=['resnet_heatmap','resnet','swin','mae','emotionnet_mae','gh_feat'])
-parser.add_argument('--teacher_model_path', type=str, default='/home/ICT2000/dchang/AffectNet/code/checkpoints_ffhq_mae/')
-parser.add_argument('--student_model_name', type=str, default='resnet', choices=['resnet_heatmap','resnet','swin','mae','emotionnet_mae','gh_feat'])
-parser.add_argument('--student_model_path', type=str, default='/home/ICT2000/dchang/FFHQ/code/checkpoints_res18/FFHQ/ResNet_18.pt')
+parser.add_argument('--teacher_model_name', type=str, default='perception', choices=['resnet_heatmap','resnet','swin','mae','emotionnet_mae','gh_feat','perception'])
+parser.add_argument('--teacher_model_path', type=str, default='/home/xguan/IHP_projects/GEN_Libreface_save/AffectNet_Libreface2/checkpoints_perception/AffectNet/perception.pt')
+parser.add_argument('--student_model_name', type=str, default='repvgg', choices=['resnet_heatmap','resnet','swin','mae','emotionnet_mae','gh_feat','repvgg'])
+parser.add_argument('--student_model_path', type=str)
 # parser.add_argument('--student_model_path', type=str, default='/home/xguan/libreface2_cleancode/LibreFace/Facial_Expression_Recognition/new_checkpoints_fm_repvgg/AffectNet/repvgg.pt')
 
 #distillation
