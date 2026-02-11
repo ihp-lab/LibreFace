@@ -5,7 +5,7 @@ from utils import set_seed
 import gaze_inference as gaze_inference
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--seed', type=int, default=0)
+parser.add_argument('--seed', type=int, default=42)
 
 parser.add_argument('--data_root', type=str, default='/data/perception-working/aehsieh/gaze-estimation/data')
 parser.add_argument('--ckpt_path', type=str, default='/data/perception-working/aehsieh/gaze-estimation/checkpoints')
