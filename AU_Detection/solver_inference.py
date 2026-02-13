@@ -33,12 +33,8 @@ class solver_in_domain(nn.Module):
 		# Initiate the networks
 		if config.model_name == "resnet":
 			self.model = ResNet18(config).cuda()
-		elif config.student_model_name == "repvgg":
+		elif config.model_name == "repvgg":
 			self.model = RepVGG(config).cuda()
-			if config.student_model_path is not None:
-				print("Load pretrain weights from FFHQ/AffectNet ...")
-				checkpoints = torch.load(config.student_model_path)['model']
-				self.student_model.load_state_dict(checkpoints, strict=True)
 		else:
 			raise NotImplementedError
 

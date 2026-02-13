@@ -1,1 +1,1 @@
-python inference.py --half_precision --ckpt_path /home/ICT2000/dchang/TAC_project/Face_Heatmap/OpenRecognition/resnet_disfa_all
+python inference.py --half_precision --ckpt_path /home/xguan/libreface2_cleancode/LibreFace/AU_Recognition/new_checkpoints_fm_repvgg

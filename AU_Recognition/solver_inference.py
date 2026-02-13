@@ -37,11 +37,7 @@ class solver_inference(nn.Module):
 		elif config.model_name == "emotionnet_mae":
 			self.model = MaskedAutoEncoder(config).cuda()
 		elif config.student_model_name == "repvgg":
-			self.student_model = RepVGG(config).cuda()
-			if config.student_model_path is not None:
-				print("Load pretrain weights from FFHQ/AffectNet ...")
-				checkpoints = torch.load(config.student_model_path)['model']
-				self.student_model.load_state_dict(checkpoints, strict=True)
+			self.model = RepVGG(config).cuda()		
 		else:
 			raise NotImplementedError
 

@@ -15,7 +15,7 @@ parser.add_argument('--ckpt_path', type=str, default='/home/ICT2000/dchang/TAC_p
 
 # data
 parser.add_argument('--data', type=str, default='BP4D', choices=['BP4D', 'DISFA'])
-parser.add_argument('--fold', type=str, default='0', choices=['0', '1', '2', '3', '4','all'])
+parser.add_argument('--fold', type=str, default='all', choices=['0', '1', '2', '3', '4','all'])
 parser.add_argument('--num_workers', type=int, default=0)
 parser.add_argument('--image_size', type=int, default=256)
 parser.add_argument('--crop_size', type=int, default=224)

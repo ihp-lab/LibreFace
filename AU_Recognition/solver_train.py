@@ -45,11 +45,11 @@ class solver_train(nn.Module):
 				del checkpoints['interpreter.4.bias']
 				self.model.load_state_dict(checkpoints, strict=False)
 		elif config.student_model_name == "repvgg":
-			self.student_model = RepVGG(config).cuda()
+			self.model = RepVGG(config).cuda()
 			if config.student_model_path is not None:
 				print("Load pretrain weights from FFHQ/AffectNet ...")
 				checkpoints = torch.load(config.student_model_path)['model']
-				self.student_model.load_state_dict(checkpoints, strict=True)
+				self.model.load_state_dict(checkpoints, strict=True)
 		else:
 			raise NotImplementedError
 
