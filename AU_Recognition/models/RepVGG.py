@@ -83,7 +83,7 @@ class RepVGG(nn.Module):
             return labels, features
 
 
-# Chatgpt
+
 def _find_module_name(model: nn.Module, target: nn.Module) -> str:
     """Return dotted path name of `target` inside `model`."""
     for name, module in model.named_modules():
