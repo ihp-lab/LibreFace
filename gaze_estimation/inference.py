@@ -30,7 +30,7 @@ parser.add_argument('--infer_batch_size', type=int, default=64)
 parser.add_argument('--mlp_input_size', type=int, default=None,
                     help='For MLP: feature dimension. If None and input_type=npy, will infer from first file.')
 parser.add_argument('--strict', action='store_true')
-parser.add_argument('--csv', type=str, default=None)
+parser.add_argument('--csv_input', type=str, default=None)
 parser.add_argument('--save_metrics', default = "true")
 
 opts = parser.parse_args()
@@ -42,4 +42,4 @@ set_seed(opts.seed)
 
 gaze_inference.run(opts)
 
-# python inference.py  --csv /data/perception-working/aehsieh/gaze-estimation/labels/all_features/test_all_feat_30.csv  --output results/preds_test.npy  
+# python inference.py  --csv_input /data/perception-working/aehsieh/gaze-estimation/labels/all_features/test_all_feat_30.csv  --output results/preds_test.npy  
