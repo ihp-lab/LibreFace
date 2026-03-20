@@ -7,6 +7,7 @@ from PIL import Image
 from torchvision import transforms
 
 from libreface.AU_Recognition.models.resnet18_combine import ResNet18
+from libreface.AU_Recognition.models.RepVGG import RepVGG
 from libreface.utils import download_weights
 
 class image_test(object):
@@ -77,6 +78,8 @@ class solver_inference_image_task_combine(nn.Module):
         # Initiate the networks
         if config.model_name == "resnet":
             self.model = ResNet18(config).to(self.device)
+        elif config.model_name == "repvgg":
+            self.model = RepVGG(config).to(self.device)	
 
         self.load_best_ckpt()
 

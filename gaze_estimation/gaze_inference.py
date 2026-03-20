@@ -35,7 +35,7 @@ def load_checkpoint(model, ckpt_path, device, strict=True):
     state = ckpt["model"] if isinstance(ckpt, dict) and "model" in ckpt else ckpt
     
 
-    model.load_state_dict(state, strict=strict)
+    model.load_state_dict(ckpt, strict=strict)
 
 
 def collect_inputs(input_path, input_type):

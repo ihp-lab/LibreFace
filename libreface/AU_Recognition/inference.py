@@ -142,6 +142,7 @@ def get_au_intensities_and_detect_aus_video(aligned_frames_path, device="cpu",
                         'device': 'cuda'
                     })
     
+    
     #set seed
     set_seed(opts.seed)
 

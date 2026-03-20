@@ -8,6 +8,7 @@ from torch.utils.data import DataLoader
 from torchvision import transforms
 
 from libreface.AU_Detection.models.resnet18 import ResNet18
+from libreface.AU_Detection.models.RepVGG import RepVGG
 from libreface.utils import download_weights
 
 class image_test(object):
@@ -77,6 +78,8 @@ class solver_in_domain_image(nn.Module):
 		# Initiate the networks
 		if config.model_name == "resnet":
 			self.model = ResNet18(config).to(self.device)
+		elif config.model_name == "repvgg":
+			self.model = RepVGG(config).to(self.device)	
 		else:
 			raise NotImplementedError
 

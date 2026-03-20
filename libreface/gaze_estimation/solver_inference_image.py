@@ -20,7 +20,8 @@ _FACEMESH_RIGHT_EYE = [33, 7, 163, 144, 145, 153, 154, 155, 133,
 _FACEMESH_IRISES    = [468, 469, 470, 471, 472, 473, 474, 475, 476, 477]
 
 # Feature dimension: (16 + 16 + 10) landmarks * 3 coords (x, y, z) = 126
-GAZE_FEAT_DIM = (len(_FACEMESH_LEFT_EYE) + len(_FACEMESH_RIGHT_EYE) + len(_FACEMESH_IRISES)) * 3
+# GAZE_FEAT_DIM = (len(_FACEMESH_LEFT_EYE) + len(_FACEMESH_RIGHT_EYE) + len(_FACEMESH_IRISES)) * 3
+GAZE_FEAT_DIM = 1404 #mediapipe default
 
 
 def extract_gaze_landmarks(image_path):
@@ -47,9 +48,10 @@ def extract_gaze_landmarks(image_path):
 		return None
 
 	lm = results.multi_face_landmarks[0].landmark
-	indices = _FACEMESH_LEFT_EYE + _FACEMESH_RIGHT_EYE + _FACEMESH_IRISES
+	# indices = _FACEMESH_LEFT_EYE + _FACEMESH_RIGHT_EYE + _FACEMESH_IRISES
 	feat = []
-	for i in indices:
+	# old version is i in range indices
+	for i in range(468):
 		feat.extend([lm[i].x, lm[i].y, lm[i].z])
 
 	return np.array(feat, dtype=np.float32)
@@ -131,8 +133,9 @@ class solver_gaze_image(nn.Module):
 
 	def load_best_ckpt(self):
 		download_weights(self.config.weights_download_id, self.config.ckpt_path)
-		checkpoints = torch.load(self.config.ckpt_path, map_location=self.device, weights_only=True)['model']
-		self.model.load_state_dict(checkpoints, strict=True)
+		checkpoints = torch.load(self.config.ckpt_path, map_location=self.device, weights_only=True)
+		self.model.load_state_dict(checkpoints, strict=False)
+		# dirty loading, solve later
 
 	def run(self, aligned_image_path):
 		if "cuda" in self.device:

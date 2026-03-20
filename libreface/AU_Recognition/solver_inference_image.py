@@ -9,6 +9,7 @@ from torchvision import transforms
 
 from libreface.AU_Recognition.models.resnet18 import ResNet18
 from libreface.AU_Recognition.models.mae import MaskedAutoEncoder
+from libreface.AU_Recognition.models.RepVGG import RepVGG
 from libreface.utils import download_weights
 
 
@@ -79,6 +80,8 @@ class solver_inference_image(nn.Module):
             self.model = ResNet18(config).to(self.device)
         elif config.model_name == "emotionnet_mae":
             self.model = MaskedAutoEncoder(config).to(self.device)
+        elif config.model_name == "repvgg":
+            self.model = RepVGG(config).to(self.device)	
         else:
             raise NotImplementedError
 
