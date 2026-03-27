@@ -32,3 +32,4 @@ test_issue11.py
 sample_image_results.csv
 sample_results.csv
 sample_video_results.csv
+eval_libreface.py
