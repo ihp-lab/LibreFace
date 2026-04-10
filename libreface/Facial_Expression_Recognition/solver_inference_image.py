@@ -7,6 +7,7 @@ from torch.utils.data import DataLoader
 from torchvision import transforms
 
 from libreface.Facial_Expression_Recognition.models.resnet18 import ResNet
+from libreface.Facial_Expression_Recognition.models.repvgg import RepVGG
 from libreface.utils import download_weights
 
 class Facial_Expression_Dataset(data.Dataset):
@@ -47,6 +48,8 @@ class solver_inference_image(nn.Module):
         # Initiate the networks
         if config.student_model_name == "resnet":
             self.student_model = ResNet(config).to(self.device)
+        elif config.student_model_name == "repvgg":
+            self.student_model = RepVGG(config).to(self.device)
         else:
             raise NotImplementedError
 

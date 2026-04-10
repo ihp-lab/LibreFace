@@ -67,7 +67,7 @@ def get_facial_attributes_video(video_path,
                                 temp_dir="./tmp", 
                                 device="cpu",
                                 batch_size=256,
-                                num_workers=2,
+                                num_workers=0,
                                 weights_download_dir:str = "./weights_libreface"):
     print(f"Using device: {device} for inference...")
     
@@ -126,7 +126,7 @@ def save_facial_attributes_video(video_path,
                             temp_dir="./tmp", 
                             device="cpu",
                             batch_size=256,
-                            num_workers=2,
+                            num_workers=0,
                             weights_download_dir:str = "./weights_libreface"):
     try:
         frames_df = get_facial_attributes_video(video_path,
@@ -173,7 +173,7 @@ def get_facial_attributes(file_path,
                           temp_dir="./tmp", 
                           device="cpu",
                           batch_size=256,
-                          num_workers=2,
+                          num_workers=0,
                           weights_download_dir:str = "./weights_libreface"):
     file_type = check_file_type(file_path)
     if file_type == "image":
