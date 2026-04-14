@@ -133,9 +133,11 @@ class solver_gaze_image(nn.Module):
 
 	def load_best_ckpt(self):
 		download_weights(self.config.weights_download_id, self.config.ckpt_path)
-		checkpoints = torch.load(self.config.ckpt_path, map_location=self.device, weights_only=True)
-		self.model.load_state_dict(checkpoints, strict=False)
-		# dirty loading, solve later
+		state_dict = torch.load(self.config.ckpt_path, map_location=self.device, weights_only=True)
+		# Unwrap optional "model" wrapper key saved by some training scripts
+		if "model" in state_dict and not any(k.startswith("layers") for k in state_dict):
+			state_dict = state_dict["model"]
+		self.model.load_state_dict(state_dict, strict=True)
 
 	def run(self, aligned_image_path):
 		if "cuda" in self.device:
