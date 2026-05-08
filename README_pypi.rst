@@ -160,6 +160,14 @@ Gaze Estimation
 
 Gaze yaw and pitch are returned by default in the :code:`get_facial_attributes` output (keys :code:`gaze_yaw` and :code:`gaze_pitch`, or columns of the same name for video).
 
+.. image:: https://github.com/ihp-lab/LibreFace/blob/libreface2/main_code/media/gaze_bias_example.png?raw=true
+   :alt: Gaze prediction example: biased (raw) vs unbiased (bias-corrected) vs ground truth on a Gaze360 frame.
+   :width: 720px
+   :align: center
+
+The figure above shows a Gaze360 example with three panels: **biased (raw)** model output (red, :code:`yaw=+11.07°, pitch=+11.43°`), **unbiased (bias-corrected)** prediction (green, :code:`yaw=+4.51°, pitch=+6.44°`), and **ground truth** (blue, :code:`yaw=-7.68°, pitch=+2.61°`). Bias correction subtracts the systematic offset measured on the held-out test set (:code:`+6.55°` yaw, :code:`+5.05°` pitch).
+
+
 If you only need gaze and want to skip AU and expression inference, call :code:`estimate_gaze` (image) or :code:`estimate_gaze_video` (list of aligned frames) directly. Both expect an **already aligned** face image — use :code:`libreface.get_aligned_image` to produce one from a raw image.
 
 .. code-block:: python
