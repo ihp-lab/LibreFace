@@ -150,7 +150,32 @@ import libreface
 libreface.get_facial_attributes(image_or_video_path,
                                 weights_download_dir = "your/directory/path")
 ```
- 
+
+#### Gaze estimation
+
+Gaze yaw and pitch are returned by default in the `get_facial_attributes` output (keys `gaze_yaw` and `gaze_pitch`, or columns of the same name for video).
+
+If you only need gaze and want to skip AU and expression inference, call `estimate_gaze` (image) or `estimate_gaze_video` (list of aligned frames) directly. Both expect an **already aligned** face image — use `libreface.get_aligned_image` to produce one from a raw image.
+
+```python
+import libreface
+
+aligned_image_path, _, _ = libreface.get_aligned_image("path/to/your_image.png", temp_dir="./tmp")
+gaze = libreface.estimate_gaze(aligned_image_path, device="cpu")
+print(gaze)  # {'gaze_yaw': <float>, 'gaze_pitch': <float>}
+```
+
+For videos, pass a list of aligned frame paths:
+
+```python
+import libreface
+
+gaze_df = libreface.estimate_gaze_video(aligned_frames_path_list,
+                                        device="cuda:0",
+                                        batch_size=256,
+                                        num_workers=2)
+# gaze_df has columns "gaze_yaw" and "gaze_pitch", one row per frame.
+```
 
 ## Getting Started with Derivative Tools (New 2.0 Models Available! Recommended)
 

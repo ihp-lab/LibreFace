@@ -9,7 +9,7 @@ Libreface
 |badge1| |badge2|
 
 
-.. |badge1| image:: https://img.shields.io/badge/version-1.0.0-blue
+.. |badge1| image:: https://img.shields.io/badge/version-2.0.0-blue
    :alt: Static Badge
 
 
@@ -21,6 +21,8 @@ This is the Python package for `LibreFace: An Open-Source Toolkit for Deep Facia
 LibreFace is an open-source and comprehensive toolkit for accurate and real-time facial expression analysis with both CPU and GPU acceleration versions.
 LibreFace eliminates the gap between cutting-edge research and an easy and free-to-use non-commercial toolbox. We propose to adaptively pre-train the vision encoders with various face datasets and then distill them to a lightweight ResNet-18 model in a feature-wise matching manner.
 We conduct extensive experiments of pre-training and distillation to demonstrate that our proposed pipeline achieves comparable results to state-of-the-art works while maintaining real-time efficiency.
+
+**LibreFace2** additionally supports gaze estimation using a MediaPipe landmark-based MLP pipeline. Gaze yaw and pitch (in degrees) are returned alongside the existing facial attribute outputs.
 
 .. _`LibreFace: An Open-Source Toolkit for Deep Facial Expression Analysis`: https://boese0601.github.io/libreface
 
@@ -153,6 +155,33 @@ For video inference, our code processes the frames of your video in batches. You
 
 Note that by default, the :code:`batch_size` is 256, and :code:`num_workers` is 2. You can increase or decrease these values according to your machine's capacity.
 
+Gaze Estimation
+----------------
+
+Gaze yaw and pitch are returned by default in the :code:`get_facial_attributes` output (keys :code:`gaze_yaw` and :code:`gaze_pitch`, or columns of the same name for video).
+
+If you only need gaze and want to skip AU and expression inference, call :code:`estimate_gaze` (image) or :code:`estimate_gaze_video` (list of aligned frames) directly. Both expect an **already aligned** face image — use :code:`libreface.get_aligned_image` to produce one from a raw image.
+
+.. code-block:: python
+
+    import libreface
+
+    aligned_image_path, _, _ = libreface.get_aligned_image("path/to/your_image.png", temp_dir="./tmp")
+    gaze = libreface.estimate_gaze(aligned_image_path, device="cpu")
+    print(gaze)  # {'gaze_yaw': <float>, 'gaze_pitch': <float>}
+
+For videos, pass a list of aligned frame paths:
+
+.. code-block:: python
+
+    import libreface
+
+    gaze_df = libreface.estimate_gaze_video(aligned_frames_path_list,
+                                            device="cuda:0",
+                                            batch_size=256,
+                                            num_workers=2)
+    # gaze_df has columns "gaze_yaw" and "gaze_pitch", one row per frame.
+
 Downloading Model Weights
 ================================
 
@@ -178,6 +207,8 @@ For an image processed through LibreFace, we save the following information in t
 - :code:`au_idx` : contains the output of our action unit (AU) detection model, which predicts whether an action unit at index :code:`idx` is activated. 0 means not activated, and 1 means activated. We detect AU at the indices :code:`[1, 2, 4, 6, 7, 10, 12, 14, 15, 17, 23, 24]`.
 
 - :code:`au_idx_intensity` : contains the output of our action unit (AU) intensity prediction model, which predicts the intensity of an action unit at index :code:`idx` between 0 and 5. 0 is least intensity and 5 is maximum intensity. We predict AU intensities for the AU indices :code:`[1, 2, 4, 5, 6, 9, 12, 15, 17, 20, 25, 26]`.
+
+- :code:`gaze_yaw`, :code:`gaze_pitch` : estimated gaze angles in degrees, predicted by a MediaPipe landmark-based MLP. Yaw is the horizontal angle (left/right) and pitch is the vertical angle (up/down).
 
 .. _`mediapipe documentation`: https://github.com/google-ai-edge/mediapipe/blob/7c28c5d58ffbcb72043cbe8c9cc32b40aaebac41/mediapipe/modules/face_geometry/data/canonical_face_model_uv_visualization.png
 
