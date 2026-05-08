@@ -34,6 +34,9 @@ def extract_gaze_landmarks(image_path):
 		np.ndarray of shape (GAZE_FEAT_DIM,) float32, or None if no face detected.
 	"""
 	img = np.array(Image.open(image_path).convert("RGB"))
+	# Per-axis pixel scaling matches the Gaze360 training pipeline
+	# (data_processing/process_gaze360_all_feat.py): x*=w, y*=h, z*=w.
+	h, w = img.shape[:2]
 	mp_face_mesh = mp.solutions.face_mesh
 
 	with mp_face_mesh.FaceMesh(
@@ -48,11 +51,9 @@ def extract_gaze_landmarks(image_path):
 		return None
 
 	lm = results.multi_face_landmarks[0].landmark
-	# indices = _FACEMESH_LEFT_EYE + _FACEMESH_RIGHT_EYE + _FACEMESH_IRISES
 	feat = []
-	# old version is i in range indices
 	for i in range(468):
-		feat.extend([lm[i].x, lm[i].y, lm[i].z])
+		feat.extend([lm[i].x * w, lm[i].y * h, lm[i].z * w])
 
 	return np.array(feat, dtype=np.float32)
 
