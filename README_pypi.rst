@@ -9,7 +9,7 @@ Libreface
 |badge1| |badge2|
 
 
-.. |badge1| image:: https://img.shields.io/badge/version-2.0.0-blue
+.. |badge1| image:: https://img.shields.io/badge/version-0.2.0-blue
    :alt: Static Badge
 
 
@@ -20,7 +20,7 @@ Libreface
 This is the Python package for `LibreFace: An Open-Source Toolkit for Deep Facial Expression Analysis`_.
 LibreFace is an open-source and comprehensive toolkit for accurate and real-time facial expression analysis with both CPU and GPU acceleration versions.
 LibreFace eliminates the gap between cutting-edge research and an easy and free-to-use non-commercial toolbox. We propose to adaptively pre-train the vision encoders with various face datasets and then distill them to a lightweight ResNet-18 model in a feature-wise matching manner.
-We conduct extensive experiments of pre-training and distillation to demonstrate that our proposed pipeline achieves comparable results to state-of-the-art works while maintaining real-time efficiency.
+We conduct extensive experiments of pre-training and distillation to demonstrate that our proposed pipeline achieves comparable results to state-of-the-art works while maintaining real-time efficiency. LibreFace2 uses a lightweight RepVGG backbone for the AU detection, AU intensity, and facial expression heads.
 
 **LibreFace2** additionally supports gaze estimation using a MediaPipe landmark-based MLP pipeline. Gaze yaw and pitch (in degrees) are returned alongside the existing facial attribute outputs.
 

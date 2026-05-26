@@ -1,1 +1,1 @@
-CUDA_VISIBLE_DEVICES=0 python inference.py --ckpt_path /home/xguan/libreface2_cleancode/LibreFace/AU_Detection/new_checkpoints_fm_repvgg
+CUDA_VISIBLE_DEVICES=0 python inference.py --ckpt_path ./new_checkpoints_fm_repvgg

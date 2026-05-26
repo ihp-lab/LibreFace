@@ -1,1 +1,1 @@
-python inference.py --half_precision --ckpt_path /home/xguan/libreface2_cleancode/LibreFace/AU_Recognition/new_checkpoints_fm_repvgg
+python inference.py --half_precision --ckpt_path ./new_checkpoints_fm_repvgg

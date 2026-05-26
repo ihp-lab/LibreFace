@@ -2,7 +2,8 @@
   
 
 <div align="center">
-  <h1 align="center">LibreFace2: An Open-Source Toolkit for Deep Facial Expression Analysis</h1>
+  <h1 align="center">LibreFace 2.0: A Generalizable Facial Expression Analysis Toolkit Leveraging Synthetic Data</h1>
+  <h1 align="center">LibreFace: An Open-Source Toolkit for Deep Facial Expression Analysis</h1>
 
   <p align="center">
 
@@ -31,7 +32,7 @@
 
 ## Introduction
 
-This is the official implementation of our WACV 2024 Application Track paper: LibreFace: An Open-Source Toolkit for Deep Facial Expression Analysis. LibreFace is an open-source and comprehensive toolkit for accurate and real-time facial expression analysis with both CPU-only and GPU-acceleration versions. LibreFace eliminates the gap between cutting-edge research and an easy and free-to-use non-commercial toolbox. We propose to adaptively pre-train the vision encoders with various face datasets and then distillate them to a lightweight ResNet-18 model in a feature-wise matching manner. LibreFace2 additionally supports gaze estimation using a MediaPipe landmark-based MLP pipeline.We conduct extensive experiments of pre-training and distillation to demonstrate that our proposed pipeline achieves comparable results to state-of-the-art works while maintaining real-time efficiency. LibreFace system supports cross-platform running, and the code is open-sourced in C# (model inference and checkpoints) and Python (model training, inference, and checkpoints).
+This is the official implementation of our WACV 2024 Application Track paper: LibreFace: An Open-Source Toolkit for Deep Facial Expression Analysis. The recent update (May 2026) incorporates the code and checkpoints for our FG 2026 paper "LibreFace 2.0: A Generalizable Facial Expression Analysis Toolkit Leveraging Synthetic Data". LibreFace is an open-source and comprehensive toolkit for accurate and real-time facial expression analysis with both CPU-only and GPU-acceleration versions. LibreFace eliminates the gap between cutting-edge research and an easy and free-to-use non-commercial toolbox. We propose to adaptively pre-train the vision encoders with various face datasets and then distillate them to a lightweight ResNet-18 and RepVGG models in a feature-wise matching manner. LibreFace 2.0 additionally supports gaze estimation using a MediaPipe landmark-based MLP pipeline. We conduct extensive experiments of pre-training and distillation to demonstrate that our proposed pipeline achieves comparable results to state-of-the-art works while maintaining real-time efficiency. LibreFace system supports cross-platform running, and the code is open-sourced in C# (model inference and checkpoints) and Python (model training, inference, and checkpoints).
 
 <p align="center">
   <img src="https://github.com/ihp-lab/LibreFace/blob/main/media/System.png" width="350px" />

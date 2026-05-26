@@ -11,7 +11,7 @@ parser.add_argument('--seed', type=int, default=0)
 
 # storage
 parser.add_argument('--data_root', type=str, default='/home/ICT2000/dchang/TAC_project/Face_Heatmap/data')
-parser.add_argument('--ckpt_path', type=str, default='/home/xguan/libreface2_cleancode/LibreFace/AU_Recognition/new_checkpoints_fm_repvgg')
+parser.add_argument('--ckpt_path', type=str, default='./new_checkpoints_fm_repvgg')
 
 # data
 parser.add_argument('--data', type=str, default='DISFA', choices=['BP4D', 'DISFA'])

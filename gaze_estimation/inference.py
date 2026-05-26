@@ -22,7 +22,7 @@ parser.add_argument('--hidden_dim', type=int, default=128)
 parser.add_argument('--device', type=str, default='cuda', choices=['cpu','cuda'])
 
 # parser.add_argument('--ckpt', type=str, default="/data/perception-working/aehsieh/gaze-estimation/checkpoints/Gaze360/mlp/mlp_256/mlp_unfiltered.pt")
-parser.add_argument('--ckpt', type=str, default="/home/xguan/libreface2_cleancode/LibreFace/gaze_estimation/checkpoints_mlp/mlp_unfiltered.pt")
+parser.add_argument('--ckpt', type=str, default="./checkpoints_mlp/mlp_unfiltered.pt")
 
 parser.add_argument('--input_type', type=str, default='npy', choices=['npy', 'image'])
 parser.add_argument('--output', type=str, default='inference_result.npy')
