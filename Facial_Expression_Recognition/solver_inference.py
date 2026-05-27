@@ -6,6 +6,7 @@ import torch.nn as nn
 
 
 from models.resnet18 import ResNet
+from models.repvgg import RepVGG
 import torch.nn.functional as F
 import pdb
 
@@ -16,6 +17,8 @@ class solver_inference(nn.Module):
 		# Initiate the networks
 		if config.student_model_name == "resnet":
 			self.student_model = ResNet(config).cuda()
+		elif config.student_model_name == "repvgg":
+			self.student_model = RepVGG(config).cuda()
 		else:
 			raise NotImplementedError
 

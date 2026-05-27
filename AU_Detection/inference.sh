@@ -1,1 +1,1 @@
-CUDA_VISIBLE_DEVICES=0 python inference.py --ckpt_path ./fm_distillation_all
+CUDA_VISIBLE_DEVICES=0 python inference.py --ckpt_path ./new_checkpoints_fm_repvgg

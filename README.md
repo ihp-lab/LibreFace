@@ -2,6 +2,7 @@
   
 
 <div align="center">
+  <h1 align="center">LibreFace 2.0: A Generalizable Facial Expression Analysis Toolkit Leveraging Synthetic Data</h1>
   <h1 align="center">LibreFace: An Open-Source Toolkit for Deep Facial Expression Analysis</h1>
 
   <p align="center">
@@ -31,7 +32,7 @@
 
 ## Introduction
 
-This is the official implementation of our WACV 2024 Application Track paper: LibreFace: An Open-Source Toolkit for Deep Facial Expression Analysis. LibreFace is an open-source and comprehensive toolkit for accurate and real-time facial expression analysis with both CPU-only and GPU-acceleration versions. LibreFace eliminates the gap between cutting-edge research and an easy and free-to-use non-commercial toolbox. We propose to adaptively pre-train the vision encoders with various face datasets and then distillate them to a lightweight ResNet-18 model in a feature-wise matching manner. We conduct extensive experiments of pre-training and distillation to demonstrate that our proposed pipeline achieves comparable results to state-of-the-art works while maintaining real-time efficiency. LibreFace system supports cross-platform running, and the code is open-sourced in C# (model inference and checkpoints) and Python (model training, inference, and checkpoints).
+This is the official implementation of our WACV 2024 Application Track paper: LibreFace: An Open-Source Toolkit for Deep Facial Expression Analysis. The recent update (May 2026) incorporates the code and checkpoints for our FG 2026 paper "LibreFace 2.0: A Generalizable Facial Expression Analysis Toolkit Leveraging Synthetic Data". LibreFace is an open-source and comprehensive toolkit for accurate and real-time facial expression analysis with both CPU-only and GPU-acceleration versions. LibreFace eliminates the gap between cutting-edge research and an easy and free-to-use non-commercial toolbox. We propose to adaptively pre-train the vision encoders with various face datasets and then distillate them to a lightweight ResNet-18 and RepVGG models in a feature-wise matching manner. LibreFace 2.0 additionally supports gaze estimation using a MediaPipe landmark-based MLP pipeline. We conduct extensive experiments of pre-training and distillation to demonstrate that our proposed pipeline achieves comparable results to state-of-the-art works while maintaining real-time efficiency. LibreFace system supports cross-platform running, and the code is open-sourced in C# (model inference and checkpoints) and Python (model training, inference, and checkpoints).
 
 <p align="center">
   <img src="https://github.com/ihp-lab/LibreFace/blob/main/media/System.png" width="350px" />
@@ -150,7 +151,39 @@ import libreface
 libreface.get_facial_attributes(image_or_video_path,
                                 weights_download_dir = "your/directory/path")
 ```
- 
+
+#### Gaze estimation
+
+Gaze yaw and pitch are returned by default in the `get_facial_attributes` output (keys `gaze_yaw` and `gaze_pitch`, or columns of the same name for video).
+
+<p align="center">
+  <img src="https://github.com/ihp-lab/LibreFace/blob/libreface2/main_code/media/gaze_bias_example.png" alt="Gaze prediction example: biased (raw) vs unbiased (bias-corrected) vs ground truth on a Gaze360 frame." width="720px" />
+</p>
+
+The figure above shows a Gaze360 example with three panels: **biased (raw)** model output (red, `yaw=+11.07°, pitch=+11.43°`), **unbiased (bias-corrected)** prediction (green, `yaw=+4.51°, pitch=+6.44°`), and **ground truth** (blue, `yaw=-7.68°, pitch=+2.61°`). Bias correction subtracts the systematic offset measured on the held-out test set (`+6.55°` yaw, `+5.05°` pitch).
+
+
+If you only need gaze and want to skip AU and expression inference, call `estimate_gaze` (image) or `estimate_gaze_video` (list of aligned frames) directly. Both expect an **already aligned** face image — use `libreface.get_aligned_image` to produce one from a raw image.
+
+```python
+import libreface
+
+aligned_image_path, _, _ = libreface.get_aligned_image("path/to/your_image.png", temp_dir="./tmp")
+gaze = libreface.estimate_gaze(aligned_image_path, device="cpu")
+print(gaze)  # {'gaze_yaw': <float>, 'gaze_pitch': <float>}
+```
+
+For videos, pass a list of aligned frame paths:
+
+```python
+import libreface
+
+gaze_df = libreface.estimate_gaze_video(aligned_frames_path_list,
+                                        device="cuda:0",
+                                        batch_size=256,
+                                        num_workers=2)
+# gaze_df has columns "gaze_yaw" and "gaze_pitch", one row per frame.
+```
 
 ## Getting Started with Derivative Tools (New 2.0 Models Available! Recommended)
 

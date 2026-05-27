@@ -9,6 +9,7 @@ import torch.nn as nn
 from utils import get_data_loader
 from models.resnet18 import ResNet18
 from models.mae import MaskedAutoEncoder
+from models.RepVGG import RepVGG
 
 
 def count_parameters(model):
@@ -43,6 +44,12 @@ class solver_train(nn.Module):
 				del checkpoints['interpreter.4.weight']
 				del checkpoints['interpreter.4.bias']
 				self.model.load_state_dict(checkpoints, strict=False)
+		elif config.student_model_name == "repvgg":
+			self.model = RepVGG(config).cuda()
+			if config.student_model_path is not None:
+				print("Load pretrain weights from FFHQ/AffectNet ...")
+				checkpoints = torch.load(config.student_model_path)['model']
+				self.model.load_state_dict(checkpoints, strict=True)
 		else:
 			raise NotImplementedError
 

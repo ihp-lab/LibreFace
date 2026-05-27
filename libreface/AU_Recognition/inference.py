@@ -104,7 +104,7 @@ def get_au_intensities_and_detect_aus_video(aligned_frames_path, device="cpu",
                                             batch_size = 256, num_workers=2,
                                       weights_download_dir="./weights_libreface"):
     opts = ConfigObject({'seed':0,
-                        'ckpt_path': f'{weights_download_dir}/AU_Recognition/weights/combined_resnet.pt',
+                        'ckpt_path': f'{weights_download_dir}/AU_Recognition/weights/combined_repvgg.pt',
                         'weights_download_id':"1CbnBr8OBt8Wb73sL1ENcrtrWAFWSSRv0", 
                         'image_inference': False,
                         'au_recognition_data_root': '',
@@ -142,6 +142,7 @@ def get_au_intensities_and_detect_aus_video(aligned_frames_path, device="cpu",
                         'device': 'cuda'
                     })
     
+    
     #set seed
     set_seed(opts.seed)
 
@@ -165,7 +166,7 @@ def get_au_intensities(image_path, device="cpu",
     # config = load_config(config_path)
     opts = ConfigObject({'seed': 0,
                         'data_root': '',
-                        'ckpt_path': f'{weights_download_dir}/AU_Recognition/weights/resnet.pt',
+                        'ckpt_path': f'{weights_download_dir}/AU_Recognition/weights/repvgg.pt',
                         'weights_download_id': '14qEnWRew2snhdMdOVyqKFJ5rq5VZrfAX',
                         'data': 'DISFA',
                         'fold': 'all',

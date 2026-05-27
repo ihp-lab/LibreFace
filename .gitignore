@@ -29,3 +29,11 @@ test_issue11.py
 /data
 *.egg-info/*
 *.DS_Store
+sample_image_results.csv
+sample_results.csv
+sample_video_results.csv
+eval_libreface.py
+export_gaze_to_onnx.py
+LibreFace_Gaze.onnx
+LibreFace_Gaze.onnx.data
+examples/sample_disfa_gaze.jpg

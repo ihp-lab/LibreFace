@@ -10,6 +10,7 @@ from utils import get_data_loader
 from data_utils import heatmap2au
 
 from models.resnet18 import ResNet18
+from models.RepVGG import RepVGG
 
 import time
 
@@ -32,6 +33,8 @@ class solver_in_domain(nn.Module):
 		# Initiate the networks
 		if config.model_name == "resnet":
 			self.model = ResNet18(config).cuda()
+		elif config.model_name == "repvgg":
+			self.model = RepVGG(config).cuda()
 		else:
 			raise NotImplementedError
 
