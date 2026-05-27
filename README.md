@@ -2,8 +2,26 @@
   
 
 <div align="center">
-  <h1 align="center">LibreFace 2.0: A Generalizable Facial Expression Analysis Toolkit Leveraging Synthetic Data</h1>
-  <h1 align="center">LibreFace: An Open-Source Toolkit for Deep Facial Expression Analysis</h1>
+  <h1 align="center">[FG 2026] LibreFace 2.0: A Generalizable Facial Expression Analysis Toolkit Leveraging Synthetic Data</h1>
+
+<p align="center">
+
+<a href="https://www.linkedin.com/in/xulang-guan-3040a6268/">
+    Xulang Guan*</a>,
+<a href="https://ashutoshchaubey.com/">
+    Ashutosh Chaubey*</a>,
+<a href="https://cv.maxi.su/">
+    Maksim Siniukov</a>,
+<a href="https://www.linkedin.com/in/belle-hsieh/">
+    Annabelle Hsieh</a>,
+
+<a href="https://scholar.google.com/citations?user=jqEgpukAAAAJ&hl=en">
+    Zongjian Li</a>,
+<a href="https://people.ict.usc.edu/~soleymani/">
+    Mohammad Soleymani</a>
+</p>
+  
+  <h1 align="center">[WACV 2024] LibreFace: An Open-Source Toolkit for Deep Facial Expression Analysis</h1>
 
   <p align="center">
 
@@ -11,20 +29,18 @@
     Di Chang</a>,
 <a href="https://yufengyin.github.io/">
     Yufeng Yin</a>,
-    Zongjian Li,
+<a href="https://scholar.google.com/citations?user=jqEgpukAAAAJ&hl=en">
+    Zongjian Li</a>,
 <a href="https://scholar.google.com/citations?user=HuuQRj4AAAAJ&hl=en">
     Minh Tran</a>,
 <a href="https://people.ict.usc.edu/~soleymani/">
     Mohammad Soleymani</a>
 
 <br>
-                    
-<a href="https://ict.usc.edu/">Institute for Creative Technologies, University of Southern California</a>
-                    
 
-<strong>WACV 2024</strong>
+<a href="https://ict.usc.edu/">Institute for Creative Technologies, University of Southern California</a>
 <br />
-<a href="https://arxiv.org/abs/2308.10713">Arxiv</a> | <a href="https://boese0601.github.io/libreface">Project page</a>
+<a href="https://arxiv.org/abs/2308.10713">Arxiv [LibreFace]</a> | <a href="https://boese0601.github.io/libreface">Project page</a>
 <br />
 </p>
 </div>
